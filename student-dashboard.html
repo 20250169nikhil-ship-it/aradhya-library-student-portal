@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>Aradhya Library - Student Dashboard</title>
+
+    <link
+        rel="stylesheet"
+        href="css/style.css">
+
+    <style>
+
+        .monthly-fee-wrapper {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        .monthly-fee-table {
+            width: 100%;
+            min-width: 1050px;
+            border-collapse: collapse;
+        }
+
+        .monthly-fee-table th,
+        .monthly-fee-table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        .monthly-fee-table th {
+            background: #f3f4f6;
+        }
+
+        .paid-status {
+            color: #15803d;
+            font-weight: bold;
+        }
+
+        .due-status {
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+        .open-status {
+            color: #15803d;
+            font-weight: bold;
+        }
+
+        .closed-status {
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+        .receipt-btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .receipt-btn:hover {
+            opacity: 0.9;
+        }
+
+        .no-receipt {
+            color: #888;
+        }
+
+        .admission-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 13px;
+        }
+
+        .admission-open {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .admission-closed {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header class="navbar">
+
+    <div class="logo">
+        📚 Aradhya Library
+    </div>
+
+
+    <nav>
+
+        <a href="index.html">
+            Home
+        </a>
+
+
+        <a href="student-dashboard.html">
+            Dashboard
+        </a>
+
+
+        <button
+            onclick="logout()"
+            class="admin-btn">
+
+            Logout
+
+        </button>
+
+    </nav>
+
+</header>
+
+
+
+<section class="dashboard-section">
+
+
+    <div class="dashboard-container">
+
+
+        <!-- ==============================
+             WELCOME
+        =============================== -->
+
+        <div class="dashboard-welcome">
+
+            <div>
+
+                <p class="welcome-small">
+                    Welcome back 👋
+                </p>
+
+
+                <h1 id="studentName">
+                    Student
+                </h1>
+
+
+                <p>
+                    Aradhya Library Student Dashboard
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ==============================
+             STUDENT INFORMATION
+        =============================== -->
+
+        <div class="dashboard-card">
+
+            <h2>
+                👤 Student Information
+            </h2>
+
+
+            <div class="student-info-grid">
+
+
+                <div class="info-box">
+
+                    <span>
+                        Enrollment Number
+                    </span>
+
+                    <strong id="enrollment">
+                        -
+                    </strong>
+
+                </div>
+
+
+
+                <div class="info-box">
+
+                    <span>
+                        Seat Number
+                    </span>
+
+                    <strong id="seatNumber">
+                        -
+                    </strong>
+
+                </div>
+
+
+
+                <div class="info-box">
+
+                    <span>
+                        Mobile Number
+                    </span>
+
+                    <strong id="mobile">
+                        -
+                    </strong>
+
+                </div>
+
+
+
+                <div class="info-box">
+
+                    <span>
+                        Registration Date
+                    </span>
+
+                    <strong id="registrationDate">
+                        Pending - Admin will update
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+
+            <div class="address-box">
+
+                <span>
+                    Address
+                </span>
+
+                <p id="address">
+                    -
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ==============================
+             FEE SUMMARY
+        =============================== -->
+
+        <div class="dashboard-card">
+
+            <h2>
+                💰 Library Fee Summary
+            </h2>
+
+
+            <div class="fee-grid">
+
+
+                <div class="fee-box">
+
+                    <span>
+                        Total Months
+                    </span>
+
+                    <strong id="totalMonths">
+                        12
+                    </strong>
+
+                </div>
+
+
+
+                <div class="fee-box">
+
+                    <span>
+                        Paid Months
+                    </span>
+
+                    <strong id="paidMonths">
+                        0
+                    </strong>
+
+                </div>
+
+
+
+                <div class="fee-box">
+
+                    <span>
+                        Pending Months
+                    </span>
+
+                    <strong id="pendingMonths">
+                        12
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+            <p class="fee-note">
+
+                💡 Monthly Library Fee: ₹700
+
+            </p>
+
+        </div>
+
+
+
+        <!-- ==============================
+             MONTHLY FEE STATUS
+        =============================== -->
+
+        <div class="dashboard-card">
+
+            <h2>
+                📅 Monthly Fee & Admission Status
+            </h2>
+
+
+            <p>
+
+                Har month ka fee status aur
+                admission status yahan dikhega.
+
+            </p>
+
+
+            <div class="monthly-fee-wrapper">
+
+
+                <table class="monthly-fee-table">
+
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Month
+                            </th>
+
+
+                            <th>
+                                Admission Status
+                            </th>
+
+
+                            <th>
+                                Fee
+                            </th>
+
+
+                            <th>
+                                Fee Status
+                            </th>
+
+
+                            <th>
+                                Paid Date
+                            </th>
+
+
+                            <th>
+                                Payment Mode
+                            </th>
+
+
+                            <th>
+                                Receipt Number
+                            </th>
+
+
+                            <th>
+                                Receipt
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="monthlyFeeTable">
+
+                    </tbody>
+
+
+                </table>
+
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ==============================
+             HELP
+        =============================== -->
+
+        <div class="dashboard-card">
+
+            <h2>
+                🆘 Help & Complaint
+            </h2>
+
+
+            <p>
+
+                Agar library se related koi problem,
+                complaint ya help chahiye,
+                to neeche diye options ka use karein.
+
+            </p>
+
+
+            <div class="help-buttons">
+
+
+                <a
+                    href="tel:+919999999999"
+                    class="help-btn">
+
+                    📞 Call Library
+
+                </a>
+
+
+
+                <a
+                    href="https://wa.me/919999999999?text=Hello%20Aradhya%20Library%2C%20I%20need%20help."
+                    target="_blank"
+                    class="help-btn whatsapp-btn">
+
+                    💬 WhatsApp Help
+
+                </a>
+
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ==============================
+             LIBRARY RULES
+        =============================== -->
+
+        <div class="dashboard-card">
+
+            <h2>
+                📖 Library Rules
+            </h2>
+
+
+            <ol class="rules-list">
+
+
+                <li>
+                    Library mein shor na karein.
+                </li>
+
+
+                <li>
+                    Library ko clean aur saaf rakhein.
+                </li>
+
+
+                <li>
+                    Dusre students ki padhai disturb na karein.
+                </li>
+
+
+                <li>
+                    Kisi ki book, pen ya personal item
+                    use karne se pehle permission lein.
+                </li>
+
+
+                <li>
+                    Library ki books aur furniture ko
+                    damage na karein.
+                </li>
+
+
+                <li>
+                    Mobile phone ko silent mode par rakhein.
+                </li>
+
+
+                <li>
+                    Apni seat par unnecessary saman
+                    na rakhein.
+                </li>
+
+
+                <li>
+                    Library staff ke instructions follow karein.
+                </li>
+
+
+                <li>
+                    Kachra dustbin mein hi daalein.
+                </li>
+
+
+                <li>
+                    Library mein discipline aur peaceful
+                    environment maintain karein.
+                </li>
+
+
+            </ol>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<footer>
+
+    <div class="footer-logo">
+        📚 Aradhya Library
+    </div>
+
+
+    <p>
+        Library Management System
+    </p>
+
+
+    <p class="copyright">
+        © 2026 Aradhya Library. All Rights Reserved.
+    </p>
+
+</footer>
+
+
+
+<script>
+
+
+/* =========================================
+   MONTHS
+========================================= */
+
+const months = [
+
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+
+];
+
+
+
+/* =========================================
+   CURRENT STUDENT
+========================================= */
+
+let studentData =
+    localStorage.getItem(
+        "currentStudent"
+    );
+
+
+
+if (!studentData) {
+
+    alert(
+        "Please login first."
+    );
+
+    window.location.href =
+        "login.html";
+
+} else {
+
+
+    const student =
+        JSON.parse(studentData);
+
+
+    /* =====================================
+       BASIC INFORMATION
+    ===================================== */
+
+    document.getElementById(
+        "studentName"
+    ).textContent =
+
+        student.fullName ||
+        student.name ||
+        "Student";
+
+
+
+    document.getElementById(
+        "enrollment"
+    ).textContent =
+
+        student.enrollmentNumber ||
+        student.enrollment ||
+        "-";
+
+
+
+    document.getElementById(
+        "seatNumber"
+    ).textContent =
+
+        student.seatNumber ||
+        student.seat ||
+        "-";
+
+
+
+    if (student.mobile) {
+
+        document.getElementById(
+            "mobile"
+        ).textContent =
+
+            "+91 " +
+            student.mobile;
+
+    } else {
+
+        document.getElementById(
+            "mobile"
+        ).textContent = "-";
+
+    }
+
+
+
+    if (student.registrationDate) {
+
+        document.getElementById(
+            "registrationDate"
+        ).textContent =
+
+            student.registrationDate;
+
+    }
+
+
+
+    document.getElementById(
+        "address"
+    ).textContent =
+
+        student.address ||
+        "-";
+
+
+
+    /* =====================================
+       LOAD LATEST DATA FROM SERVER
+    ===================================== */
+
+    loadLatestStudentData(
+
+        student.enrollmentNumber ||
+        student.enrollment
+
+    );
+
+}
+
+
+
+/* =========================================
+   LOAD LATEST STUDENT DATA
+========================================= */
+
+async function loadLatestStudentData(
+    enrollmentNumber
+) {
+
+
+    if (!enrollmentNumber) {
+
+        renderFees({});
+
+        return;
+
+    }
+
+
+    try {
+
+
+        const response =
+            await fetch(
+
+                "http://localhost:3000/api/student/" +
+                encodeURIComponent(
+                    enrollmentNumber
+                )
+
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            console.error(
+                data.message ||
+                "Unable to load student."
+            );
+
+            renderFees({});
+
+            return;
+
+        }
+
+
+        const student =
+            data.student || {};
+
+
+        /* =================================
+           UPDATE STUDENT INFORMATION
+        ================================= */
+
+        document.getElementById(
+            "studentName"
+        ).textContent =
+
+            student.fullName ||
+            "Student";
+
+
+
+        document.getElementById(
+            "enrollment"
+        ).textContent =
+
+            student.enrollmentNumber ||
+            "-";
+
+
+
+        document.getElementById(
+            "seatNumber"
+        ).textContent =
+
+            student.seatNumber ||
+            "-";
+
+
+
+        document.getElementById(
+            "mobile"
+        ).textContent =
+
+            student.mobile
+                ? "+91 " + student.mobile
+                : "-";
+
+
+
+        document.getElementById(
+            "registrationDate"
+        ).textContent =
+
+            student.registrationDate ||
+            "Pending - Admin will update";
+
+
+
+        document.getElementById(
+            "address"
+        ).textContent =
+
+            student.address ||
+            "-";
+
+
+
+        /* =================================
+           SAVE UPDATED STUDENT
+        ================================= */
+
+        localStorage.setItem(
+
+            "currentStudent",
+
+            JSON.stringify(student)
+
+        );
+
+
+
+        /* =================================
+           RENDER FEES
+        ================================= */
+
+        renderFees(
+            student.monthlyFees || {}
+        );
+
+
+    } catch (error) {
+
+
+        console.error(error);
+
+
+        renderFees({});
+
+
+    }
+
+}
+
+
+
+/* =========================================
+   RENDER MONTHLY FEES
+========================================= */
+
+function renderFees(
+    monthlyFees
+) {
+
+
+    const table =
+        document.getElementById(
+            "monthlyFeeTable"
+        );
+
+
+    table.innerHTML = "";
+
+
+    let paidCount = 0;
+
+    let pendingCount = 0;
+
+
+
+    months.forEach(
+        function(month) {
+
+
+            const fee =
+                monthlyFees[month] || {
+
+
+                    amount: 700,
+
+                    status: "DUE",
+
+                    paidDate: "",
+
+                    paymentDate: "",
+
+                    paymentMode: "",
+
+                    receiptNumber: "",
+
+                    admissionStatus:
+                        "OPEN"
+
+                };
+
+
+
+            const amount =
+                fee.amount || 700;
+
+
+
+            const feeStatus =
+                fee.status || "DUE";
+
+
+
+            const admissionStatus =
+                fee.admissionStatus ||
+                "OPEN";
+
+
+
+            if (
+                feeStatus === "PAID"
+            ) {
+
+                paidCount++;
+
+            } else {
+
+                pendingCount++;
+
+            }
+
+
+
+            const row =
+                document.createElement(
+                    "tr"
+                );
+
+
+
+            /* =================================
+               ADMISSION STATUS
+            ================================= */
+
+            let admissionHtml;
+
+
+            if (
+                admissionStatus ===
+                "CLOSED"
+            ) {
+
+                admissionHtml =
+
+                    `<span class="admission-badge admission-closed">
+                        🔴 Admission Closed
+                    </span>`;
+
+            } else {
+
+                admissionHtml =
+
+                    `<span class="admission-badge admission-open">
+                        🟢 Admission Open
+                    </span>`;
+
+            }
+
+
+
+            /* =================================
+               FEE STATUS
+            ================================= */
+
+            let feeStatusHtml;
+
+
+            if (
+                feeStatus ===
+                "PAID"
+            ) {
+
+                feeStatusHtml =
+
+                    `<span class="paid-status">
+                        ✅ PAID
+                    </span>`;
+
+            } else {
+
+                feeStatusHtml =
+
+                    `<span class="due-status">
+                        ❌ DUE
+                    </span>`;
+
+            }
+
+
+
+            /* =================================
+               RECEIPT
+            ================================= */
+
+            let receiptHtml;
+
+
+            if (
+                feeStatus === "PAID" &&
+                fee.receiptNumber
+            ) {
+
+                receiptHtml =
+
+                    `<button
+                        class="receipt-btn"
+                        onclick='downloadReceipt(
+                            ${JSON.stringify(monthlyFees[month])},
+                            ${JSON.stringify(month)}
+                        )'>
+
+                        📥 Download
+
+                    </button>`;
+
+            } else {
+
+                receiptHtml =
+
+                    `<span class="no-receipt">
+                        Not Available
+                    </span>`;
+
+            }
+
+
+
+            row.innerHTML = `
+
+                <td>
+                    <strong>
+                        ${month}
+                    </strong>
+                </td>
+
+
+                <td>
+                    ${admissionHtml}
+                </td>
+
+
+                <td>
+                    ₹${amount}
+                </td>
+
+
+                <td>
+                    ${feeStatusHtml}
+                </td>
+
+
+                <td>
+                    ${
+                        fee.paidDate ||
+                        fee.paymentDate ||
+                        "-"
+                    }
+                </td>
+
+
+                <td>
+                    ${
+                        fee.paymentMode ||
+                        "-"
+                    }
+                </td>
+
+
+                <td>
+                    ${
+                        fee.receiptNumber ||
+                        "-"
+                    }
+                </td>
+
+
+                <td>
+                    ${receiptHtml}
+                </td>
+
+            `;
+
+
+            table.appendChild(row);
+
+
+        }
+    );
+
+
+
+    /* =====================================
+       SUMMARY
+    ===================================== */
+
+    document.getElementById(
+        "totalMonths"
+    ).textContent =
+
+        months.length;
+
+
+
+    document.getElementById(
+        "paidMonths"
+    ).textContent =
+
+        paidCount;
+
+
+
+    document.getElementById(
+        "pendingMonths"
+    ).textContent =
+
+        pendingCount;
+
+}
+
+
+
+/* =========================================
+   DOWNLOAD RECEIPT
+========================================= */
+
+function downloadReceipt(
+    fee,
+    month
+) {
+
+
+    const studentData =
+        localStorage.getItem(
+            "currentStudent"
+        );
+
+
+    const student =
+        studentData
+            ? JSON.parse(studentData)
+            : {};
+
+
+
+    const studentName =
+        student.fullName ||
+        "Student";
+
+
+
+    const enrollment =
+        student.enrollmentNumber ||
+        student.enrollment ||
+        "-";
+
+
+
+    const paymentDate =
+        fee.paidDate ||
+        fee.paymentDate ||
+        "-";
+
+
+
+    const paymentMode =
+        fee.paymentMode ||
+        "-";
+
+
+
+    const receiptNumber =
+        fee.receiptNumber ||
+        "-";
+
+
+
+    const amount =
+        fee.amount ||
+        700;
+
+
+
+    const receiptContent = `
+
+ARADHYA LIBRARY
+========================================
+
+                 FEE RECEIPT
+
+========================================
+
+Student Name:
+${studentName}
+
+Enrollment Number:
+${enrollment}
+
+Month:
+${month}
+
+Fee Amount:
+₹${amount}
+
+Payment Date:
+${paymentDate}
+
+Payment Mode:
+${paymentMode}
+
+Receipt Number:
+${receiptNumber}
+
+Fee Status:
+PAID
+
+========================================
+
+Thank you for using Aradhya Library.
+
+This is a computer generated receipt.
+
+========================================
+
+    `;
+
+
+
+    const blob =
+        new Blob(
+            [receiptContent],
+            {
+                type:
+                    "text/plain"
+            }
+        );
+
+
+
+    const url =
+        URL.createObjectURL(blob);
+
+
+
+    const link =
+        document.createElement(
+            "a"
+        );
+
+
+    link.href = url;
+
+
+    link.download =
+        "Aradhya-Library-" +
+        month +
+        "-Receipt-" +
+        receiptNumber +
+        ".txt";
+
+
+    document.body.appendChild(
+        link
+    );
+
+
+    link.click();
+
+
+    document.body.removeChild(
+        link
+    );
+
+
+    URL.revokeObjectURL(
+        url
+    );
+
+}
+
+
+
+/* =========================================
+   LOGOUT
+========================================= */
+
+function logout() {
+
+
+    localStorage.removeItem(
+        "currentStudent"
+    );
+
+
+    alert(
+        "You have been logged out."
+    );
+
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+</script>
+
+
+</body>
+
+</html>

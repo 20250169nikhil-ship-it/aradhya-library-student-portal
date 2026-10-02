@@ -1,0 +1,319 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Aradhya Library - Admin Login</title>
+
+    <link rel="stylesheet"
+          href="css/style.css">
+
+</head>
+
+
+<body>
+
+
+<header class="navbar">
+
+    <div class="logo">
+        📚 Aradhya Library
+    </div>
+
+    <nav>
+
+        <a href="index.html">
+            Home
+        </a>
+
+        <a href="login.html">
+            Student Login
+        </a>
+
+        <a href="register.html">
+            Join Library
+        </a>
+
+    </nav>
+
+</header>
+
+
+
+<section class="registration-section">
+
+    <div class="registration-card">
+
+        <div class="registration-header">
+
+            <div class="registration-icon">
+                🔐
+            </div>
+
+            <h1>
+                Admin Login
+            </h1>
+
+            <p>
+                Login to manage Aradhya Library.
+            </p>
+
+        </div>
+
+
+        <form id="adminLoginForm">
+
+
+            <div class="form-group">
+
+                <label for="adminUsername">
+                    Admin ID
+                </label>
+
+                <input
+                    type="text"
+                    id="adminUsername"
+                    placeholder="Enter Admin ID"
+                    required>
+
+            </div>
+
+
+
+            <div class="form-group">
+
+                <label for="adminPassword">
+                    Admin Password
+                </label>
+
+                <input
+                    type="password"
+                    id="adminPassword"
+                    placeholder="Enter Admin Password"
+                    required>
+
+            </div>
+
+
+
+            <button
+                type="submit"
+                class="registration-btn"
+                id="adminLoginBtn">
+
+                Admin Login
+
+            </button>
+
+
+            <p class="already-member">
+
+                Student?
+
+                <a href="login.html">
+                    Student Login
+                </a>
+
+            </p>
+
+
+        </form>
+
+    </div>
+
+</section>
+
+
+
+<footer>
+
+    <div class="footer-logo">
+        📚 Aradhya Library
+    </div>
+
+    <p>
+        Library Management System
+    </p>
+
+    <p class="copyright">
+        © 2026 Aradhya Library. All Rights Reserved.
+    </p>
+
+</footer>
+
+
+
+<script>
+
+const adminLoginForm =
+    document.getElementById("adminLoginForm");
+
+const adminLoginBtn =
+    document.getElementById("adminLoginBtn");
+
+
+adminLoginForm.addEventListener(
+    "submit",
+    async function(event) {
+
+        event.preventDefault();
+
+
+        const username =
+            document
+            .getElementById("adminUsername")
+            .value
+            .trim();
+
+
+        const password =
+            document
+            .getElementById("adminPassword")
+            .value;
+
+
+        if (!username || !password) {
+
+            alert(
+                "Please enter Admin ID and Password."
+            );
+
+            return;
+        }
+
+
+        adminLoginBtn.disabled = true;
+
+        adminLoginBtn.innerText =
+            "Logging in...";
+
+
+        try {
+
+            /*
+             * IMPORTANT:
+             * Same backend server ka API
+             */
+
+            const response =
+                await fetch(
+                    "/api/admin/login",
+                    {
+
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body: JSON.stringify({
+
+                            username: username,
+
+                            password: password
+
+                        })
+
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            /*
+             * LOGIN FAILED
+             */
+
+            if (!response.ok) {
+
+                alert(
+                    data.message ||
+                    "Invalid Admin ID or Password."
+                );
+
+                adminLoginBtn.disabled = false;
+
+                adminLoginBtn.innerText =
+                    "Admin Login";
+
+                return;
+            }
+
+
+            /*
+             * LOGIN SUCCESS
+             */
+
+            localStorage.setItem(
+                "adminLoggedIn",
+                "true"
+            );
+
+
+            localStorage.setItem(
+                "adminUsername",
+                data.username ||
+                username
+            );
+
+
+            localStorage.setItem(
+                "adminToken",
+                data.token ||
+                "ARADHYA_ADMIN_ACCESS"
+            );
+
+
+            alert(
+                "Admin Login Successful!"
+            );
+
+
+            /*
+             * OPEN ADMIN DASHBOARD
+             */
+
+            window.location.href =
+                "/admin-dashboard.html";
+
+
+        } catch (error) {
+
+            console.error(
+                "Admin Login Error:",
+                error
+            );
+
+
+            alert(
+                "Backend server se connection nahi ho pa raha.\n\n" +
+                "Pehle check karo ki server.js localhost:3000 par running hai."
+            );
+
+
+            adminLoginBtn.disabled = false;
+
+            adminLoginBtn.innerText =
+                "Admin Login";
+
+        }
+
+    }
+);
+
+</script>
+
+
+</body>
+
+</html>
+```

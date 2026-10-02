@@ -1,0 +1,439 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Aradhya Library - Registration</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<header class="navbar">
+
+    <div class="logo">
+        📚 Aradhya Library
+    </div>
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="login.html">Student Login</a>
+        <a href="admin-login.html" class="admin-btn">Admin Login</a>
+    </nav>
+
+</header>
+
+
+<section class="registration-section">
+
+    <div class="registration-card">
+
+        <div class="registration-header">
+
+            <div class="registration-icon">
+                📝
+            </div>
+
+            <h1>Library Admission</h1>
+
+            <p>
+                Create your student account for Aradhya Library.
+            </p>
+
+        </div>
+
+
+        <form id="registrationForm">
+
+            <!-- FULL NAME -->
+
+            <div class="form-group">
+
+                <label for="fullName">
+                    Full Name
+                </label>
+
+                <input
+                    type="text"
+                    id="fullName"
+                    placeholder="Enter your full name"
+                    required>
+
+            </div>
+
+
+            <!-- ADDRESS -->
+
+            <div class="form-group">
+
+                <label for="address">
+                    Complete Address
+                </label>
+
+                <textarea
+                    id="address"
+                    rows="4"
+                    placeholder="Enter your complete address"
+                    required></textarea>
+
+            </div>
+
+
+            <!-- MOBILE -->
+
+            <div class="form-group">
+
+                <label for="mobile">
+                    Mobile Number
+                </label>
+
+                <div class="mobile-input">
+
+                    <span>+91</span>
+
+                    <input
+                        type="tel"
+                        id="mobile"
+                        placeholder="10-digit mobile number"
+                        maxlength="10"
+                        required>
+
+                </div>
+
+            </div>
+
+
+            <!-- PASSWORD -->
+
+            <div class="form-group">
+
+                <label for="password">
+                    Create Password
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Create your password"
+                    minlength="6"
+                    required>
+
+                <small>
+                    Password must contain at least 6 characters.
+                </small>
+
+            </div>
+
+
+            <!-- CONFIRM PASSWORD -->
+
+            <div class="form-group">
+
+                <label for="confirmPassword">
+                    Confirm Password
+                </label>
+
+                <input
+                    type="password"
+                    id="confirmPassword"
+                    placeholder="Re-enter your password"
+                    minlength="6"
+                    required>
+
+            </div>
+
+
+            <!-- SUBMIT -->
+
+            <button
+                type="submit"
+                class="registration-btn"
+                id="registerBtn">
+
+                Create Library Account
+
+            </button>
+
+
+            <p class="already-member">
+
+                Already registered?
+
+                <a href="login.html">
+                    Student Login
+                </a>
+
+            </p>
+
+        </form>
+
+    </div>
+
+</section>
+
+
+<footer>
+
+    <div class="footer-logo">
+        📚 Aradhya Library
+    </div>
+
+    <p>
+        Library Management System
+    </p>
+
+    <p class="copyright">
+        © 2026 Aradhya Library. All Rights Reserved.
+    </p>
+
+</footer>
+
+
+<script>
+
+const registrationForm =
+    document.getElementById("registrationForm");
+
+const registerBtn =
+    document.getElementById("registerBtn");
+
+
+registrationForm.addEventListener("submit", async function(event) {
+
+    event.preventDefault();
+
+
+    const fullName =
+        document.getElementById("fullName").value.trim();
+
+    const address =
+        document.getElementById("address").value.trim();
+
+    const mobile =
+        document.getElementById("mobile").value.trim();
+
+    const password =
+        document.getElementById("password").value;
+
+    const confirmPassword =
+        document.getElementById("confirmPassword").value;
+
+
+    /* =========================
+       MOBILE VALIDATION
+    ========================= */
+
+    if (!/^[6-9][0-9]{9}$/.test(mobile)) {
+
+        alert(
+            "Please enter a valid 10-digit Indian mobile number."
+        );
+
+        return;
+    }
+
+
+    /* =========================
+       PASSWORD VALIDATION
+    ========================= */
+
+    if (password.length < 6) {
+
+        alert(
+            "Password must contain at least 6 characters."
+        );
+
+        return;
+    }
+
+
+    /* =========================
+       CONFIRM PASSWORD
+    ========================= */
+
+    if (password !== confirmPassword) {
+
+        alert(
+            "Password and Confirm Password do not match."
+        );
+
+        return;
+    }
+
+
+    /* =========================
+       DISABLE BUTTON
+    ========================= */
+
+    registerBtn.disabled = true;
+
+    registerBtn.innerText =
+        "Creating Account...";
+
+
+    try {
+
+        /* =========================
+           SEND DATA TO BACKEND
+        ========================= */
+
+        const response = await fetch(
+            "http://localhost:3000/api/register",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+
+                    fullName: fullName,
+
+                    address: address,
+
+                    mobile: mobile,
+
+                    password: password
+
+                })
+            }
+        );
+
+
+        const data =
+            await response.json();
+
+
+        /* =========================
+           REGISTRATION FAILED
+        ========================= */
+
+        if (!response.ok) {
+
+            alert(
+                data.message ||
+                "Registration failed."
+            );
+
+            registerBtn.disabled = false;
+
+            registerBtn.innerText =
+                "Create Library Account";
+
+            return;
+        }
+
+
+        /* =========================
+           SAVE CURRENT STUDENT
+        ========================= */
+
+        const currentStudent = {
+
+            id:
+                data.student.id,
+
+            enrollmentNumber:
+                data.enrollmentNumber,
+
+            fullName:
+                data.student.fullName,
+
+            mobile:
+                data.student.mobile,
+
+            address:
+                address,
+
+            seatNumber:
+                "",
+
+            registrationDate:
+                "",
+
+            totalMonths:
+                0,
+
+            paidMonths:
+                0,
+
+            pendingMonths:
+                0
+
+        };
+
+
+        localStorage.setItem(
+            "currentStudent",
+            JSON.stringify(currentStudent)
+        );
+
+
+        /* =========================
+           SUCCESS MESSAGE
+        ========================= */
+
+        alert(
+
+            "Registration Successful!\n\n" +
+
+            "Enrollment Number: " +
+            data.enrollmentNumber +
+
+            "\n\n" +
+
+            "Seat Number: Will be assigned by Admin" +
+
+            "\n\n" +
+
+            "Registration Date: Will be updated by Admin"
+
+        );
+
+
+        /* =========================
+           GO TO LOGIN
+        ========================= */
+
+        window.location.href =
+            "login.html";
+
+
+    } catch (error) {
+
+        console.error(
+            "Registration Error:",
+            error
+        );
+
+
+        alert(
+
+            "Backend server se connection nahi ho pa raha.\n\n" +
+
+            "Please make sure that node server.js is running."
+
+        );
+
+
+        registerBtn.disabled = false;
+
+        registerBtn.innerText =
+            "Create Library Account";
+
+    }
+
+});
+
+</script>
+
+
+</body>
+
+</html>
+```

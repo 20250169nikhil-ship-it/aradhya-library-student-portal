@@ -1,0 +1,126 @@
+[
+  {
+    "id": 1790967917508,
+    "enrollmentNumber": "AR2026526399",
+    "fullName": "Deepak",
+    "address": "Shiv nagar colony raya road laxminagar yamunapar mathura",
+    "mobile": "8650425941",
+    "password": "$2b$10$PxHceaJVToci1lKIcPSBPeaEBCN8gMJvyD1UVw14Dx1jin6Yy620.",
+    "createdAt": "2026-10-02T19:05:17.508Z",
+    "monthlyFee": 700,
+    "feeStatus": "DUE",
+    "dueFee": 700,
+    "seatNumber": "",
+    "registrationDate": "",
+    "monthlyFees": {
+      "January": {
+        "amount": 700,
+        "status": "PAID",
+        "paidDate": "2026-10-02",
+        "paymentMode": "Cash",
+        "receiptNumber": "AL-2026-1790967917508-JAN-4066",
+        "admissionStatus": "OPEN",
+        "paymentDate": "2026-10-02"
+      },
+      "February": {
+        "amount": 700,
+        "status": "PAID",
+        "paidDate": "2026-10-02",
+        "paymentMode": "Cash",
+        "receiptNumber": "AL-2026-1790967917508-FEB-4321",
+        "admissionStatus": "OPEN",
+        "paymentDate": "2026-10-02"
+      },
+      "March": {
+        "amount": 700,
+        "status": "DUE",
+        "paidDate": "",
+        "paymentMode": "",
+        "receiptNumber": "",
+        "admissionStatus": "OPEN",
+        "paymentDate": ""
+      },
+      "April": {
+        "amount": 700,
+        "status": "DUE",
+        "paidDate": "",
+        "paymentMode": "",
+        "receiptNumber": "",
+        "admissionStatus": "OPEN",
+        "paymentDate": ""
+      },
+      "May": {
+        "amount": 700,
+        "status": "DUE",
+        "paidDate": "",
+        "paymentMode": "",
+        "receiptNumber": "",
+        "admissionStatus": "OPEN",
+        "paymentDate": ""
+      },
+      "June": {
+        "amount": 700,
+        "status": "DUE",
+        "paidDate": "",
+        "paymentMode": "",
+        "receiptNumber": "",
+        "admissionStatus": "OPEN",
+        "paymentDate": ""
+      },
+      "July": {
+        "amount": 700,
+        "status": "DUE",
+        "paidDate": "",
+        "paymentMode": "",
+        "receiptNumber": "",
+        "admissionStatus": "OPEN",
+        "paymentDate": ""
+      },
+      "August": {
+        "amount": 700,
+        "status": "DUE",
+        "paidDate": "",
+        "paymentMode": "",
+        "receiptNumber": "",
+        "admissionStatus": "OPEN",
+        "paymentDate": ""
+      },
+      "September": {
+        "amount": 700,
+        "status": "DUE",
+        "paidDate": "",
+        "paymentMode": "",
+        "receiptNumber": "",
+        "admissionStatus": "CLOSED",
+        "paymentDate": ""
+      },
+      "October": {
+        "amount": 700,
+        "status": "DUE",
+        "paidDate": "",
+        "paymentMode": "",
+        "receiptNumber": "",
+        "admissionStatus": "OPEN",
+        "paymentDate": ""
+      },
+      "November": {
+        "amount": 700,
+        "status": "DUE",
+        "paidDate": "",
+        "paymentMode": "",
+        "receiptNumber": "",
+        "admissionStatus": "OPEN",
+        "paymentDate": ""
+      },
+      "December": {
+        "amount": 700,
+        "status": "DUE",
+        "paidDate": "",
+        "paymentMode": "",
+        "receiptNumber": "",
+        "admissionStatus": "OPEN",
+        "paymentDate": ""
+      }
+    }
+  }
+]
