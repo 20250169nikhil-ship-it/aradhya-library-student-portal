@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -197,13 +196,12 @@ adminLoginForm.addEventListener(
         try {
 
             /*
-             * IMPORTANT:
-             * Same backend server ka API
+             * Render Backend API
              */
 
             const response =
                 await fetch(
-                    "/api/admin/login",
+                    "https://aradhya-library-student-portal-1.onrender.com/api/admin/login",
                     {
 
                         method: "POST",
@@ -283,7 +281,7 @@ adminLoginForm.addEventListener(
              */
 
             window.location.href =
-                "/admin-dashboard.html";
+                "admin-dashboard.html";
 
 
         } catch (error) {
@@ -296,7 +294,7 @@ adminLoginForm.addEventListener(
 
             alert(
                 "Backend server se connection nahi ho pa raha.\n\n" +
-                "Pehle check karo ki server.js localhost:3000 par running hai."
+                "Render backend server se connection check karo."
             );
 
 
@@ -316,4 +314,3 @@ adminLoginForm.addEventListener(
 </body>
 
 </html>
-```
