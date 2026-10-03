@@ -469,82 +469,60 @@ function createDefaultFees() {
 
 async function loadStudents() {
 
+    const container =
+        document.getElementById("studentsContainer");
 
-   const response =
-    await fetch(
+    container.innerHTML = `
+        <div class="loading">
+            ⏳ Loading students...
+        </div>
+    `;
 
-        API_URL + "/api/admin/students",
+    try {
 
-        {
-            method: "GET",
-
-            headers: {
-                "Authorization":
-                    "Bearer " +
-                    ADMIN_TOKEN
+        const response = await fetch(
+            API_URL + "/api/admin/students",
+            {
+                method: "GET",
+                headers: {
+                    "Authorization":
+                        "Bearer " + ADMIN_TOKEN
+                }
             }
-        }
-    );
+        );
 
-        const data =
-            await response.json();
-
+        const data = await response.json();
 
         if (!response.ok) {
-
             throw new Error(
-
                 data.message ||
                 "Unable to load students."
-
             );
-
         }
-
 
         const students =
             data.students || [];
 
-
         document.getElementById(
             "totalStudents"
-        ).textContent =
-            students.length;
+        ).textContent = students.length;
 
-
-        displayStudents(
-            students
-        );
-
+        displayStudents(students);
 
     } catch (error) {
 
-
-        console.error(
-            error
-        );
-
+        console.error(error);
 
         container.innerHTML = `
-
             <div class="empty">
-
                 ❌ Students load nahi ho pa rahe.
-
                 <br><br>
-
                 <strong>
-                    ${escapeHtml(
-                        error.message
-                    )}
+                    ${escapeHtml(error.message)}
                 </strong>
-
             </div>
-
         `;
-
     }
-
 }
 
 
