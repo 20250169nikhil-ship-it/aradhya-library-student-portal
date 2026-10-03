@@ -5,47 +5,93 @@ const fs = require("fs");
 const path = require("path");
 
 const app = express();
-const PORT = 3000;
 
-/* ========================================
+const PORT = process.env.PORT || 3000;
+
+/* =========================================
+   ADMIN CONFIG
+========================================= */
+
+const ADMIN_USERNAME =
+    process.env.ADMIN_USERNAME || "AL741774";
+
+const ADMIN_PASSWORD =
+    process.env.ADMIN_PASSWORD || "CHANGE_ME_ADMIN_PASSWORD";
+
+const OLD_ADMIN_TOKEN =
+    "ARADHYA_ADMIN_ACCESS";
+
+
+/* =========================================
    MIDDLEWARE
-======================================== */
+========================================= */
 
 app.use(cors());
+
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-/* ========================================
+app.use(
+    express.urlencoded({
+        extended: true
+    })
+);
+
+
+/* =========================================
    PATHS
-======================================== */
+========================================= */
 
-const projectRoot = path.join(__dirname, "../..");
+const projectRoot =
+    path.join(__dirname, "..");
 
-const dataFolder = path.join(__dirname, "data");
+const dataFolder =
+    process.env.DATA_DIR ||
+    path.join(__dirname, "data");
 
-const usersFile = path.join(dataFolder, "users.json");
+const usersFile =
+    path.join(
+        dataFolder,
+        "users.json"
+    );
 
-/* ========================================
+
+/* =========================================
    CREATE DATA FOLDER
-======================================== */
+========================================= */
 
 if (!fs.existsSync(dataFolder)) {
-    fs.mkdirSync(dataFolder, { recursive: true });
+
+    fs.mkdirSync(
+        dataFolder,
+        {
+            recursive: true
+        }
+    );
+
 }
 
-/* ========================================
+
+/* =========================================
    CREATE USERS FILE
-======================================== */
+========================================= */
 
 if (!fs.existsSync(usersFile)) {
-    fs.writeFileSync(usersFile, "[]");
+
+    fs.writeFileSync(
+        usersFile,
+        "[]",
+        "utf8"
+    );
+
 }
 
-/* ========================================
+
+/* =========================================
    MONTHS
-======================================== */
+========================================= */
 
 const months = [
+
     "January",
     "February",
     "March",
@@ -58,104 +104,80 @@ const months = [
     "October",
     "November",
     "December"
+
 ];
 
-/* ========================================
-   ADMIN LOGIN
-======================================== */
 
-const ADMIN_USERNAME = "AL741774";
-const ADMIN_PASSWORD = "Al@8493";
-
-/* ========================================
-   HELPER - USERS
-======================================== */
+/* =========================================
+   GET USERS
+========================================= */
 
 function getUsers() {
 
     try {
 
-        const data = fs.readFileSync(
-            usersFile,
-            "utf8"
-        );
+        const data =
+            fs.readFileSync(
+                usersFile,
+                "utf8"
+            );
 
-        return JSON.parse(data);
+        const users =
+            JSON.parse(data);
+
+        return Array.isArray(users)
+            ? users
+            : [];
 
     } catch (error) {
+
+        console.error(
+            "GET USERS ERROR:",
+            error
+        );
 
         return [];
 
     }
+
 }
 
-/* ========================================
+
+/* =========================================
    SAVE USERS
-======================================== */
+========================================= */
 
 function saveUsers(users) {
 
     fs.writeFileSync(
+
         usersFile,
-        JSON.stringify(users, null, 2)
+
+        JSON.stringify(
+            users,
+            null,
+            2
+        ),
+
+        "utf8"
+
     );
 
 }
 
-/* ========================================
+
+/* =========================================
    CREATE MONTHLY FEES
-======================================== */
+========================================= */
 
 function createMonthlyFees() {
 
     const fees = {};
 
-    months.forEach(function(month) {
+    months.forEach(
+        function(month) {
 
-        fees[month] = {
-
-            amount: 700,
-
-            status: "DUE",
-
-            paidDate: "",
-
-            paymentDate: "",
-
-            paymentMode: "",
-
-            receiptNumber: "",
-
-            admissionStatus: "OPEN"
-
-        };
-
-    });
-
-    return fees;
-
-}
-
-/* ========================================
-   FIX OLD STUDENT FEE RECORDS
-======================================== */
-
-function ensureMonthlyFees(user) {
-
-    if (!user.monthlyFees) {
-
-        user.monthlyFees =
-            createMonthlyFees();
-
-        return;
-
-    }
-
-    months.forEach(function(month) {
-
-        if (!user.monthlyFees[month]) {
-
-            user.monthlyFees[month] = {
+            fees[month] = {
 
                 amount: 700,
 
@@ -173,45 +195,120 @@ function ensureMonthlyFees(user) {
 
             };
 
-        } else {
+        }
+    );
+
+    return fees;
+
+}
+
+
+/* =========================================
+   ENSURE MONTHLY FEES
+========================================= */
+
+function ensureMonthlyFees(user) {
+
+    if (!user.monthlyFees) {
+
+        user.monthlyFees =
+            createMonthlyFees();
+
+        return;
+
+    }
+
+
+    months.forEach(
+        function(month) {
+
+            if (
+                !user.monthlyFees[month]
+            ) {
+
+                user.monthlyFees[month] = {
+
+                    amount: 700,
+
+                    status: "DUE",
+
+                    paidDate: "",
+
+                    paymentDate: "",
+
+                    paymentMode: "",
+
+                    receiptNumber: "",
+
+                    admissionStatus: "OPEN"
+
+                };
+
+                return;
+
+            }
+
 
             const fee =
                 user.monthlyFees[month];
 
-            if (!fee.admissionStatus) {
-                fee.admissionStatus = "OPEN";
-            }
-
-            if (!fee.paymentDate) {
-                fee.paymentDate =
-                    fee.paidDate || "";
-            }
-
-            if (!fee.paymentMode) {
-                fee.paymentMode = "";
-            }
-
-            if (!fee.receiptNumber) {
-                fee.receiptNumber = "";
-            }
 
             fee.amount = 700;
 
-        }
 
-    });
+            if (!fee.status) {
+
+                fee.status = "DUE";
+
+            }
+
+
+            if (!fee.admissionStatus) {
+
+                fee.admissionStatus =
+                    "OPEN";
+
+            }
+
+
+            if (!fee.paymentDate) {
+
+                fee.paymentDate =
+                    fee.paidDate || "";
+
+            }
+
+
+            if (!fee.paymentMode) {
+
+                fee.paymentMode = "";
+
+            }
+
+
+            if (!fee.receiptNumber) {
+
+                fee.receiptNumber = "";
+
+            }
+
+        }
+    );
 
 }
 
-/* ========================================
+
+/* =========================================
    GENERATE ENROLLMENT NUMBER
-======================================== */
+========================================= */
 
 function generateEnrollmentNumber() {
 
-    const users = getUsers();
+    const users =
+        getUsers();
 
     let enrollmentNumber;
+
 
     do {
 
@@ -221,26 +318,37 @@ function generateEnrollmentNumber() {
                 Math.random() * 900000
             );
 
+
         enrollmentNumber =
             "AR" +
             new Date().getFullYear() +
             randomNumber;
 
+
     } while (
+
         users.some(
-            user =>
-                user.enrollmentNumber ===
-                enrollmentNumber
+            function(user) {
+
+                return (
+                    user.enrollmentNumber ===
+                    enrollmentNumber
+                );
+
+            }
         )
+
     );
+
 
     return enrollmentNumber;
 
 }
 
-/* ========================================
+
+/* =========================================
    GENERATE RECEIPT NUMBER
-======================================== */
+========================================= */
 
 function generateReceiptNumber() {
 
@@ -250,77 +358,164 @@ function generateReceiptNumber() {
             Math.random() * 9000
         );
 
+
     return (
+
         "AL-FEE-" +
         new Date().getFullYear() +
         "-" +
         randomNumber
+
     );
 
 }
 
-/* ========================================
-   HOME
-======================================== */
 
-app.get("/", function(req, res) {
+/* =========================================
+   ADMIN AUTH CHECK
+========================================= */
 
-    res.send(
-        "Aradhya Library Backend is Running!"
-    );
+function checkAdmin(
+    req,
+    res,
+    next
+) {
 
-});
+    const authHeader =
+        req.headers.authorization || "";
 
-/* ========================================
-   ADMIN LOGIN
-======================================== */
 
-app.post(
-    "/api/admin/login",
-    function(req, res) {
+    const token =
+        authHeader
+            .replace(
+                "Bearer ",
+                ""
+            )
+            .trim();
 
-        const {
-            username,
-            password
-        } = req.body;
 
-        if (
-            username === ADMIN_USERNAME &&
-            password === ADMIN_PASSWORD
-        ) {
+    if (
 
-            return res.json({
+        token !== OLD_ADMIN_TOKEN &&
 
-                success: true,
+        !token.startsWith("ADMIN-")
 
-                username: ADMIN_USERNAME,
-
-                token:
-                    "ADMIN-" +
-                    Date.now(),
-
-                message:
-                    "Admin Login Successful!"
-
-            });
-
-        }
+    ) {
 
         return res.status(401).json({
 
             success: false,
 
             message:
-                "Invalid Admin Username or Password."
+                "Unauthorized. Admin login required."
 
         });
 
     }
+
+
+    next();
+
+}
+
+
+/* =========================================
+   HOME
+========================================= */
+
+app.get(
+    "/",
+    function(req, res) {
+
+        res.send(
+            "Aradhya Library Backend is Running!"
+        );
+
+    }
 );
 
-/* ========================================
+
+/* =========================================
+   ADMIN LOGIN
+========================================= */
+
+app.post(
+    "/api/admin/login",
+    function(req, res) {
+
+        try {
+
+            const {
+                username,
+                password
+            } = req.body;
+
+
+            if (
+
+                username ===
+                ADMIN_USERNAME &&
+
+                password ===
+                ADMIN_PASSWORD
+
+            ) {
+
+                return res.json({
+
+                    success: true,
+
+                    username:
+                        ADMIN_USERNAME,
+
+                    token:
+                        "ADMIN-" +
+                        Date.now(),
+
+                    message:
+                        "Admin Login Successful!"
+
+                });
+
+            }
+
+
+            return res.status(401).json({
+
+                success: false,
+
+                message:
+                    "Invalid Admin Username or Password."
+
+            });
+
+
+        } catch (error) {
+
+            console.error(
+                "ADMIN LOGIN ERROR:",
+                error
+            );
+
+
+            return res.status(500).json({
+
+                success: false,
+
+                message:
+                    "Admin login server error."
+
+            });
+
+        }
+
+    }
+);
+
+
+/* =========================================
    REGISTER STUDENT
-======================================== */
+========================================= */
 
 app.post(
     "/api/register",
@@ -335,11 +530,14 @@ app.post(
                 password
             } = req.body;
 
+
             if (
+
                 !fullName ||
                 !address ||
                 !mobile ||
                 !password
+
             ) {
 
                 return res.status(400).json({
@@ -352,6 +550,7 @@ app.post(
                 });
 
             }
+
 
             if (
                 !/^[6-9]\d{9}$/.test(mobile)
@@ -368,7 +567,10 @@ app.post(
 
             }
 
-            if (password.length < 6) {
+
+            if (
+                password.length < 6
+            ) {
 
                 return res.status(400).json({
 
@@ -381,13 +583,23 @@ app.post(
 
             }
 
-            const users = getUsers();
+
+            const users =
+                getUsers();
+
 
             const existingUser =
                 users.find(
-                    user =>
-                        user.mobile === mobile
+                    function(user) {
+
+                        return (
+                            user.mobile ===
+                            mobile
+                        );
+
+                    }
                 );
+
 
             if (existingUser) {
 
@@ -402,8 +614,10 @@ app.post(
 
             }
 
+
             const enrollmentNumber =
                 generateEnrollmentNumber();
+
 
             const hashedPassword =
                 await bcrypt.hash(
@@ -411,49 +625,53 @@ app.post(
                     10
                 );
 
+
             const newUser = {
 
-                id: Date.now(),
+                id:
+                    Date.now(),
 
                 enrollmentNumber:
-
                     enrollmentNumber,
 
                 fullName:
-
-                    fullName,
+                    fullName.trim(),
 
                 address:
-
-                    address,
+                    address.trim(),
 
                 mobile:
-
-                    mobile,
+                    mobile.trim(),
 
                 password:
-
                     hashedPassword,
 
-                registrationDate: "",
+                registrationDate:
+                    "",
 
-                seatNumber: "",
+                seatNumber:
+                    "",
 
                 monthlyFees:
-
                     createMonthlyFees(),
 
                 createdAt:
-
                     new Date().toISOString()
 
             };
 
-            users.push(newUser);
 
-            saveUsers(users);
+            users.push(
+                newUser
+            );
 
-            res.status(201).json({
+
+            saveUsers(
+                users
+            );
+
+
+            return res.status(201).json({
 
                 success: true,
 
@@ -461,7 +679,6 @@ app.post(
                     "Registration successful!",
 
                 enrollmentNumber:
-
                     enrollmentNumber,
 
                 student: {
@@ -494,16 +711,21 @@ app.post(
 
             });
 
+
         } catch (error) {
 
-            console.error(error);
+            console.error(
+                "REGISTRATION ERROR:",
+                error
+            );
 
-            res.status(500).json({
+
+            return res.status(500).json({
 
                 success: false,
 
                 message:
-                    "Server error."
+                    "Registration server error."
 
             });
 
@@ -512,9 +734,10 @@ app.post(
     }
 );
 
-/* ========================================
+
+/* =========================================
    STUDENT LOGIN
-======================================== */
+========================================= */
 
 app.post(
     "/api/login",
@@ -526,6 +749,7 @@ app.post(
                 enrollmentNumber,
                 password
             } = req.body;
+
 
             if (
                 !enrollmentNumber ||
@@ -543,16 +767,30 @@ app.post(
 
             }
 
-            const users = getUsers();
+
+            const users =
+                getUsers();
+
 
             const user =
                 users.find(
-                    student =>
-                        student.enrollmentNumber
-                            .toLowerCase() ===
-                        enrollmentNumber
-                            .toLowerCase()
+                    function(student) {
+
+                        return (
+
+                            String(
+                                student.enrollmentNumber
+                            ).toLowerCase() ===
+
+                            String(
+                                enrollmentNumber
+                            ).toLowerCase()
+
+                        );
+
+                    }
                 );
+
 
             if (!user) {
 
@@ -567,11 +805,13 @@ app.post(
 
             }
 
+
             const passwordMatch =
                 await bcrypt.compare(
                     password,
                     user.password
                 );
+
 
             if (!passwordMatch) {
 
@@ -586,11 +826,18 @@ app.post(
 
             }
 
-            ensureMonthlyFees(user);
 
-            saveUsers(users);
+            ensureMonthlyFees(
+                user
+            );
 
-            res.json({
+
+            saveUsers(
+                users
+            );
+
+
+            return res.json({
 
                 success: true,
 
@@ -621,17 +868,22 @@ app.post(
                         user.seatNumber || "",
 
                     monthlyFees:
-                        user.monthlyFees
+                        user.monthlyFees || {}
 
                 }
 
             });
 
+
         } catch (error) {
 
-            console.error(error);
+            console.error(
+                "STUDENT LOGIN ERROR:",
+                error
+            );
 
-            res.status(500).json({
+
+            return res.status(500).json({
 
                 success: false,
 
@@ -645,60 +897,84 @@ app.post(
     }
 );
 
-/* ========================================
+
+/* =========================================
    GET ALL STUDENTS - ADMIN
-======================================== */
+========================================= */
 
 app.get(
     "/api/admin/students",
+    checkAdmin,
     function(req, res) {
 
         try {
 
-            const users = getUsers();
+            const users =
+                getUsers();
 
-            users.forEach(function(user) {
 
-                ensureMonthlyFees(user);
+            users.forEach(
+                function(user) {
 
-            });
+                    ensureMonthlyFees(
+                        user
+                    );
 
-            saveUsers(users);
+                }
+            );
+
+
+            saveUsers(
+                users
+            );
+
 
             const students =
-                users.map(function(user) {
+                users.map(
+                    function(user) {
 
-                    return {
+                        return {
 
-                        id:
-                            user.id,
+                            id:
+                                user.id,
 
-                        enrollmentNumber:
-                            user.enrollmentNumber,
+                            enrollmentNumber:
+                                user.enrollmentNumber,
 
-                        fullName:
-                            user.fullName,
+                            fullName:
+                                user.fullName,
 
-                        address:
-                            user.address,
+                            address:
+                                user.address,
 
-                        mobile:
-                            user.mobile,
+                            mobile:
+                                user.mobile,
 
-                        registrationDate:
-                            user.registrationDate || "",
+                            registrationDate:
+                                user.registrationDate || "",
 
-                        seatNumber:
-                            user.seatNumber || "",
+                            seatNumber:
+                                user.seatNumber || "",
 
-                        monthlyFees:
-                            user.monthlyFees
+                            monthlyFees:
+                                user.monthlyFees || {},
 
-                    };
+                            createdAt:
+                                user.createdAt
 
-                });
+                        };
 
-            res.json({
+                    }
+                );
+
+
+            console.log(
+                "ADMIN STUDENTS:",
+                students.length
+            );
+
+
+            return res.json({
 
                 success: true,
 
@@ -707,11 +983,16 @@ app.get(
 
             });
 
+
         } catch (error) {
 
-            console.error(error);
+            console.error(
+                "GET STUDENTS ERROR:",
+                error
+            );
 
-            res.status(500).json({
+
+            return res.status(500).json({
 
                 success: false,
 
@@ -725,34 +1006,48 @@ app.get(
     }
 );
 
-/* ========================================
-   UPDATE STUDENT DETAILS - PUT
-======================================== */
 
-app.put(
-    "/api/admin/student/:id",
+/* =========================================
+   UPDATE STUDENT DETAILS
+========================================= */
+
+app.patch(
+    "/api/admin/students/:id",
+    checkAdmin,
     function(req, res) {
 
         try {
 
             const studentId =
-                Number(req.params.id);
+                Number(
+                    req.params.id
+                );
+
 
             const {
                 seatNumber,
                 registrationDate
             } = req.body;
 
-            const users = getUsers();
 
-            const user =
+            const users =
+                getUsers();
+
+
+            const student =
                 users.find(
-                    student =>
-                        student.id ===
-                        studentId
+                    function(user) {
+
+                        return (
+                            Number(user.id) ===
+                            studentId
+                        );
+
+                    }
                 );
 
-            if (!user) {
+
+            if (!student) {
 
                 return res.status(404).json({
 
@@ -765,64 +1060,81 @@ app.put(
 
             }
 
+
             if (
                 seatNumber !== undefined
             ) {
 
-                user.seatNumber =
+                student.seatNumber =
                     seatNumber;
 
             }
+
 
             if (
                 registrationDate !== undefined
             ) {
 
-                user.registrationDate =
+                student.registrationDate =
                     registrationDate;
 
             }
 
-            saveUsers(users);
 
-            res.json({
+            saveUsers(
+                users
+            );
+
+
+            return res.json({
 
                 success: true,
 
                 message:
-                    "Student details updated.",
+                    "Student details updated successfully.",
 
                 student: {
 
                     id:
-                        user.id,
+                        student.id,
 
                     enrollmentNumber:
-                        user.enrollmentNumber,
+                        student.enrollmentNumber,
 
                     fullName:
-                        user.fullName,
+                        student.fullName,
 
-                    seatNumber:
-                        user.seatNumber,
+                    address:
+                        student.address,
+
+                    mobile:
+                        student.mobile,
 
                     registrationDate:
-                        user.registrationDate
+                        student.registrationDate,
+
+                    seatNumber:
+                        student.seatNumber
 
                 }
 
             });
 
+
         } catch (error) {
 
-            console.error(error);
+            console.error(
+                "STUDENT UPDATE ERROR:",
+                error
+            );
 
-            res.status(500).json({
+
+            return res.status(500).json({
 
                 success: false,
 
                 message:
-                    "Unable to update student."
+                    "Student update failed."
 
             });
 
@@ -831,34 +1143,122 @@ app.put(
     }
 );
 
-/* ========================================
-   UPDATE STUDENT DETAILS - PATCH
-======================================== */
+
+/* =========================================
+   UPDATE MONTHLY FEE
+========================================= */
 
 app.patch(
-    "/api/admin/students/:id",
+    "/api/admin/students/:id/fee",
+    checkAdmin,
     function(req, res) {
 
         try {
 
             const studentId =
-                Number(req.params.id);
-
-            const {
-                seatNumber,
-                registrationDate
-            } = req.body;
-
-            const users = getUsers();
-
-            const user =
-                users.find(
-                    student =>
-                        student.id ===
-                        studentId
+                Number(
+                    req.params.id
                 );
 
-            if (!user) {
+
+            const {
+
+                month,
+
+                status,
+
+                paymentDate,
+
+                paymentMode,
+
+                amount,
+
+                receiptNumber,
+
+                admissionStatus
+
+            } = req.body;
+
+
+            if (
+                !month ||
+                !months.includes(month)
+            ) {
+
+                return res.status(400).json({
+
+                    success: false,
+
+                    message:
+                        "Invalid month."
+
+                });
+
+            }
+
+
+            if (
+
+                status !== undefined &&
+
+                status !== "PAID" &&
+
+                status !== "DUE"
+
+            ) {
+
+                return res.status(400).json({
+
+                    success: false,
+
+                    message:
+                        "Status must be PAID or DUE."
+
+                });
+
+            }
+
+
+            if (
+
+                admissionStatus !== undefined &&
+
+                admissionStatus !== "OPEN" &&
+
+                admissionStatus !== "CLOSED"
+
+            ) {
+
+                return res.status(400).json({
+
+                    success: false,
+
+                    message:
+                        "Invalid admission status."
+
+                });
+
+            }
+
+
+            const users =
+                getUsers();
+
+
+            const student =
+                users.find(
+                    function(user) {
+
+                        return (
+                            Number(user.id) ===
+                            studentId
+                        );
+
+                    }
+                );
+
+
+            if (!student) {
 
                 return res.status(404).json({
 
@@ -871,392 +1271,128 @@ app.patch(
 
             }
 
-            if (
-                seatNumber !== undefined
-            ) {
 
-                user.seatNumber =
-                    seatNumber;
-
-            }
-
-            if (
-                registrationDate !== undefined
-            ) {
-
-                user.registrationDate =
-                    registrationDate;
-
-            }
-
-            saveUsers(users);
-
-            res.json({
-
-                success: true,
-
-                message:
-                    "Student details updated.",
-
-                student: user
-
-            });
-
-        } catch (error) {
-
-            console.error(error);
-
-            res.status(500).json({
-
-                success: false,
-
-                message:
-                    "Unable to update student."
-
-            });
-
-        }
-
-    }
-);
-
-/* ========================================
-   UPDATE MONTHLY FEE - PUT
-======================================== */
-
-app.put(
-    "/api/admin/student/:id/fee",
-    function(req, res) {
-
-        updateMonthlyFee(req, res);
-
-    }
-);
-
-/* ========================================
-   UPDATE MONTHLY FEE - PATCH
-======================================== */
-
-app.patch(
-    "/api/admin/students/:id/fee",
-    function(req, res) {
-
-        updateMonthlyFee(req, res);
-
-    }
-);
-
-/* ========================================
-   MONTHLY FEE UPDATE FUNCTION
-======================================== */
-
-function updateMonthlyFee(req, res) {
-
-    try {
-
-        const studentId =
-            Number(req.params.id);
-
-        const {
-            month,
-            status,
-            paidDate,
-            paymentDate,
-            paymentMode,
-            receiptNumber,
-            admissionStatus
-        } = req.body;
-
-        if (!months.includes(month)) {
-
-            return res.status(400).json({
-
-                success: false,
-
-                message:
-                    "Invalid month."
-
-            });
-
-        }
-
-        if (
-            status !== undefined &&
-            status !== "PAID" &&
-            status !== "DUE"
-        ) {
-
-            return res.status(400).json({
-
-                success: false,
-
-                message:
-                    "Status must be PAID or DUE."
-
-            });
-
-        }
-
-        if (
-            admissionStatus !== undefined &&
-            admissionStatus !== "OPEN" &&
-            admissionStatus !== "CLOSED"
-        ) {
-
-            return res.status(400).json({
-
-                success: false,
-
-                message:
-                    "Admission status must be OPEN or CLOSED."
-
-            });
-
-        }
-
-        if (
-            status === "PAID" &&
-            paymentMode !== "Cash" &&
-            paymentMode !== "Online"
-        ) {
-
-            return res.status(400).json({
-
-                success: false,
-
-                message:
-                    "Payment mode must be Cash or Online."
-
-            });
-
-        }
-
-        const users = getUsers();
-
-        const user =
-            users.find(
-                student =>
-                    student.id ===
-                    studentId
+            ensureMonthlyFees(
+                student
             );
 
-        if (!user) {
 
-            return res.status(404).json({
+            const currentFee =
+                student.monthlyFees[
+                    month
+                ];
 
-                success: false,
 
-                message:
-                    "Student not found."
+            if (status !== undefined) {
 
-            });
-
-        }
-
-        ensureMonthlyFees(user);
-
-        const fee =
-            user.monthlyFees[month];
-
-        fee.amount = 700;
-
-        /* =================================
-           ADMISSION STATUS
-        ================================= */
-
-        if (
-            admissionStatus !== undefined
-        ) {
-
-            fee.admissionStatus =
-                admissionStatus;
-
-        }
-
-        /* =================================
-           FEE STATUS
-        ================================= */
-
-        if (status !== undefined) {
-
-            fee.status = status;
-
-        }
-
-        /* =================================
-           PAID
-        ================================= */
-
-        if (status === "PAID") {
-
-            const finalDate =
-                paidDate ||
-                paymentDate ||
-                new Date()
-                    .toISOString()
-                    .split("T")[0];
-
-            fee.paidDate =
-                finalDate;
-
-            fee.paymentDate =
-                finalDate;
-
-            fee.paymentMode =
-                paymentMode;
-
-            if (receiptNumber) {
-
-                fee.receiptNumber =
-                    receiptNumber;
+                currentFee.status =
+                    status;
 
             }
 
-            if (!fee.receiptNumber) {
 
-                fee.receiptNumber =
+            if (
+                paymentDate !== undefined
+            ) {
+
+                currentFee.paymentDate =
+                    paymentDate || "";
+
+                currentFee.paidDate =
+                    paymentDate || "";
+
+            }
+
+
+            if (
+                paymentMode !== undefined
+            ) {
+
+                currentFee.paymentMode =
+                    paymentMode || "";
+
+            }
+
+
+            if (
+                receiptNumber !== undefined
+            ) {
+
+                currentFee.receiptNumber =
+                    receiptNumber || "";
+
+            }
+
+
+            if (
+                amount !== undefined
+            ) {
+
+                currentFee.amount =
+                    Number(amount) || 700;
+
+            }
+
+
+            if (
+                admissionStatus !== undefined
+            ) {
+
+                currentFee.admissionStatus =
+                    admissionStatus;
+
+            }
+
+
+            if (
+                currentFee.status === "PAID" &&
+                !currentFee.receiptNumber
+            ) {
+
+                currentFee.receiptNumber =
                     generateReceiptNumber();
 
             }
 
-        }
 
-        /* =================================
-           DUE
-        ================================= */
+            saveUsers(
+                users
+            );
 
-        if (status === "DUE") {
 
-            fee.paidDate = "";
-
-            fee.paymentDate = "";
-
-            fee.paymentMode = "";
-
-            fee.receiptNumber = "";
-
-        }
-
-        saveUsers(users);
-
-        res.json({
-
-            success: true,
-
-            message:
-                month +
-                " fee/admission status updated successfully.",
-
-            month:
-                month,
-
-            fee:
-                fee
-
-        });
-
-    } catch (error) {
-
-        console.error(error);
-
-        res.status(500).json({
-
-            success: false,
-
-            message:
-                "Unable to update fee."
-
-        });
-
-    }
-
-}
-
-/* ========================================
-   GET ONE STUDENT
-======================================== */
-
-app.get(
-    "/api/student/:enrollmentNumber",
-    function(req, res) {
-
-        try {
-
-            const enrollmentNumber =
-                req.params.enrollmentNumber;
-
-            const users = getUsers();
-
-            const user =
-                users.find(
-                    student =>
-                        student.enrollmentNumber
-                            .toLowerCase() ===
-                        enrollmentNumber
-                            .toLowerCase()
-                );
-
-            if (!user) {
-
-                return res.status(404).json({
-
-                    success: false,
-
-                    message:
-                        "Student not found."
-
-                });
-
-            }
-
-            ensureMonthlyFees(user);
-
-            saveUsers(users);
-
-            res.json({
+            return res.json({
 
                 success: true,
 
-                student: {
+                message:
+                    "Fee updated successfully.",
 
-                    id:
-                        user.id,
+                studentId:
+                    studentId,
 
-                    enrollmentNumber:
-                        user.enrollmentNumber,
+                month:
+                    month,
 
-                    fullName:
-                        user.fullName,
-
-                    address:
-                        user.address,
-
-                    mobile:
-                        user.mobile,
-
-                    registrationDate:
-                        user.registrationDate || "",
-
-                    seatNumber:
-                        user.seatNumber || "",
-
-                    monthlyFees:
-                        user.monthlyFees
-
-                }
+                fee:
+                    currentFee
 
             });
 
+
         } catch (error) {
 
-            console.error(error);
+            console.error(
+                "FEE UPDATE ERROR:",
+                error
+            );
 
-            res.status(500).json({
+
+            return res.status(500).json({
 
                 success: false,
 
                 message:
-                    "Unable to load student."
+                    "Fee update failed."
 
             });
 
@@ -1265,27 +1401,40 @@ app.get(
     }
 );
 
-/* ========================================
-   DELETE STUDENT - ADMIN
-======================================== */
+
+/* =========================================
+   DELETE STUDENT
+========================================= */
 
 app.delete(
-    "/api/admin/student/:id",
+    "/api/admin/students/:id",
+    checkAdmin,
     function(req, res) {
 
         try {
 
             const studentId =
-                Number(req.params.id);
+                Number(
+                    req.params.id
+                );
 
-            const users = getUsers();
+
+            const users =
+                getUsers();
+
 
             const index =
                 users.findIndex(
-                    student =>
-                        student.id ===
-                        studentId
+                    function(user) {
+
+                        return (
+                            Number(user.id) ===
+                            studentId
+                        );
+
+                    }
                 );
+
 
             if (index === -1) {
 
@@ -1300,11 +1449,19 @@ app.delete(
 
             }
 
-            users.splice(index, 1);
 
-            saveUsers(users);
+            users.splice(
+                index,
+                1
+            );
 
-            res.json({
+
+            saveUsers(
+                users
+            );
+
+
+            return res.json({
 
                 success: true,
 
@@ -1313,11 +1470,16 @@ app.delete(
 
             });
 
+
         } catch (error) {
 
-            console.error(error);
+            console.error(
+                "DELETE STUDENT ERROR:",
+                error
+            );
 
-            res.status(500).json({
+
+            return res.status(500).json({
 
                 success: false,
 
@@ -1331,25 +1493,34 @@ app.delete(
     }
 );
 
-/* ========================================
+
+/* =========================================
    SERVE WEBSITE
-======================================== */
+========================================= */
 
 app.use(
-    express.static(projectRoot)
+    express.static(
+        projectRoot
+    )
 );
 
-/* ========================================
+
+/* =========================================
    START SERVER
-======================================== */
+========================================= */
 
 app.listen(
     PORT,
     function() {
 
         console.log(
-            "Aradhya Library server running on http://localhost:" +
+            "Aradhya Library Backend running on port " +
             PORT
+        );
+
+        console.log(
+            "Users file:",
+            usersFile
         );
 
     }
