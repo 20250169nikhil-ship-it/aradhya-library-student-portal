@@ -360,7 +360,8 @@ Harish Kumar
 ========================================= */
 
 const API_URL =
-    "http://localhost:3000";
+    "https://aradhya-library-student-portal-5.onrender.com";
+
 
 
 const ADMIN_TOKEN =
@@ -469,48 +470,21 @@ function createDefaultFees() {
 async function loadStudents() {
 
 
-    const container =
-        document.getElementById(
-            "studentsContainer"
-        );
+   const response =
+    await fetch(
 
+        API_URL + "/api/admin/students",
 
-    container.innerHTML = `
+        {
+            method: "GET",
 
-        <div class="loading">
-
-            ⏳ Loading students...
-
-        </div>
-
-    `;
-
-
-    try {
-
-
-        const response =
-            await fetch(
-
-                API_URL +
-                "fetch("https://TUMHARA-BACKEND-URL.onrender.com/api/admin/students")",
-
-                {
-
-                    method: "GET",
-
-                    headers: {
-
-                        "Authorization":
-                            "Bearer " +
-                            ADMIN_TOKEN
-
-                    }
-
-                }
-
-            );
-
+            headers: {
+                "Authorization":
+                    "Bearer " +
+                    ADMIN_TOKEN
+            }
+        }
+    );
 
         const data =
             await response.json();
