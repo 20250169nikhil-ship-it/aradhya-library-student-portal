@@ -1,26 +1,34 @@
-// ==========================================
-// ARADHYA LIBRARY - MAIN JAVASCRIPT
-// ==========================================
+// Shared frontend helpers
+const API = window.location.protocol === "file:" ? "http://localhost:3000" : "";
 
-console.log("Aradhya Library website loaded successfully.");
+function esc(value) {
+  return String(value ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+  }[c]));
+}
 
+function showMessage(text, type="notice") {
+  const box = document.getElementById("messageBox");
+  if (!box) return alert(text);
+  box.className = "notice " + type;
+  box.textContent = text;
+  box.style.display = "block";
+  setTimeout(() => box.style.display = "none", 5000);
+}
 
-// Future features will be added here:
-//
-// 1. Member Registration
-// 2. OTP Verification
-// 3. Enrollment Number Generation
-// 4. Automatic Seat Assignment
-// 5. Member Dashboard
-// 6. Fee Management
-// 7. Complaint System
-// 8. Admin Panel
-// 9. Admin Authentication
-// 10. Member Management
+function getStudent() {
+  try { return JSON.parse(localStorage.getItem("currentStudent") || "null"); }
+  catch { return null; }
+}
 
+function logoutStudent() {
+  localStorage.removeItem("currentStudent");
+  location.href = "login.html";
+}
 
-document.addEventListener("DOMContentLoaded", function () {
-
-    console.log("Library Management System is ready.");
-
-});
+function logoutAdmin() {
+  localStorage.removeItem("adminLoggedIn");
+  localStorage.removeItem("adminUsername");
+  localStorage.removeItem("adminToken");
+  location.href = "admin-login.html";
+}
