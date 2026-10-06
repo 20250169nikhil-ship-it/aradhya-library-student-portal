@@ -1,48 +1,85 @@
 <!doctype html>
+
 <html lang="en">
+
+
 
 <head>
 
+
+
 <meta charset="UTF-8">
+
+
 
 <meta
     name="viewport"
     content="width=device-width, initial-scale=1.0">
 
+
+
 <title>
     Admin Dashboard | Aradhya Library
 </title>
+
+
 
 <link
     rel="stylesheet"
     href="css/style.css">
 
+
+
 </head>
+
+
+
 
 
 <body>
 
 
+
+
+
 <header class="navbar">
 
+
+
     <div class="logo">
+
         📚 Aradhya Library
+
     </div>
+
+
+
 
 
     <nav>
 
+
+
         <a href="index.html">
+
             Home
+
         </a>
 
 
+
         <span>
+
             Admin:
+
             <b id="adminName">
+
                 Admin
+
             </b>
+
         </span>
+
 
 
         <button
@@ -54,59 +91,115 @@
 
         </button>
 
+
+
     </nav>
 
+
+
 </header>
+
+
+
+
 
 
 
 <main class="admin-container">
 
 
+
+
+
     <div class="admin-header">
 
+
+
         <h1>
+
             🔐 Admin Dashboard
+
         </h1>
 
+
+
         <p>
+
             Student, seat, monthly fee and attendance management.
+
         </p>
+
+
+
 
 
         <div class="summary-box">
 
+
+
             <div class="summary-item">
+
+
 
                 👨‍🎓 Students:
 
+
+
                 <span id="totalStudents">
+
                     0
+
                 </span>
+
+
 
             </div>
 
 
+
+
+
             <div class="summary-item">
+
+
 
                 💰 Monthly Fee:
 
                 ₹700
 
+
+
             </div>
+
+
+
 
 
             <div class="summary-item">
 
+
+
                 📅 Year:
+
+
 
                 <span id="year"></span>
 
+
+
             </div>
+
+
 
         </div>
 
+
+
     </div>
+
+
+
+
 
 
 
@@ -115,66 +208,121 @@
         class="notice"
         style="display:none">
 
+
+
     </div>
+
+
+
+
 
 
 
     <div class="admin-form">
 
+
+
         <div>
 
+
+
             <label>
+
                 Search Student
+
             </label>
+
+
 
             <input
                 id="search"
                 placeholder="Name / enrollment / mobile">
 
+
+
         </div>
+
+
+
 
 
         <div
             style="display:flex;align-items:end">
+
+
 
             <button
                 class="save-btn"
                 type="button"
                 onclick="loadStudents()">
 
+
+
                 🔄 Refresh
+
+
 
             </button>
 
+
+
         </div>
 
+
+
     </div>
+
+
+
+
 
 
 
     <div id="studentsContainer">
 
+
+
         <div class="loading">
+
             Loading students...
+
         </div>
 
+
+
     </div>
+
+
+
 
 
 </main>
 
 
 
+
+
+
+
 <script>
+
+
 
 /* =====================================================
    API
 ===================================================== */
 
 const API =
+
     window.location.protocol === "file:"
+
         ? "http://localhost:3000"
+
         : "";
+
+
+
+
 
 
 
@@ -183,22 +331,40 @@ const API =
 ===================================================== */
 
 let token =
+
     localStorage.getItem("adminToken");
 
+
+
 let adminLoggedIn =
+
     localStorage.getItem("adminLoggedIn");
 
 
+
+
+
 if (
+
     adminLoggedIn !== "true" ||
+
     !token
+
 ) {
 
+
+
     window.location.replace(
+
         "admin-login.html"
+
     );
 
 }
+
+
+
+
 
 
 
@@ -207,11 +373,20 @@ if (
 ===================================================== */
 
 document.getElementById(
+
     "adminName"
+
 ).textContent =
+
     localStorage.getItem(
+
         "adminUsername"
+
     ) || "Admin";
+
+
+
+
 
 
 
@@ -220,9 +395,16 @@ document.getElementById(
 ===================================================== */
 
 document.getElementById(
+
     "year"
+
 ).textContent =
+
     new Date().getFullYear();
+
+
+
+
 
 
 
@@ -233,23 +415,46 @@ document.getElementById(
 let allStudents = [];
 
 
+
+
+
 const months = [
 
+
+
     "January",
+
     "February",
+
     "March",
+
     "April",
+
     "May",
+
     "June",
 
+
+
     "July",
+
     "August",
+
     "September",
+
     "October",
+
     "November",
+
     "December"
 
+
+
 ];
+
+
+
+
 
 
 
@@ -259,26 +464,49 @@ const months = [
 
 function esc(value) {
 
+
+
     return String(
+
         value ?? ""
+
     ).replace(
+
         /[&<>"']/g,
+
         function(character) {
+
+
 
             return {
 
+
+
                 "&": "&amp;",
+
                 "<": "&lt;",
+
                 ">": "&gt;",
+
                 '"': "&quot;",
+
                 "'": "&#039;"
+
+
 
             }[character];
 
+
+
         }
+
     );
 
 }
+
+
+
+
 
 
 
@@ -287,36 +515,66 @@ function esc(value) {
 ===================================================== */
 
 function msg(
+
     text,
+
     type = "notice"
+
 ) {
 
+
+
     const box =
+
         document.getElementById(
+
             "messageBox"
+
         );
 
+
+
     box.className =
+
         "notice " + type;
 
+
+
     box.textContent =
+
         text;
 
+
+
     box.style.display =
+
         "block";
 
 
+
     setTimeout(
+
         function() {
 
+
+
             box.style.display =
+
                 "none";
 
+
+
         },
+
         4000
+
     );
 
 }
+
+
+
+
 
 
 
@@ -326,26 +584,50 @@ function msg(
 
 async function loadStudents() {
 
+
+
     try {
 
+
+
         const response =
+
             await fetch(
+
                 API +
+
                 "/api/admin/students",
+
                 {
+
                     method: "GET",
 
+
+
                     headers: {
+
                         "Authorization":
+
                             "Bearer " +
+
                             token
+
                     }
+
                 }
+
             );
 
 
+
+
+
         const data =
+
             await response.json();
+
+
+
 
 
         /* =============================================
@@ -353,53 +635,102 @@ async function loadStudents() {
         ============================================= */
 
         if (
+
             response.status === 401
+
         ) {
+
+
 
             logoutAdmin();
 
+
+
             return;
 
+
+
         }
+
+
+
 
 
         if (!response.ok) {
 
+
+
             throw new Error(
+
                 data.message ||
+
                 "Unable to load students."
+
             );
+
+
 
         }
 
 
+
+
+
         allStudents =
+
             data.students || [];
 
 
+
+
+
         document.getElementById(
+
             "totalStudents"
+
         ).textContent =
+
             allStudents.length;
+
+
+
 
 
         render();
 
+
+
     }
+
+
 
     catch (error) {
 
+
+
         console.error(error);
 
+
+
         msg(
+
             error.message ||
+
             "Students load nahi ho pa rahe.",
+
             "error"
+
         );
 
     }
 
+
+
 }
+
+
+
+
 
 
 
@@ -408,11 +739,20 @@ async function loadStudents() {
 ===================================================== */
 
 document
+
     .getElementById("search")
+
     .addEventListener(
+
         "input",
+
         render
+
     );
+
+
+
+
 
 
 
@@ -422,66 +762,129 @@ document
 
 function render() {
 
+
+
     const query =
+
         document
+
             .getElementById("search")
+
             .value
+
             .trim()
+
             .toLowerCase();
 
 
+
+
+
     const list =
+
         allStudents.filter(
+
             function(student) {
+
+
 
                 return [
 
+
+
                     student.fullName,
+
+
 
                     student.enrollmentNumber,
 
+
+
                     student.mobile
 
+
+
                 ].some(
+
                     function(value) {
 
+
+
                         return String(
+
                             value || ""
+
                         )
-                        .toLowerCase()
-                        .includes(query);
+
+                            .toLowerCase()
+
+                            .includes(query);
+
+
 
                     }
+
                 );
 
+
+
             }
+
         );
+
+
+
 
 
     const box =
+
         document.getElementById(
+
             "studentsContainer"
+
         );
+
+
+
 
 
     if (!list.length) {
 
+
+
         box.innerHTML =
+
             '<div class="empty">' +
+
             '📚 No students found.' +
+
             '</div>';
 
+
+
         return;
+
+
 
     }
 
 
+
+
+
     box.innerHTML =
+
         list
+
             .map(studentCard)
+
             .join("");
 
 }
+
+
+
+
 
 
 
@@ -491,331 +894,645 @@ function render() {
 
 function studentCard(student) {
 
+
+
     const fees =
+
         student.monthlyFees || {};
+
+
+
 
 
     return `
 
+
+
 <div class="student-card">
+
+
+
 
 
     <div class="student-top">
 
+
+
         <div>
 
+
+
             <h2
+
                 style="
+
                     color:#173f75;
+
                     margin-top:0
+
                 ">
 
+
+
                 👤
+
                 ${esc(student.fullName)}
+
+
 
             </h2>
 
 
+
+
+
             <div>
 
+
+
                 <b>
+
                     Enrollment:
+
                 </b>
 
+
+
                 ${esc(
+
                     student.enrollmentNumber
+
                 )}
+
+
 
             </div>
 
 
+
+
+
             <div>
 
+
+
                 <b>
+
                     Mobile:
+
                 </b>
+
+
 
                 +91
+
                 ${esc(
+
                     student.mobile
+
                 )}
 
+
+
             </div>
+
+
+
 
 
             <div>
 
+
+
                 <b>
+
                     Address:
+
                 </b>
 
+
+
                 ${esc(
+
                     student.address
+
                 )}
 
+
+
             </div>
+
+
 
         </div>
 
 
+
+
+
         <div>
+
+
 
             <div class="summary-item">
 
                 Seat:
 
                 <b>
+
                     ${esc(
+
                         student.seatNumber ||
+
                         "Not Assigned"
+
                     )}
+
                 </b>
 
             </div>
 
 
+
+
+
             <div
+
                 class="summary-item"
+
                 style="margin-top:8px">
+
+
 
                 Admission:
 
                 <b>
+
                     ${esc(
+
                         student.registrationDate ||
+
                         "-"
+
                     )}
+
                 </b>
+
+
 
             </div>
 
+
+
         </div>
+
+
 
     </div>
 
 
 
+
+
+
+
     <h3
+
         style="
+
             color:#173f75
+
         ">
+
+
 
         ⚙️ Student Information
 
+
+
     </h3>
+
+
 
 
 
     <div class="admin-form">
 
 
+
+
+
         <div>
 
+
+
             <label>
+
                 Full Name
+
             </label>
 
+
+
             <input
+
                 id="name-${student.id}"
+
                 value="${esc(
+
                     student.fullName
+
                 )}">
+
+
 
         </div>
 
 
+
+
+
         <div>
 
+
+
             <label>
+
                 Mobile
+
             </label>
 
+
+
             <input
+
                 id="mobile-${student.id}"
+
                 value="${esc(
+
                     student.mobile
+
                 )}">
+
+
 
         </div>
 
 
+
+
+
         <div>
 
+
+
             <label>
+
                 Seat Number
+
             </label>
 
+
+
             <input
+
                 id="seat-${student.id}"
+
                 value="${esc(
+
                     student.seatNumber || ""
+
                 )}"
+
                 placeholder="A-01">
 
+
+
         </div>
+
+
+
 
 
         <div>
 
+
+
             <label>
+
                 Admission Date
+
             </label>
 
+
+
             <input
+
                 id="date-${student.id}"
+
                 type="date"
+
                 value="${esc(
+
                     student.registrationDate || ""
+
                 )}">
 
+
+
         </div>
+
+
+
 
 
         <div>
 
+
+
             <label>
+
                 Address
+
             </label>
 
+
+
             <input
+
                 id="address-${student.id}"
+
                 value="${esc(
+
                     student.address
+
                 )}">
 
+
+
         </div>
+
+
+
 
 
         <div
+
             style="
+
                 display:flex;
+
                 align-items:end
+
             ">
 
+
+
             <button
+
                 class="save-btn"
+
                 type="button"
+
                 onclick="
+
                     saveStudent(${student.id})
+
                 ">
+
+
 
                 💾 Save
 
+
+
             </button>
 
+
+
         </div>
+
 
 
     </div>
 
 
 
+
+
+
+
     <h3
+
         style="
+
             color:#173f75
+
         ">
+
+
 
         💰 Monthly Fees — ₹700
 
+
+
     </h3>
+
+
+
 
 
     <div class="table-wrap">
 
+
+
         <table class="data-table">
+
+
 
             <thead>
 
+
+
                 <tr>
 
+
+
                     <th>
+
                         Month
+
                     </th>
 
+
+
                     <th>
+
                         Status
+
                     </th>
 
+
+
                     <th>
+
                         Date
+
                     </th>
 
+
+
                     <th>
+
                         Mode
+
                     </th>
 
+
+
                     <th>
+
                         Receipt
+
                     </th>
 
+
+
                     <th>
+
                         Admission
+
                     </th>
 
+
+
                     <th>
+
                         Action
+
                     </th>
+
+
 
                 </tr>
+
+
 
             </thead>
 
 
+
+
+
             <tbody>
 
+
+
                 ${months.map(
+
                     function(month) {
 
+
+
                         return feeRow(
+
                             student,
+
                             month,
+
                             fees[month] || {}
+
                         );
 
+
+
                     }
+
                 ).join("")}
+
+
 
             </tbody>
 
+
+
         </table>
 
+
+
     </div>
+
+
+
+
 
 
 
     <h3
+
         style="
+
             color:#173f75
+
         ">
 
+
+
         📍 Attendance
+
+
 
     </h3>
 
 
+
+
+
     <div id="att-${student.id}">
 
+
+
         <button
+
             class="small-btn blue"
+
             type="button"
+
             onclick="
+
                 loadAttendance(
+
                     ${student.id}
+
                 )
+
             ">
+
+
 
             Load Attendance
 
+
+
         </button>
+
+
 
     </div>
 
 
+
 </div>
+
+
 
 `;
 
 }
+
+
+
+
 
 
 
@@ -824,299 +1541,581 @@ function studentCard(student) {
 ===================================================== */
 
 function feeRow(
+
     student,
+
     month,
+
     fee
+
 ) {
 
+
+
     const paid =
+
         String(
+
             fee.status || "DUE"
+
         ).toUpperCase() === "PAID";
 
 
+
+
+
     const open =
+
         String(
+
             fee.admissionStatus ||
+
             "OPEN"
+
         ).toUpperCase() === "OPEN";
+
+
+
 
 
     return `
 
+
+
 <tr>
 
+
+
     <td>
+
         <b>
+
             ${month}
+
         </b>
+
     </td>
 
 
+
+
+
     <td
+
         class="${
+
             paid
+
                 ? "paid"
+
                 : "due"
+
         }">
 
+
+
         ${
+
             paid
+
                 ? "🟢 PAID"
+
                 : "🔴 DUE"
+
         }
 
+
+
     </td>
+
+
+
 
 
     <td>
 
+
+
         ${esc(
+
             fee.paymentDate ||
+
             fee.paidDate ||
+
             "-"
+
         )}
+
+
 
     </td>
 
 
+
+
+
     <td>
 
+
+
         ${esc(
+
             fee.paymentMode ||
+
             "-"
+
         )}
 
+
+
     </td>
+
+
+
 
 
     <td>
 
+
+
         ${esc(
+
             fee.receiptNumber ||
+
             "-"
+
         )}
 
+
+
     </td>
+
+
+
 
 
     <td
+
         class="${
+
             open
+
                 ? "open"
+
                 : "closed"
+
         }">
 
+
+
         ${
+
             open
+
                 ? "OPEN"
+
                 : "CLOSED"
+
         }
+
+
 
     </td>
 
 
+
+
+
     <td>
+
+
 
         <div class="action-row">
 
 
+
+
+
             <button
+
                 class="small-btn green"
+
                 type="button"
+
                 onclick="
+
                     setFee(
+
                         ${student.id},
+
                         '${month}',
+
                         'PAID'
+
                     )
+
                 ">
+
+
 
                 PAID
 
+
+
             </button>
 
 
+
+
+
             <button
+
                 class="small-btn red"
+
                 type="button"
+
                 onclick="
+
                     setFee(
+
                         ${student.id},
+
                         '${month}',
+
                         'DUE'
+
                     )
+
                 ">
+
+
 
                 DUE
 
+
+
             </button>
+
+
+
 
 
             <button
+
                 class="
+
                     small-btn
+
                     ${open ? "red" : "green"}
+
                 "
+
                 type="button"
+
                 onclick="
+
                     setAdmission(
+
                         ${student.id},
+
                         '${month}',
+
                         '${open ? "CLOSED" : "OPEN"}'
+
                     )
+
                 ">
 
+
+
                 ${
+
                     open
+
                         ? "Close"
+
                         : "Open"
+
                 }
+
+
 
             </button>
 
 
+
+
+
             ${
+
                 paid
+
                     ? `
+
                     <button
+
                         class="small-btn blue"
+
                         type="button"
+
                         onclick="
+
                             receipt(
+
                                 '${student.id}',
+
                                 '${month}'
+
                             )
+
                         ">
+
+
 
                         Receipt
 
+
+
                     </button>
+
                     `
+
                     : ""
+
             }
+
+
+
 
 
         </div>
 
+
+
     </td>
 
+
+
 </tr>
+
+
 
 `;
 
 }
-
-
-
 /* =====================================================
    SAVE STUDENT
 ===================================================== */
 
 async function saveStudent(id) {
 
+
+
     const body = {
 
+
+
         fullName:
+
             document.getElementById(
+
                 "name-" + id
+
             ).value,
+
+
 
         address:
+
             document.getElementById(
+
                 "address-" + id
+
             ).value,
+
+
 
         mobile:
+
             document.getElementById(
+
                 "mobile-" + id
+
             ).value,
+
+
 
         seatNumber:
+
             document.getElementById(
+
                 "seat-" + id
+
             ).value,
 
+
+
         registrationDate:
+
             document.getElementById(
+
                 "date-" + id
+
             ).value
+
+
 
     };
 
 
+
+
+
     try {
 
+
+
         const response =
+
             await fetch(
+
                 API +
+
                 "/api/admin/student/" +
+
                 id,
+
                 {
+
                     method: "PUT",
+
+
 
                     headers: {
 
+
+
                         "Content-Type":
+
                             "application/json",
 
+
+
                         "Authorization":
+
                             "Bearer " +
+
                             token
+
+
 
                     },
 
+
+
                     body:
+
                         JSON.stringify(body)
 
+
+
                 }
+
             );
 
 
+
+
+
         const data =
+
             await response.json();
 
 
+
+
+
         if (
+
             response.status === 401
+
         ) {
+
+
 
             logoutAdmin();
 
+
+
             return;
 
+
+
         }
+
+
+
 
 
         if (!response.ok) {
 
+
+
             throw new Error(
+
                 data.message
+
             );
+
+
 
         }
 
 
+
+
+
         msg(
+
             "Student details saved.",
+
             "success"
+
         );
+
+
+
 
 
         loadStudents();
 
+
+
     }
+
+
 
     catch (error) {
 
+
+
         msg(
+
             error.message,
+
             "error"
+
         );
 
     }
 
+
+
 }
+
+
+
+
 
 
 
@@ -1125,129 +2124,254 @@ async function saveStudent(id) {
 ===================================================== */
 
 async function setFee(
+
     id,
+
     month,
+
     status
+
 ) {
+
+
 
     let mode = "";
 
 
+
+
+
     if (
+
         status === "PAID"
+
     ) {
 
+
+
         mode =
+
             prompt(
+
                 "Payment mode: Cash / Online",
+
                 "Online"
+
             );
 
 
+
+
+
         if (!mode) {
+
             return;
+
         }
 
+
+
     }
+
+
+
 
 
     const body = {
 
+
+
         status,
 
+
+
         paymentMode:
+
             mode,
 
+
+
         paidDate:
+
             status === "PAID"
+
                 ? new Date()
+
                     .toISOString()
+
                     .slice(0, 10)
+
                 : ""
+
+
 
     };
 
 
+
+
+
     try {
 
+
+
         const response =
+
             await fetch(
+
                 API +
+
                 "/api/admin/student/" +
+
                 id +
+
                 "/fee/" +
+
                 new Date()
+
                     .getFullYear() +
+
                 "/" +
+
                 month,
+
                 {
+
                     method: "PUT",
+
+
 
                     headers: {
 
+
+
                         "Content-Type":
+
                             "application/json",
 
+
+
                         "Authorization":
+
                             "Bearer " +
+
                             token
+
+
 
                     },
 
+
+
                     body:
+
                         JSON.stringify(body)
 
+
+
                 }
+
             );
 
 
+
+
+
         const data =
+
             await response.json();
 
 
+
+
+
         if (
+
             response.status === 401
+
         ) {
+
+
 
             logoutAdmin();
 
+
+
             return;
 
+
+
         }
+
+
+
 
 
         if (!response.ok) {
 
+
+
             throw new Error(
+
                 data.message
+
             );
+
+
 
         }
 
 
+
+
+
         msg(
+
             month +
+
             " marked " +
+
             status +
+
             ".",
+
             "success"
+
         );
+
+
+
 
 
         loadStudents();
 
+
+
     }
+
+
 
     catch (error) {
 
+
+
         msg(
+
             error.message,
+
             "error"
+
         );
 
     }
 
+
+
 }
+
+
+
+
 
 
 
@@ -1256,85 +2380,166 @@ async function setFee(
 ===================================================== */
 
 async function setAdmission(
+
     id,
+
     month,
+
     status
+
 ) {
+
+
 
     try {
 
+
+
         const response =
+
             await fetch(
+
                 API +
+
                 "/api/admin/student/" +
+
                 id +
+
                 "/fee/" +
+
                 new Date()
+
                     .getFullYear() +
+
                 "/" +
+
                 month,
+
                 {
+
                     method: "PUT",
+
+
 
                     headers: {
 
+
+
                         "Content-Type":
+
                             "application/json",
 
+
+
                         "Authorization":
+
                             "Bearer " +
+
                             token
+
+
 
                     },
 
+
+
                     body:
+
                         JSON.stringify({
+
                             admissionStatus:
+
                                 status
+
                         })
 
+
+
                 }
+
             );
 
 
+
+
+
         const data =
+
             await response.json();
 
 
+
+
+
         if (
+
             response.status === 401
+
         ) {
+
+
 
             logoutAdmin();
 
+
+
             return;
 
+
+
         }
+
+
+
 
 
         if (!response.ok) {
 
+
+
             throw new Error(
+
                 data.message
+
             );
+
+
 
         }
 
 
+
+
+
         loadStudents();
+
+
 
     }
 
+
+
     catch (error) {
 
+
+
         msg(
+
             error.message,
+
             "error"
+
         );
 
     }
 
+
+
 }
+
+
+
+
 
 
 
@@ -1343,212 +2548,450 @@ async function setAdmission(
 ===================================================== */
 
 function receipt(
+
     id,
+
     month
+
 ) {
 
+
+
     const student =
+
         allStudents.find(
+
             function(item) {
 
+
+
                 return String(item.id) ===
+
                     String(id);
 
+
+
             }
+
         );
 
 
+
+
+
     const fee =
+
         student?.monthlyFees?.[month];
 
 
+
+
+
     if (
+
         !student ||
+
         !fee
+
     ) {
 
+
+
         return;
+
+
 
     }
 
 
+
+
+
     const popup =
+
         window.open(
+
             "",
+
             "_blank"
+
         );
+
+
+
 
 
     if (!popup) {
 
+
+
         alert(
+
             "Popup blocked hai. Browser me popup allow karein."
+
         );
 
+
+
         return;
+
+
 
     }
 
 
+
+
+
     popup.document.write(`
+
+
 
 <html>
 
+
+
 <head>
 
+
+
 <title>
+
     Fee Receipt -
+
     ${esc(
+
         student.enrollmentNumber
+
     )}
+
 </title>
+
+
 
 <style>
 
+
+
 body {
+
     font-family: Arial;
+
     padding: 40px;
+
 }
+
+
 
 .box {
+
     border: 2px solid #173f75;
+
     padding: 30px;
+
     max-width: 650px;
+
     margin: auto;
+
 }
+
+
 
 h1 {
+
     color: #173f75;
+
     text-align: center;
+
 }
+
+
 
 table {
+
     width: 100%;
+
     border-collapse: collapse;
+
     margin-top: 20px;
+
 }
+
+
 
 td {
+
     padding: 10px;
+
     border-bottom: 1px solid #ddd;
+
 }
 
+
+
 </style>
+
+
 
 </head>
 
 
+
+
+
 <body>
+
+
 
 <div class="box">
 
+
+
 <h1>
+
     📚 Aradhya Library
+
 </h1>
 
 
+
+
+
 <h2 style="text-align:center">
+
     Fee Receipt
+
 </h2>
+
+
+
 
 
 <table>
 
+
+
 <tr>
+
+
+
     <td>Student</td>
+
     <td>
+
         ${esc(student.fullName)}
+
     </td>
+
+
+
 </tr>
 
 
+
+
+
 <tr>
+
+
+
     <td>Enrollment</td>
+
     <td>
+
         ${esc(
+
             student.enrollmentNumber
+
         )}
+
     </td>
+
+
+
 </tr>
 
 
+
+
+
 <tr>
+
+
+
     <td>Month</td>
+
     <td>
+
         ${esc(month)}
+
     </td>
+
+
+
 </tr>
 
 
+
+
+
 <tr>
+
+
+
     <td>Amount</td>
+
     <td>
+
         ₹${Number(
+
             fee.amount || 700
+
         )}
+
     </td>
+
+
+
 </tr>
 
 
+
+
+
 <tr>
+
+
+
     <td>Payment Mode</td>
+
     <td>
+
         ${esc(
+
             fee.paymentMode || "-"
+
         )}
+
     </td>
+
+
+
 </tr>
 
 
+
+
+
 <tr>
+
+
+
     <td>Payment Date</td>
+
     <td>
+
         ${esc(
+
             fee.paymentDate ||
+
             fee.paidDate ||
+
             "-"
+
         )}
+
     </td>
+
+
+
 </tr>
+
+
+
 
 
 <tr>
+
+
+
     <td>Receipt No.</td>
+
     <td>
+
         ${esc(
+
             fee.receiptNumber ||
+
             "-"
+
         )}
+
     </td>
+
+
+
 </tr>
+
+
 
 </table>
 
 
+
+
+
 <p style="margin-top:35px">
 
+
+
     Authorized by Aradhya Library
+
+
 
 </p>
 
 
+
+
+
 <script>
+
     window.print();
+
 <\/script>
+
+
+
 
 
 </div>
 
+
+
 </body>
 
+
+
 </html>
+
+
 
 `);
 
 
+
+
+
     popup.document.close();
 
+
+
 }
+
+
+
+
 
 
 
@@ -1557,164 +3000,324 @@ td {
 ===================================================== */
 
 async function loadAttendance(
+
     id
+
 ) {
 
+
+
     const box =
+
         document.getElementById(
+
             "att-" + id
+
         );
+
+
+
 
 
     try {
 
+
+
         const response =
+
             await fetch(
+
                 API +
+
                 "/api/admin/student/" +
+
                 id +
+
                 "/attendance/" +
+
                 new Date()
+
                     .getFullYear(),
+
                 {
+
                     headers: {
+
                         "Authorization":
+
                             "Bearer " +
+
                             token
+
                     }
+
                 }
+
             );
 
 
+
+
+
         const data =
+
             await response.json();
 
 
+
+
+
         if (
+
             response.status === 401
+
         ) {
+
+
 
             logoutAdmin();
 
+
+
             return;
 
+
+
         }
+
+
+
 
 
         if (!response.ok) {
 
+
+
             throw new Error(
+
                 data.message
+
             );
+
+
 
         }
 
 
+
+
+
         const rows =
+
             Object.values(
+
                 data.attendance || {}
+
             )
+
             .sort(
+
                 function(a, b) {
 
+
+
                     return String(
+
                         b.date
+
                     ).localeCompare(
+
                         String(a.date)
+
                     );
 
+
+
                 }
+
             );
 
 
+
+
+
         box.innerHTML =
+
             rows.length
+
+
 
                 ? `
 
+
+
 <div class="table-wrap">
+
+
 
 <table class="data-table">
 
+
+
 <tr>
 
+
+
 <th>
+
     Date
+
 </th>
 
+
+
 <th>
+
     IN
+
 </th>
 
+
+
 <th>
+
     OUT
+
 </th>
+
+
 
 </tr>
+
+
+
 
 
 ${rows.map(
+
     function(attendance) {
+
+
 
         return `
 
+
+
 <tr>
 
+
+
 <td>
+
     ${esc(
+
         attendance.date
+
     )}
+
 </td>
 
+
+
 <td>
+
     ${esc(
+
         attendance.inTime ||
+
         "-"
+
     )}
+
 </td>
 
+
+
 <td>
+
     ${esc(
+
         attendance.outTime ||
+
         "-"
+
     )}
+
 </td>
+
+
 
 </tr>
 
+
+
 `;
 
     }
+
 ).join("")}
+
+
 
 </table>
 
+
+
 </div>
+
+
 
 `
 
+
+
                 : `
+
 <div class="notice">
+
     No attendance records.
+
 </div>
+
 `;
 
+
+
     }
+
+
 
     catch (error) {
 
+
+
         box.innerHTML =
+
             `
+
             <div class="notice error">
+
                 ${esc(
+
                     error.message
+
                 )}
+
             </div>
+
             `;
+
+
 
     }
 
+
+
 }
+
+
+
+
 
 
 
@@ -1724,33 +3327,63 @@ ${rows.map(
 
 function logoutAdmin() {
 
+
+
     /* Clear admin login information */
 
+
+
     localStorage.removeItem(
+
         "adminLoggedIn"
+
     );
 
+
+
     localStorage.removeItem(
+
         "adminUsername"
+
     );
 
+
+
     localStorage.removeItem(
+
         "adminToken"
+
     );
+
+
+
 
 
     /* Clear session */
 
+
+
     sessionStorage.clear();
+
+
+
 
 
     /* Go to admin login */
 
+
+
     window.location.replace(
+
         "admin-login.html"
+
     );
 
 }
+
+
+
+
 
 
 
@@ -1759,33 +3392,62 @@ function logoutAdmin() {
 ===================================================== */
 
 window.addEventListener(
+
     "pageshow",
+
     function() {
 
+
+
         const loggedIn =
+
             localStorage.getItem(
+
                 "adminLoggedIn"
+
             );
 
+
+
         const savedToken =
+
             localStorage.getItem(
+
                 "adminToken"
+
             );
+
+
+
 
 
         if (
+
             loggedIn !== "true" ||
+
             !savedToken
+
         ) {
 
+
+
             window.location.replace(
+
                 "admin-login.html"
+
             );
 
         }
 
+
+
     }
+
 );
+
+
+
+
 
 
 
@@ -1795,11 +3457,21 @@ window.addEventListener(
 
 loadStudents();
 
+
+
 </script>
+
+
+
 
 
 <script src="js/app.js"></script>
 
+
+
 </body>
 
+
+
 </html>
+<!-- PART 3 END -->
