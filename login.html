@@ -1,326 +1,231 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta charset="UTF-8">
+  <title>Student Login | Aradhya Library</title>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Aradhya Library - Student Login</title>
-
-    <link rel="stylesheet" href="css/style.css">
-
+  <link rel="stylesheet" href="css/style.css">
 </head>
-
 
 <body>
 
-<header class="navbar">
-
-    <div class="logo">
-        📚 Aradhya Library
-    </div>
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="logo">📚 Aradhya Library</div>
 
     <nav>
-
-        <a href="index.html">
-            Home
-        </a>
-
-        <a href="register.html">
-            Join Library
-        </a>
-
+      <a href="index.html">Home</a>
+      <a href="register.html">Join Library</a>
+      <a class="admin-btn" href="admin-login.html">Admin Login</a>
     </nav>
+  </header>
 
-</header>
 
-
-<section class="registration-section">
+  <!-- Student Login -->
+  <section class="registration-section">
 
     <div class="registration-card">
 
-        <div class="registration-header">
+      <div class="registration-header">
+        <div class="registration-icon">🔐</div>
 
-            <div class="registration-icon">
-                🔐
-            </div>
+        <h1>Student Login</h1>
 
-            <h1>
-                Student Login
-            </h1>
+        <p>
+          Login using your Enrollment Number and Password.
+        </p>
+      </div>
 
-            <p>
-                Login using your Enrollment Number and Password.
-            </p>
+
+      <!-- Message Box -->
+      <div
+        id="messageBox"
+        class="notice"
+        style="display:none"
+      ></div>
+
+
+      <!-- Login Form -->
+      <form id="loginForm">
+
+        <div class="form-group">
+
+          <label for="enrollment">
+            Enrollment Number
+          </label>
+
+          <input
+            id="enrollment"
+            type="text"
+            placeholder="Example: AR20260001"
+            autocomplete="username"
+            required
+          >
 
         </div>
 
 
-        <form id="loginForm">
+        <div class="form-group">
+
+          <label for="password">
+            Password
+          </label>
+
+          <input
+            id="password"
+            type="password"
+            placeholder="Enter your password"
+            autocomplete="current-password"
+            required
+          >
+
+        </div>
 
 
-            <div class="form-group">
+        <button
+          type="submit"
+          class="registration-btn"
+          id="loginBtn"
+        >
+          Login
+        </button>
 
-                <label for="enrollment">
-                    Enrollment Number
-                </label>
-
-                <input
-                    type="text"
-                    id="enrollment"
-                    placeholder="Example: AR2026526399"
-                    maxlength="30"
-                    required>
-
-            </div>
+      </form>
 
 
-            <div class="form-group">
-
-                <label for="loginPassword">
-                    Password
-                </label>
-
-                <input
-                    type="password"
-                    id="loginPassword"
-                    placeholder="Enter your password"
-                    required>
-
-            </div>
-
-
-            <button
-                type="submit"
-                class="registration-btn"
-                id="loginBtn">
-
-                Login
-
-            </button>
-
-
-            <p class="already-member">
-
-                New student?
-
-                <a href="register.html">
-                    Create Account
-                </a>
-
-            </p>
-
-
-        </form>
+      <p class="already-member">
+        New student?
+        <a href="register.html">Create Account</a>
+      </p>
 
     </div>
 
-</section>
+  </section>
 
 
-<footer>
+  <!-- Footer -->
+  <footer>
 
     <div class="footer-logo">
-        📚 Aradhya Library
+      📚 Aradhya Library
     </div>
 
     <p>
-        Library Management System
+      Library Management System
     </p>
 
-    <p class="copyright">
-        © 2026 Aradhya Library. All Rights Reserved.
-    </p>
-
-</footer>
+  </footer>
 
 
-<script>
-
-const API_URL =
-    "https://aradhya-library-student-portal-5.onrender.com";
+  <!-- Shared JavaScript -->
+  <script src="js/app.js"></script>
 
 
-const loginForm =
-    document.getElementById("loginForm");
+  <!-- Login JavaScript -->
+  <script>
+
+    document
+      .getElementById("loginForm")
+      .addEventListener("submit", async function (e) {
+
+        e.preventDefault();
+
+        const btn = document.getElementById("loginBtn");
+
+        const enrollmentInput =
+          document.getElementById("enrollment");
+
+        const passwordInput =
+          document.getElementById("password");
 
 
-const loginBtn =
-    document.getElementById("loginBtn");
-
-
-loginForm.addEventListener(
-    "submit",
-    async function(event) {
-
-        event.preventDefault();
-
-
-        const enrollment =
-            document
-            .getElementById("enrollment")
-            .value
-            .trim();
-
+        const enrollmentNumber =
+          enrollmentInput.value
+            .trim()
+            .toUpperCase();
 
         const password =
-            document
-            .getElementById("loginPassword")
-            .value;
+          passwordInput.value;
 
 
-        if (!enrollment || !password) {
-
-            alert(
-                "Please enter Enrollment Number and Password."
-            );
-
-            return;
+        if (!enrollmentNumber || !password) {
+          showMessage(
+            "Please enter Enrollment Number and Password.",
+            "error"
+          );
+          return;
         }
 
 
-        loginBtn.disabled = true;
-
-        loginBtn.innerText =
-            "Logging in...";
+        btn.disabled = true;
+        btn.textContent = "Logging in...";
 
 
         try {
 
-            console.log(
-                "Connecting to:",
-                API_URL + "/api/login"
-            );
+          const response = await fetch(
+            API + "/api/login",
+            {
+              method: "POST",
 
+              headers: {
+                "Content-Type": "application/json"
+              },
 
-            const response =
-                await fetch(
-                    API_URL + "/api/login",
-                    {
-                        method: "POST",
-
-                        headers: {
-                            "Content-Type":
-                                "application/json"
-                        },
-
-                        body:
-                            JSON.stringify({
-
-                                enrollmentNumber:
-                                    enrollment,
-
-                                password:
-                                    password
-
-                            })
-                    }
-                );
-
-
-            const data =
-                await response.json();
-
-
-            console.log(
-                "Login response:",
-                data
-            );
-
-
-            if (!response.ok) {
-
-                alert(
-                    data.message ||
-                    "Invalid Enrollment Number or Password."
-                );
-
-                loginBtn.disabled = false;
-
-                loginBtn.innerText =
-                    "Login";
-
-                return;
+              body: JSON.stringify({
+                enrollmentNumber: enrollmentNumber,
+                password: password
+              })
             }
+          );
 
 
-            if (
-                !data.student
-            ) {
-
-                alert(
-                    "Login successful, but student data was not received."
-                );
-
-                loginBtn.disabled = false;
-
-                loginBtn.innerText =
-                    "Login";
-
-                return;
-            }
+          const data = await response.json();
 
 
-            // Save logged-in student
+          if (!response.ok) {
 
-            localStorage.setItem(
-                "currentStudent",
-                JSON.stringify(
-                    data.student
-                )
+            throw new Error(
+              data.message || "Login failed."
             );
 
-
-            alert(
-
-                "Login Successful!\n\n" +
-
-                "Welcome " +
-
-                data.student.fullName
-
-            );
+          }
 
 
-            window.location.href =
-                "student-dashboard.html";
+          /*
+           * Save logged-in student's public data
+           */
+          localStorage.setItem(
+            "currentStudent",
+            JSON.stringify(data.student)
+          );
 
+
+          /*
+           * Redirect to Student Dashboard
+           */
+          window.location.href =
+            "student-dashboard.html";
+
+
+        } catch (error) {
+
+          showMessage(
+            error.message ||
+            "Unable to login. Please try again.",
+            "error"
+          );
+
+          btn.disabled = false;
+          btn.textContent = "Login";
 
         }
 
-        catch (error) {
+      });
 
-            console.error(
-                "LOGIN ERROR:",
-                error
-            );
-
-
-            alert(
-
-                "Backend se connection nahi ho pa raha.\n\n" +
-
-                "Please check that the backend is live."
-
-            );
-
-
-            loginBtn.disabled = false;
-
-            loginBtn.innerText =
-                "Login";
-
-        }
-
-    }
-
-);
-
-</script>
-
+  </script>
 
 </body>
-
 </html>
