@@ -1,12 +1,10 @@
-```html
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Aradhya Library - Registration</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Admission | Aradhya Library</title>
 
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -22,7 +20,10 @@
     <nav>
         <a href="index.html">Home</a>
         <a href="login.html">Student Login</a>
-        <a href="admin-login.html" class="admin-btn">Admin Login</a>
+
+        <a class="admin-btn" href="admin-login.html">
+            Admin Login
+        </a>
     </nav>
 
 </header>
@@ -47,54 +48,68 @@
         </div>
 
 
-        <form id="registrationForm">
+        <!-- MESSAGE -->
+
+        <div
+            id="messageBox"
+            class="notice"
+            style="display:none">
+        </div>
+
+
+        <!-- REGISTRATION FORM -->
+
+        <div id="step1">
 
             <div class="form-group">
 
-                <label for="fullName">
+                <label>
                     Full Name
                 </label>
 
                 <input
-                    type="text"
                     id="fullName"
-                    placeholder="Enter your full name"
-                    required>
+                    type="text"
+                    autocomplete="name"
+                    placeholder="Enter your full name">
 
             </div>
 
 
             <div class="form-group">
 
-                <label for="address">
+                <label>
                     Complete Address
                 </label>
 
                 <textarea
                     id="address"
-                    rows="4"
-                    placeholder="Enter your complete address"
-                    required></textarea>
+                    rows="3"
+                    autocomplete="street-address"
+                    placeholder="Enter your complete address"></textarea>
 
             </div>
 
 
             <div class="form-group">
 
-                <label for="mobile">
+                <label>
                     Mobile Number
                 </label>
 
                 <div class="mobile-input">
 
-                    <span>+91</span>
+                    <span>
+                        +91
+                    </span>
 
                     <input
-                        type="tel"
                         id="mobile"
-                        placeholder="10-digit mobile number"
+                        type="tel"
                         maxlength="10"
-                        required>
+                        inputmode="numeric"
+                        autocomplete="tel"
+                        placeholder="10-digit mobile number">
 
                 </div>
 
@@ -103,61 +118,92 @@
 
             <div class="form-group">
 
-                <label for="password">
+                <label>
                     Create Password
                 </label>
 
                 <input
-                    type="password"
                     id="password"
-                    placeholder="Create your password"
+                    type="password"
                     minlength="6"
-                    required>
-
-                <small>
-                    Password must contain at least 6 characters.
-                </small>
+                    autocomplete="new-password"
+                    placeholder="Minimum 6 characters">
 
             </div>
 
 
             <div class="form-group">
 
-                <label for="confirmPassword">
+                <label>
                     Confirm Password
                 </label>
 
                 <input
-                    type="password"
                     id="confirmPassword"
-                    placeholder="Re-enter your password"
+                    type="password"
                     minlength="6"
-                    required>
+                    autocomplete="new-password"
+                    placeholder="Re-enter password">
 
             </div>
 
 
             <button
-                type="submit"
                 class="registration-btn"
-                id="registerBtn">
+                id="createAccountBtn">
 
                 Create Library Account
 
             </button>
 
+        </div>
 
-            <p class="already-member">
 
-                Already registered?
+        <!-- SUCCESS -->
 
-                <a href="login.html">
-                    Student Login
-                </a>
+        <div
+            id="success"
+            style="display:none;text-align:center">
 
+            <h2>
+                ✅ Registration Successful!
+            </h2>
+
+            <p>
+                Your Enrollment Number is:
             </p>
 
-        </form>
+            <h1 id="enrollmentNumber">
+                -
+            </h1>
+
+            <div class="notice success">
+
+                Save this enrollment number.
+                You will need it for login.
+
+            </div>
+
+            <a
+                class="registration-btn"
+                href="login.html">
+
+                Go To Login
+
+            </a>
+
+        </div>
+
+
+        <p class="already-member">
+
+            Already registered?
+
+            <a href="login.html">
+                Student Login
+            </a>
+
+        </p>
 
     </div>
 
@@ -174,124 +220,211 @@
         Library Management System
     </p>
 
-    <p class="copyright">
-        © 2026 Aradhya Library. All Rights Reserved.
-    </p>
-
 </footer>
 
 
 <script>
 
-const registrationForm =
-    document.getElementById("registrationForm");
+const API =
+    window.location.protocol === "file:"
+        ? "http://localhost:3000"
+        : "";
 
-const registerBtn =
-    document.getElementById("registerBtn");
+
+/* =========================================
+   ELEMENTS
+========================================= */
+
+const fullNameEl =
+    document.getElementById("fullName");
+
+const addressEl =
+    document.getElementById("address");
+
+const mobileEl =
+    document.getElementById("mobile");
+
+const passwordEl =
+    document.getElementById("password");
+
+const confirmPasswordEl =
+    document.getElementById("confirmPassword");
+
+const createAccountBtn =
+    document.getElementById("createAccountBtn");
 
 
-registrationForm.addEventListener(
-    "submit",
-    async function(event) {
+/* =========================================
+   MESSAGE
+========================================= */
 
-        event.preventDefault();
+function msg(text, type = "notice") {
 
+    const el =
+        document.getElementById("messageBox");
+
+    el.textContent =
+        text || "";
+
+    el.className =
+        type;
+
+    el.style.display =
+        "block";
+}
+
+
+function hideMsg() {
+
+    const el =
+        document.getElementById("messageBox");
+
+    el.style.display =
+        "none";
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+function getMobile() {
+
+    return mobileEl
+        .value
+        .replace(/\D/g, "")
+        .slice(-10);
+
+}
+
+
+/* =========================================
+   CREATE ACCOUNT
+========================================= */
+
+createAccountBtn.onclick =
+    async function () {
 
         const fullName =
-            document
-            .getElementById("fullName")
-            .value
-            .trim();
-
+            fullNameEl
+                .value
+                .trim();
 
         const address =
-            document
-            .getElementById("address")
-            .value
-            .trim();
-
+            addressEl
+                .value
+                .trim();
 
         const mobile =
-            document
-            .getElementById("mobile")
-            .value
-            .trim();
-
+            getMobile();
 
         const password =
-            document
-            .getElementById("password")
-            .value;
-
+            passwordEl
+                .value;
 
         const confirmPassword =
-            document
-            .getElementById("confirmPassword")
-            .value;
+            confirmPasswordEl
+                .value;
 
 
-        /* =========================
-           MOBILE VALIDATION
-        ========================= */
+        /* ==============================
+           VALIDATION
+        ============================== */
 
-        if (!/^[6-9][0-9]{9}$/.test(mobile)) {
+        if (!fullName) {
 
-            alert(
-                "Please enter a valid 10-digit Indian mobile number."
+            msg(
+                "Please enter your full name.",
+                "error"
             );
+
+            fullNameEl.focus();
 
             return;
         }
 
 
-        /* =========================
-           PASSWORD VALIDATION
-        ========================= */
+        if (!address) {
+
+            msg(
+                "Please enter your complete address.",
+                "error"
+            );
+
+            addressEl.focus();
+
+            return;
+        }
+
+
+        if (
+            !/^[6-9]\d{9}$/.test(mobile)
+        ) {
+
+            msg(
+                "Enter a valid 10-digit Indian mobile number.",
+                "error"
+            );
+
+            mobileEl.focus();
+
+            return;
+        }
+
 
         if (password.length < 6) {
 
-            alert(
-                "Password must contain at least 6 characters."
+            msg(
+                "Password must contain at least 6 characters.",
+                "error"
             );
+
+            passwordEl.focus();
 
             return;
         }
 
 
-        /* =========================
-           CONFIRM PASSWORD
-        ========================= */
+        if (
+            password !== confirmPassword
+        ) {
 
-        if (password !== confirmPassword) {
-
-            alert(
-                "Password and Confirm Password do not match."
+            msg(
+                "Passwords do not match.",
+                "error"
             );
+
+            confirmPasswordEl.focus();
 
             return;
         }
 
 
-        /* =========================
-           DISABLE BUTTON
-        ========================= */
+        /* ==============================
+           START
+        ============================== */
 
-        registerBtn.disabled = true;
+        createAccountBtn.disabled =
+            true;
 
-        registerBtn.innerText =
+        createAccountBtn.textContent =
             "Creating Account...";
+
+        hideMsg();
 
 
         try {
 
-            /* =========================
-               SEND DATA TO BACKEND
-            ========================= */
+            /* ==============================
+               REGISTER
+            ============================== */
 
             const response =
                 await fetch(
-                    "https://aradhya-library-student-portal-5.onrender.com/api/register",
+                    API + "/api/register",
                     {
+
                         method: "POST",
 
                         headers: {
@@ -315,162 +448,114 @@ registrationForm.addEventListener(
                                     password
 
                             })
+
                     }
                 );
 
-
-            /* =========================
-               READ RESPONSE
-            ========================= */
 
             const data =
                 await response.json();
 
 
-            /* =========================
-               REGISTRATION FAILED
-            ========================= */
+            /* ==============================
+               ERROR
+            ============================== */
 
             if (!response.ok) {
 
-                alert(
+                throw new Error(
                     data.message ||
                     "Registration failed."
                 );
 
-                registerBtn.disabled = false;
-
-                registerBtn.innerText =
-                    "Create Library Account";
-
-                return;
             }
 
 
-            /* =========================
-               CHECK STUDENT DATA
-            ========================= */
+            /* ==============================
+               SUCCESS
+            ============================== */
 
-            if (
-                !data.student ||
-                !data.enrollmentNumber
-            ) {
+            document
+                .getElementById("step1")
+                .style.display =
+                "none";
 
-                alert(
-                    "Account response incomplete. Please try again."
+
+            document
+                .getElementById("success")
+                .style.display =
+                "block";
+
+
+            document
+                .getElementById(
+                    "enrollmentNumber"
+                )
+                .textContent =
+                data.enrollmentNumber ||
+                "-";
+
+
+            /* ==============================
+               SAVE STUDENT
+            ============================== */
+
+            if (data.student) {
+
+                localStorage.setItem(
+                    "currentStudent",
+                    JSON.stringify(
+                        data.student
+                    )
                 );
 
-                registerBtn.disabled = false;
-
-                registerBtn.innerText =
-                    "Create Library Account";
-
-                return;
             }
 
 
-            /* =========================
-               SAVE CURRENT STUDENT
-            ========================= */
-
-            const currentStudent = {
-
-                id:
-                    data.student.id,
-
-                enrollmentNumber:
-                    data.enrollmentNumber,
-
-                fullName:
-                    data.student.fullName,
-
-                mobile:
-                    data.student.mobile,
-
-                address:
-                    address,
-
-                seatNumber:
-                    "",
-
-                registrationDate:
-                    "",
-
-                totalMonths:
-                    0,
-
-                paidMonths:
-                    0,
-
-                pendingMonths:
-                    0
-
-            };
-
-
-            localStorage.setItem(
-                "currentStudent",
-                JSON.stringify(
-                    currentStudent
-                )
+            msg(
+                "Registration successful.",
+                "success"
             );
 
 
-            /* =========================
-               SUCCESS MESSAGE
-            ========================= */
-
-            alert(
-
-                "Registration Successful!\n\n" +
-
-                "Enrollment Number: " +
-                data.enrollmentNumber +
-
-                "\n\n" +
-
-                "Seat Number: Will be assigned by Admin" +
-
-                "\n\n" +
-
-                "Registration Date: Will be updated by Admin"
-
-            );
-
-
-            /* =========================
-               GO TO LOGIN
-            ========================= */
-
-            window.location.href =
-                "login.html";
-
-        }
-
-
-        catch (error) {
+        } catch (error) {
 
             console.error(
-                "Registration Error:",
+                "Registration error:",
                 error
             );
 
 
-            alert(
-
-                "Backend server se connection nahi ho pa raha.\n\n" +
-
-                "Please check your internet connection or try again."
-
+            msg(
+                error.message ||
+                "Account create nahi ho paaya.",
+                "error"
             );
 
 
-            registerBtn.disabled = false;
+            createAccountBtn.disabled =
+                false;
 
-            registerBtn.innerText =
+            createAccountBtn.textContent =
                 "Create Library Account";
 
         }
+
+    };
+
+
+/* =========================================
+   ONLY NUMBERS IN MOBILE
+========================================= */
+
+mobileEl.addEventListener(
+    "input",
+    function () {
+
+        this.value =
+            this.value
+                .replace(/\D/g, "")
+                .slice(0, 10);
 
     }
 );
@@ -478,7 +563,8 @@ registrationForm.addEventListener(
 </script>
 
 
+<script src="js/app.js"></script>
+
 </body>
 
 </html>
-```
