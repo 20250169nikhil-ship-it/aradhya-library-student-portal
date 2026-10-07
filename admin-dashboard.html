@@ -1,51 +1,222 @@
 <!doctype html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<meta name="viewport"
+content="width=device-width,initial-scale=1.0">
+
 <title>Admin Dashboard | Aradhya Library</title>
+
 <link rel="stylesheet" href="css/style.css">
 
 <style>
-.admin-container{max-width:1200px;margin:auto;padding:25px}
-.admin-header{margin-bottom:20px}
-.summary-box{display:flex;gap:15px;flex-wrap:wrap;margin-top:15px}
-.summary-item{padding:12px 16px;background:#f5f7fa;border-radius:8px}
-.admin-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;margin:15px 0}
-.admin-form input,.admin-form select{width:100%;box-sizing:border-box}
-.save-btn,.small-btn{cursor:pointer}
-.notice{padding:12px;margin:15px 0;border-radius:8px}
-.notice.success{background:#e8f8ee;color:#146c35}
-.notice.error{background:#fdeaea;color:#a40000}
-.student-card{background:#fff;border:1px solid #ddd;border-radius:12px;padding:20px;margin:25px 0;box-shadow:0 3px 12px rgba(0,0,0,.06)}
-.student-top{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
-.table-wrap{width:100%;overflow-x:auto}
-.data-table{width:100%;min-width:1050px;border-collapse:collapse}
-.data-table th,.data-table td{border:1px solid #ddd;padding:9px;text-align:center}
-.data-table input,.data-table select{width:100%;box-sizing:border-box;padding:6px}
-.paid{color:green;font-weight:bold}
-.due{color:red;font-weight:bold}
-.open{color:green;font-weight:bold}
-.closed{color:red;font-weight:bold}
-.action-row{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
-.small-btn{border:0;padding:8px 12px;border-radius:6px}
-.small-btn.green{background:#198754;color:white}
-.small-btn.red{background:#dc3545;color:white}
-.small-btn.blue{background:#0d6efd;color:white}
-.small-btn.orange{background:#f59f00;color:white}
-.loading,.empty{padding:30px;text-align:center}
-.year-box{margin:15px 0;padding:15px;border:1px solid #ddd;border-radius:10px;background:#fff}
-.year-box select{padding:9px 12px;border-radius:6px;border:1px solid #bbb;font-weight:bold}
-.fee-title{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+
+.admin-container{
+max-width:1200px;
+margin:auto;
+padding:25px;
+}
+
+.summary-box{
+display:flex;
+gap:15px;
+flex-wrap:wrap;
+margin:15px 0;
+}
+
+.summary-item{
+padding:12px 16px;
+background:#f5f7fa;
+border-radius:8px;
+}
+
+.admin-form{
+display:grid;
+grid-template-columns:
+repeat(auto-fit,minmax(200px,1fr));
+gap:15px;
+margin:15px 0;
+}
+
+.admin-form input,
+.admin-form select{
+width:100%;
+box-sizing:border-box;
+padding:9px;
+}
+
+.student-card{
+background:#fff;
+border:1px solid #ddd;
+border-radius:12px;
+padding:20px;
+margin:25px 0;
+box-shadow:0 3px 12px rgba(0,0,0,.06);
+}
+
+.student-top{
+display:flex;
+justify-content:space-between;
+gap:20px;
+flex-wrap:wrap;
+}
+
+.table-wrap{
+width:100%;
+overflow-x:auto;
+}
+
+.data-table{
+width:100%;
+min-width:1100px;
+border-collapse:collapse;
+}
+
+.data-table th,
+.data-table td{
+border:1px solid #ddd;
+padding:9px;
+text-align:center;
+}
+
+.data-table input,
+.data-table select{
+width:100%;
+box-sizing:border-box;
+padding:7px;
+}
+
+.action-row{
+display:flex;
+gap:6px;
+flex-wrap:wrap;
+justify-content:center;
+}
+
+.small-btn{
+border:0;
+padding:8px 12px;
+border-radius:6px;
+cursor:pointer;
+}
+
+.green{
+background:#198754;
+color:white;
+}
+
+.red{
+background:#dc3545;
+color:white;
+}
+
+.blue{
+background:#0d6efd;
+color:white;
+}
+
+.orange{
+background:#f59f00;
+color:white;
+}
+
+.paid{
+color:green;
+font-weight:bold;
+}
+
+.due{
+color:red;
+font-weight:bold;
+}
+
+.open{
+color:green;
+font-weight:bold;
+}
+
+.closed{
+color:red;
+font-weight:bold;
+}
+
+.notice{
+padding:12px;
+margin:15px 0;
+border-radius:8px;
+}
+
+.notice.success{
+background:#e8f8ee;
+color:#146c35;
+}
+
+.notice.error{
+background:#fdeaea;
+color:#a40000;
+}
+
+.year-box{
+padding:15px;
+border:1px solid #ddd;
+border-radius:10px;
+background:white;
+margin:15px 0;
+}
+
+.year-box select{
+padding:9px 12px;
+border-radius:6px;
+border:1px solid #bbb;
+font-weight:bold;
+}
+
+.loading,
+.empty{
+padding:30px;
+text-align:center;
+}
+
+.fee-title{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:10px;
+flex-wrap:wrap;
+}
+
+.amount-save{
+display:flex;
+gap:5px;
+align-items:center;
+}
+
+.amount-save input{
+width:100px !important;
+}
 
 @media(max-width:600px){
-.admin-container{padding:12px}
-.student-card{padding:12px}
+
+.admin-container{
+padding:12px;
 }
+
+.student-card{
+padding:12px;
+}
+
+}
+
 </style>
+
 </head>
 
+
 <body>
+
 
 <header class="navbar">
 
@@ -66,16 +237,19 @@ Admin:
 
 <button
 class="logout-btn"
-type="button"
 onclick="logoutAdmin()">
+
 Logout
+
 </button>
 
 </nav>
+
 </header>
 
 
 <main class="admin-container">
+
 
 <div class="admin-header">
 
@@ -84,7 +258,8 @@ Logout
 </h1>
 
 <p>
-Student, seat, monthly fee, admission and attendance management.
+Student, seat, monthly fee,
+admission and attendance management.
 </p>
 
 
@@ -96,33 +271,14 @@ Student, seat, monthly fee, admission and attendance management.
 </div>
 
 <div class="summary-item">
-💰 Default Fee:
-<b>₹700</b>
+💰 Fee:
+<b>Editable</b>
 </div>
 
 <div class="summary-item">
-📅 Selected Year:
+📅 Year:
 <b id="year"></b>
 </div>
-
-</div>
-
-
-<div class="year-box">
-
-<label>
-<b>💰 Fee Year</b>
-</label>
-
-<select id="feeYear">
-
-<option value="2026">2026</option>
-<option value="2027">2027</option>
-<option value="2028">2028</option>
-<option value="2029">2029</option>
-<option value="2030">2030</option>
-
-</select>
 
 </div>
 
@@ -133,6 +289,41 @@ Student, seat, monthly fee, admission and attendance management.
 id="messageBox"
 class="notice"
 style="display:none">
+</div>
+
+
+<div class="year-box">
+
+<label>
+<b>💰 Select Fee Year</b>
+</label>
+
+<br><br>
+
+<select id="feeYear">
+
+<option value="2026">
+2026
+</option>
+
+<option value="2027">
+2027
+</option>
+
+<option value="2028">
+2028
+</option>
+
+<option value="2029">
+2029
+</option>
+
+<option value="2030">
+2030
+</option>
+
+</select>
+
 </div>
 
 
@@ -156,7 +347,6 @@ placeholder="Name / enrollment / mobile">
 
 <button
 class="save-btn"
-type="button"
 onclick="loadStudents()">
 
 🔄 Refresh
@@ -176,24 +366,27 @@ onclick="loadStudents()">
 
 </div>
 
+
 </main>
 
 
 <script>
 
-/* =====================================================
-   CONFIG
-===================================================== */
-
-const API = "";
+const API="";
 
 const token =
-localStorage.getItem("adminToken") || "";
+localStorage.getItem(
+"adminToken"
+) || "";
 
-const adminLoggedIn =
-localStorage.getItem("adminLoggedIn");
+const loggedIn =
+localStorage.getItem(
+"adminLoggedIn"
+);
 
-const months = [
+
+const months=[
+
 "January",
 "February",
 "March",
@@ -206,38 +399,33 @@ const months = [
 "October",
 "November",
 "December"
+
 ];
 
 
-let allStudents = [];
+let allStudents=[];
 
-let selectedFeeYear =
-String(new Date().getFullYear());
+let selectedFeeYear=
+String(
+new Date().getFullYear()
+);
 
-
-/* =====================================================
-   ADMIN CHECK
-===================================================== */
 
 if(
-adminLoggedIn !== "true" ||
+loggedIn!=="true" ||
 !token
 ){
 
-window.location.replace(
+location.replace(
 "admin-login.html"
 );
 
 }
 
 
-/* =====================================================
-   ADMIN NAME
-===================================================== */
-
 document.getElementById(
 "adminName"
-).textContent =
+).textContent=
 localStorage.getItem(
 "adminUsername"
 ) || "Admin";
@@ -245,50 +433,40 @@ localStorage.getItem(
 
 document.getElementById(
 "feeYear"
-).value =
+).value=
 selectedFeeYear;
 
 
 document.getElementById(
 "year"
-).textContent =
+).textContent=
 selectedFeeYear;
 
 
-/* =====================================================
-   ESCAPE
-===================================================== */
-
-function esc(value){
+function esc(v){
 
 return String(
-value ?? ""
+v ?? ""
 ).replace(
 /[&<>"']/g,
-function(ch){
+c=>({
 
-return {
 "&":"&amp;",
 "<":"&lt;",
 ">":"&gt;",
 '"':"&quot;",
 "'":"&#039;"
-}[ch];
 
-}
+}[c])
 );
 
 }
 
 
-/* =====================================================
-   JAVASCRIPT ARGUMENT ESCAPE
-===================================================== */
-
-function jsArg(value){
+function arg(v){
 
 return String(
-value ?? ""
+v ?? ""
 )
 .replace(/\\/g,"\\\\")
 .replace(/'/g,"\\'");
@@ -296,45 +474,31 @@ value ?? ""
 }
 
 
-/* =====================================================
-   MESSAGE
-===================================================== */
-
 function msg(
 text,
 type="success"
 ){
 
-const box =
+const box=
 document.getElementById(
 "messageBox"
 );
 
-box.textContent =
-text;
+box.textContent=text;
 
-box.className =
-"notice " + type;
+box.className=
+"notice "+type;
 
-box.style.display =
+box.style.display=
 "block";
 
 setTimeout(
-function(){
-
-box.style.display =
-"none";
-
-},
+()=>box.style.display="none",
 4000
 );
 
 }
 
-
-/* =====================================================
-   YEAR CHANGE
-===================================================== */
 
 document.getElementById(
 "feeYear"
@@ -342,12 +506,12 @@ document.getElementById(
 "change",
 function(){
 
-selectedFeeYear =
+selectedFeeYear=
 this.value;
 
 document.getElementById(
 "year"
-).textContent =
+).textContent=
 selectedFeeYear;
 
 renderStudents();
@@ -355,10 +519,6 @@ renderStudents();
 }
 );
 
-
-/* =====================================================
-   SEARCH
-===================================================== */
 
 document.getElementById(
 "search"
@@ -368,49 +528,41 @@ renderStudents
 );
 
 
-/* =====================================================
-   LOAD STUDENTS
-===================================================== */
-
 async function loadStudents(){
 
-const box =
+const box=
 document.getElementById(
 "studentsContainer"
 );
 
-box.innerHTML =
+box.innerHTML=
 '<div class="loading">⏳ Loading students...</div>';
 
 
 try{
 
-const response =
+const response=
 await fetch(
-API +
+API+
 "/api/admin/students",
 {
-method:"GET",
-
 headers:{
 "Authorization":
-"Bearer " + token
+"Bearer "+token
 }
-
 }
 );
 
 
-const data =
+const data=
 await response.json();
 
 
 if(
-response.status === 401
+response.status===401
 ){
 
 logoutAdmin();
-
 return;
 
 }
@@ -426,30 +578,26 @@ data.message ||
 }
 
 
-allStudents =
+allStudents=
 data.students || [];
 
 
 document.getElementById(
 "totalStudents"
-).textContent =
+).textContent=
 allStudents.length;
 
 
 renderStudents();
 
-
 }
 catch(error){
 
-console.error(
-"LOAD ERROR:",
-error
-);
+console.error(error);
 
-box.innerHTML =
-'<div class="notice error">' +
-esc(error.message) +
+box.innerHTML=
+'<div class="notice error">'+
+esc(error.message)+
 '</div>';
 
 }
@@ -457,11 +605,7 @@ esc(error.message) +
 }
 
 
-/* =====================================================
-   YEAR FEES
-===================================================== */
-
-function getYearFees(
+function getFees(
 student,
 year
 ){
@@ -477,7 +621,7 @@ return student.feesByYear[year];
 
 
 if(
-String(year) === "2026" &&
+year==="2026" &&
 student.monthlyFees
 ){
 
@@ -489,13 +633,11 @@ return student.monthlyFees;
 return {};
 
 }
-/* =====================================================
-   RENDER STUDENTS
-===================================================== */
+
 
 function renderStudents(){
 
-const query =
+const query=
 document.getElementById(
 "search"
 ).value
@@ -503,31 +645,26 @@ document.getElementById(
 .toLowerCase();
 
 
-const list =
+const list=
 allStudents.filter(
-function(student){
+student=>[
 
-return [
 student.fullName,
 student.enrollmentNumber,
 student.mobile
-].some(
-function(value){
 
-return String(
+].some(
+value=>
+String(
 value || ""
 )
 .toLowerCase()
-.includes(query);
-
-}
-);
-
-}
+.includes(query)
+)
 );
 
 
-const box =
+const box=
 document.getElementById(
 "studentsContainer"
 );
@@ -535,9 +672,9 @@ document.getElementById(
 
 if(!list.length){
 
-box.innerHTML =
-'<div class="empty">' +
-'📚 No students found.' +
+box.innerHTML=
+'<div class="empty">'+
+'📚 No students found.'+
 '</div>';
 
 return;
@@ -545,7 +682,7 @@ return;
 }
 
 
-box.innerHTML =
+box.innerHTML=
 list
 .map(studentCard)
 .join("");
@@ -553,17 +690,13 @@ list
 }
 
 
-/* =====================================================
-   STUDENT CARD
-===================================================== */
-
 function studentCard(student){
 
-const id =
+const id=
 String(student.id);
 
-const fees =
-getYearFees(
+const fees=
+getFees(
 student,
 selectedFeeYear
 );
@@ -573,39 +706,27 @@ return `
 
 <div class="student-card">
 
-
 <div class="student-top">
 
 <div>
 
 <h2 style="color:#173f75">
-
 👤 ${esc(student.fullName)}
-
 </h2>
 
-
 <div>
-
 <b>Enrollment:</b>
 ${esc(student.enrollmentNumber)}
-
 </div>
 
-
 <div>
-
 <b>Mobile:</b>
 +91 ${esc(student.mobile)}
-
 </div>
 
-
 <div>
-
 <b>Address:</b>
 ${esc(student.address)}
-
 </div>
 
 </div>
@@ -616,7 +737,6 @@ ${esc(student.address)}
 <div class="summary-item">
 
 Seat:
-
 <b>
 ${esc(
 student.seatNumber ||
@@ -626,13 +746,11 @@ student.seatNumber ||
 
 </div>
 
-
 <div
 class="summary-item"
 style="margin-top:8px">
 
 Admission:
-
 <b>
 ${esc(
 student.registrationDate ||
@@ -647,22 +765,16 @@ student.registrationDate ||
 </div>
 
 
-
 <h3 style="color:#173f75">
-
 ⚙️ Student Information
-
 </h3>
 
 
 <div class="admin-form">
 
-
 <div>
 
-<label>
-Full Name
-</label>
+<label>Full Name</label>
 
 <input
 id="name-${esc(id)}"
@@ -675,9 +787,7 @@ student.fullName
 
 <div>
 
-<label>
-Mobile
-</label>
+<label>Mobile</label>
 
 <input
 id="mobile-${esc(id)}"
@@ -690,9 +800,7 @@ student.mobile
 
 <div>
 
-<label>
-Seat Number
-</label>
+<label>Seat Number</label>
 
 <input
 id="seat-${esc(id)}"
@@ -706,9 +814,7 @@ placeholder="A-01">
 
 <div>
 
-<label>
-Admission Date
-</label>
+<label>Admission Date</label>
 
 <input
 id="date-${esc(id)}"
@@ -722,14 +828,12 @@ student.registrationDate || ""
 
 <div>
 
-<label>
-Address
-</label>
+<label>Address</label>
 
 <input
 id="address-${esc(id)}"
 value="${esc(
-student.address
+student.address || ""
 )}">
 
 </div>
@@ -740,8 +844,7 @@ style="display:flex;align-items:end">
 
 <button
 class="save-btn"
-type="button"
-onclick="saveStudent('${jsArg(id)}')">
+onclick="saveStudent('${arg(id)}')">
 
 💾 Save
 
@@ -750,11 +853,6 @@ onclick="saveStudent('${jsArg(id)}')">
 </div>
 
 </div>
-
-
-
-<div class="fee-title">
-
 <h3 style="color:#173f75">
 
 💰 Monthly Fees —
@@ -762,12 +860,15 @@ ${selectedFeeYear}
 
 </h3>
 
+
+<div class="fee-title">
+
 <span>
-Default amount: ₹700
+<b>₹500 / ₹700 / Any Amount</b>
+can be set for each month.
 </span>
 
 </div>
-
 
 
 <div class="table-wrap">
@@ -778,37 +879,21 @@ Default amount: ₹700
 
 <tr>
 
-<th>
-Month
-</th>
+<th>Month</th>
 
-<th>
-Amount
-</th>
+<th>Amount</th>
 
-<th>
-Status
-</th>
+<th>Status</th>
 
-<th>
-Admission
-</th>
+<th>Admission</th>
 
-<th>
-Date
-</th>
+<th>Date</th>
 
-<th>
-Mode
-</th>
+<th>Mode</th>
 
-<th>
-Receipt
-</th>
+<th>Receipt</th>
 
-<th>
-Action
-</th>
+<th>Action</th>
 
 </tr>
 
@@ -819,15 +904,12 @@ Action
 
 ${
 months.map(
-function(month){
-
-return feeRow(
+month=>
+feeRow(
 student,
 month,
 fees[month] || {}
-);
-
-}
+)
 ).join("")
 }
 
@@ -838,11 +920,8 @@ fees[month] || {}
 </div>
 
 
-
 <h3 style="color:#173f75">
-
 📍 Attendance
-
 </h3>
 
 
@@ -850,8 +929,10 @@ fees[month] || {}
 
 <button
 class="small-btn blue"
-type="button"
-onclick="loadAttendance('${jsArg(id)}')">
+onclick="
+loadAttendance(
+'${arg(id)}'
+)">
 
 Load Attendance
 
@@ -867,28 +948,38 @@ Load Attendance
 }
 
 
-/* =====================================================
-   FEE ROW
-===================================================== */
-
 function feeRow(
 student,
 month,
 fee
 ){
 
-const id =
+const id=
 String(student.id);
 
-const paid =
-String(
-fee.status || "DUE"
-).toUpperCase() === "PAID";
+
+const amount=
+Number(
+fee.amount ??
+700
+);
 
 
-const admissionStatus =
+const status=
 String(
-fee.admissionStatus || "OPEN"
+fee.status ||
+"DUE"
+).toUpperCase();
+
+
+const paid=
+status==="PAID";
+
+
+const admission=
+String(
+fee.admissionStatus ||
+"OPEN"
 ).toUpperCase();
 
 
@@ -896,47 +987,39 @@ return `
 
 <tr>
 
-
 <td>
-
 <b>
 ${month}
 </b>
-
 </td>
 
 
-
 <td>
+
+<div class="amount-save">
 
 <input
 id="amount-${esc(id)}-${esc(month)}"
 type="number"
 min="0"
 step="1"
-value="${esc(
-fee.amount ?? 700
-)}">
-
-
-<br>
-
+value="${amount}">
 
 <button
 class="small-btn orange"
-type="button"
 onclick="
-saveFeeAmount(
-'${jsArg(id)}',
-'${jsArg(month)}'
+saveAmount(
+'${arg(id)}',
+'${arg(month)}'
 )">
 
 Save ₹
 
 </button>
 
-</td>
+</div>
 
+</td>
 
 
 <td
@@ -955,10 +1038,9 @@ paid
 </td>
 
 
-
 <td
 class="${
-admissionStatus === "CLOSED"
+admission==="CLOSED"
 ? "closed"
 : "open"
 }">
@@ -966,38 +1048,34 @@ admissionStatus === "CLOSED"
 <b>
 
 ${
-admissionStatus === "CLOSED"
+admission==="CLOSED"
 ? "🔴 CLOSED"
 : "🟢 OPEN"
 }
 
 </b>
 
-
 <br>
-
 
 <button
 class="small-btn ${
-admissionStatus === "CLOSED"
+admission==="CLOSED"
 ? "green"
 : "red"
 }"
-type="button"
-
 onclick="
-changeAdmissionStatus(
-'${jsArg(id)}',
-'${jsArg(month)}',
+changeAdmission(
+'${arg(id)}',
+'${arg(month)}',
 '${
-admissionStatus === "CLOSED"
+admission==="CLOSED"
 ? "OPEN"
 : "CLOSED"
 }'
 )">
 
 ${
-admissionStatus === "CLOSED"
+admission==="CLOSED"
 ? "Open"
 : "Close"
 }
@@ -1005,7 +1083,6 @@ admissionStatus === "CLOSED"
 </button>
 
 </td>
-
 
 
 <td>
@@ -1019,7 +1096,6 @@ fee.paidDate ||
 </td>
 
 
-
 <td>
 
 ${esc(
@@ -1028,7 +1104,6 @@ fee.paymentMode ||
 )}
 
 </td>
-
 
 
 <td>
@@ -1041,20 +1116,16 @@ fee.receiptNumber ||
 </td>
 
 
-
 <td>
 
 <div class="action-row">
 
-
 <button
 class="small-btn green"
-type="button"
-
 onclick="
 setFee(
-'${jsArg(id)}',
-'${jsArg(month)}',
+'${arg(id)}',
+'${arg(month)}',
 'PAID'
 )">
 
@@ -1063,15 +1134,12 @@ PAID
 </button>
 
 
-
 <button
 class="small-btn red"
-type="button"
-
 onclick="
 setFee(
-'${jsArg(id)}',
-'${jsArg(month)}',
+'${arg(id)}',
+'${arg(month)}',
 'DUE'
 )">
 
@@ -1088,12 +1156,10 @@ paid
 
 <button
 class="small-btn blue"
-type="button"
-
 onclick="
-receipt(
-'${jsArg(id)}',
-'${jsArg(month)}'
+downloadReceipt(
+'${arg(id)}',
+'${arg(month)}'
 )">
 
 📄 Receipt
@@ -1108,11 +1174,9 @@ receipt(
 
 }
 
-
 </div>
 
 </td>
-
 
 </tr>
 
@@ -1121,48 +1185,44 @@ receipt(
 }
 
 
-/* =====================================================
-   SAVE STUDENT
-===================================================== */
-
 async function saveStudent(id){
 
 try{
 
-const body = {
+const body={
 
 fullName:
 document.getElementById(
-"name-" + id
+"name-"+id
 ).value.trim(),
 
 mobile:
 document.getElementById(
-"mobile-" + id
+"mobile-"+id
 ).value.trim(),
 
 address:
 document.getElementById(
-"address-" + id
+"address-"+id
 ).value.trim(),
 
 seatNumber:
 document.getElementById(
-"seat-" + id
+"seat-"+id
 ).value.trim(),
 
 registrationDate:
 document.getElementById(
-"date-" + id
+"date-"+id
 ).value
 
 };
 
 
-const response =
+const response=
 await fetch(
-API +
-"/api/admin/student/" +
+API+
+"/api/admin/student/"+
 encodeURIComponent(id),
 {
 
@@ -1174,8 +1234,7 @@ headers:{
 "application/json",
 
 "Authorization":
-"Bearer " +
-token
+"Bearer "+token
 
 },
 
@@ -1186,16 +1245,15 @@ JSON.stringify(body)
 );
 
 
-const data =
+const data=
 await response.json();
 
 
 if(
-response.status === 401
+response.status===401
 ){
 
 logoutAdmin();
-
 return;
 
 }
@@ -1213,408 +1271,107 @@ data.error ||
 
 
 msg(
-"✅ Student details saved successfully."
+"✅ Student details saved."
 );
 
-
 await loadStudents();
-
 
 }
 catch(error){
 
-console.error(
-"SAVE STUDENT ERROR:",
-error
-);
-
 msg(
-"❌ Save failed: " +
-error.message,
+"❌ "+error.message,
 "error"
 );
 
 }
 
 }
-/* =====================================================
-   SAVE FEE AMOUNT
-===================================================== */
 
-async function saveFeeAmount(
+
+async function updateFee(
 id,
-month
+month,
+extra
 ){
 
-const student =
+const student=
 allStudents.find(
-function(item){
-
-return String(item.id) ===
-String(id);
-
-}
+s=>
+String(s.id)===
+String(id)
 );
 
 
 if(!student){
 
-msg(
-"Student not found.",
-"error"
+throw new Error(
+"Student not found."
 );
-
-return;
 
 }
 
 
-const input =
-document.getElementById(
-"amount-" +
-id +
-"-" +
-month
-);
-
-
-const amount =
-Number(
-input?.value
-);
-
-
-if(
-!Number.isFinite(amount) ||
-amount < 0
-){
-
-msg(
-"Valid fee amount enter karo.",
-"error"
-);
-
-return;
-
-}
-
-
-const fees =
-getYearFees(
+const fees=
+getFees(
 student,
 selectedFeeYear
 );
 
 
-const oldFee =
+const oldFee=
 fees[month] || {};
 
 
-try{
-
-const response =
-await fetch(
-API +
-"/api/admin/students/" +
-encodeURIComponent(id) +
-"/fee",
-{
-
-method:"PATCH",
-
-headers:{
-
-"Content-Type":
-"application/json",
-
-"Authorization":
-"Bearer " +
-token
-
-},
-
-body:
-JSON.stringify({
+const body={
 
 year:
 selectedFeeYear,
 
 month:
-
 month,
 
 amount:
-amount,
+Number(
+extra.amount ??
+oldFee.amount ??
+700
+),
 
 status:
-oldFee.status ||
+extra.status ??
+oldFee.status ??
 "DUE",
 
 paymentDate:
-oldFee.paymentDate ||
-oldFee.paidDate ||
+extra.paymentDate ??
+oldFee.paymentDate ??
+oldFee.paidDate ??
 "",
 
 paymentMode:
-oldFee.paymentMode ||
+extra.paymentMode ??
+oldFee.paymentMode ??
 "",
 
 receiptNumber:
-oldFee.receiptNumber ||
+extra.receiptNumber ??
+oldFee.receiptNumber ??
 "",
 
 admissionStatus:
-oldFee.admissionStatus ||
-"OPEN"
-
-})
-
-}
-);
-
-
-const data =
-await response.json();
-
-
-if(
-response.status === 401
-){
-
-logoutAdmin();
-
-return;
-
-}
-
-
-if(!response.ok){
-
-throw new Error(
-data.message ||
-data.error ||
-"Fee amount update failed."
-);
-
-}
-
-
-msg(
-"✅ " +
-month +
-" " +
-selectedFeeYear +
-" fee ₹" +
-amount +
-" saved."
-);
-
-
-await loadStudents();
-
-
-}
-catch(error){
-
-console.error(
-"FEE AMOUNT ERROR:",
-error
-);
-
-msg(
-"❌ Fee amount update failed: " +
-error.message,
-"error"
-);
-
-}
-
-}
-
-
-/* =====================================================
-   SET FEE
-===================================================== */
-
-async function setFee(
-id,
-month,
-status
-){
-
-const student =
-allStudents.find(
-function(item){
-
-return String(item.id) ===
-String(id);
-
-}
-);
-
-
-if(!student){
-
-msg(
-"Student not found.",
-"error"
-);
-
-return;
-
-}
-
-
-const fees =
-getYearFees(
-student,
-selectedFeeYear
-);
-
-
-const oldFee =
-fees[month] || {};
-
-
-const amount =
-Number(
-oldFee.amount ?? 700
-);
-
-
-let paymentMode = "";
-
-
-if(status === "PAID"){
-
-paymentMode =
-prompt(
-"Payment Mode:\n\nCash ya Online",
-"Cash"
-);
-
-
-if(!paymentMode){
-
-return;
-
-}
-
-
-paymentMode =
-paymentMode.trim();
-
-
-if(
-paymentMode.toLowerCase() !==
-"cash" &&
-paymentMode.toLowerCase() !==
-"online"
-){
-
-alert(
-"Sirf Cash ya Online enter karo."
-);
-
-return;
-
-}
-
-
-paymentMode =
-paymentMode.toLowerCase() ===
-"cash"
-? "Cash"
-: "Online";
-
-}
-
-
-const today =
-new Date()
-.toLocaleDateString(
-"en-CA",
-{
-timeZone:
-"Asia/Kolkata"
-}
-);
-
-
-const ok =
-confirm(
-
-status === "PAID"
-
-?
-
-`Fee PAID karni hai?
-
-Year: ${selectedFeeYear}
-Month: ${month}
-Amount: ₹${amount}
-Mode: ${paymentMode}`
-
-:
-
-`${month} ${selectedFeeYear} ki fee DUE karni hai?`
-
-);
-
-
-if(!ok){
-
-return;
-
-}
-
-
-const body = {
-
-year:
-selectedFeeYear,
-
-month:
-month,
-
-status:
-status,
-
-amount:
-amount,
-
-paymentDate:
-status === "PAID"
-? today
-: "",
-
-paymentMode:
-status === "PAID"
-? paymentMode
-: "",
-
-receiptNumber:
-status === "PAID"
-? (
-oldFee.receiptNumber ||
-""
-)
-: "",
-
-admissionStatus:
-oldFee.admissionStatus ||
+extra.admissionStatus ??
+oldFee.admissionStatus ??
 "OPEN"
 
 };
 
 
-try{
-
-const response =
+const response=
 await fetch(
-API +
-"/api/admin/students/" +
-encodeURIComponent(id) +
+API+
+"/api/admin/students/"+
+encodeURIComponent(id)+
 "/fee",
 {
 
@@ -1626,8 +1383,7 @@ headers:{
 "application/json",
 
 "Authorization":
-"Bearer " +
-token
+"Bearer "+token
 
 },
 
@@ -1638,17 +1394,16 @@ JSON.stringify(body)
 );
 
 
-const data =
+const data=
 await response.json();
 
 
 if(
-response.status === 401
+response.status===401
 ){
 
 logoutAdmin();
-
-return;
+return null;
 
 }
 
@@ -1664,19 +1419,255 @@ data.error ||
 }
 
 
+return data;
+
+}
+
+
+async function saveAmount(
+id,
+month
+){
+
+try{
+
+const input=
+document.getElementById(
+"amount-"+id+"-"+month
+);
+
+
+const amount=
+Number(
+input.value
+);
+
+
+if(
+!Number.isFinite(amount) ||
+amount<0
+){
+
 msg(
-"✅ " +
-month +
-" " +
-selectedFeeYear +
-" marked " +
-status +
-"."
+"❌ Valid amount enter karo.",
+"error"
+);
+
+return;
+
+}
+
+
+await updateFee(
+id,
+month,
+{
+amount:amount
+}
+);
+
+
+msg(
+"✅ "+
+month+
+" "+selectedFeeYear+
+" fee ₹"+
+amount+
+" saved."
 );
 
 
 await loadStudents();
 
+}
+catch(error){
+
+console.error(error);
+
+msg(
+"❌ Fee save failed: "+
+error.message,
+"error"
+);
+
+}
+
+}
+async function setFee(
+id,
+month,
+status
+){
+
+try{
+
+const student=
+allStudents.find(
+s=>
+String(s.id)===
+String(id)
+);
+
+
+if(!student){
+
+throw new Error(
+"Student not found."
+);
+
+}
+
+
+const fees=
+getFees(
+student,
+selectedFeeYear
+);
+
+
+const oldFee=
+fees[month] || {};
+
+
+const amount=
+Number(
+oldFee.amount ??
+700
+);
+
+
+let paymentMode="";
+
+
+let paymentDate="";
+
+
+if(status==="PAID"){
+
+paymentMode=
+prompt(
+"Payment Mode:\n\nCash ya Online",
+oldFee.paymentMode ||
+"Cash"
+);
+
+
+if(!paymentMode){
+
+return;
+
+}
+
+
+paymentMode=
+paymentMode.trim();
+
+
+if(
+paymentMode.toLowerCase()!=="cash" &&
+paymentMode.toLowerCase()!=="online"
+){
+
+alert(
+"Sirf Cash ya Online enter karo."
+);
+
+return;
+
+}
+
+
+paymentMode=
+paymentMode.toLowerCase()==="cash"
+? "Cash"
+: "Online";
+
+
+paymentDate=
+new Date()
+.toLocaleDateString(
+"en-CA",
+{
+timeZone:
+"Asia/Kolkata"
+}
+);
+
+
+const ok=
+confirm(
+
+"Fee PAID karni hai?\n\n"+
+"Year: "+selectedFeeYear+
+"\nMonth: "+month+
+"\nAmount: ₹"+amount+
+"\nMode: "+paymentMode
+
+);
+
+
+if(!ok){
+
+return;
+
+}
+
+}else{
+
+const ok=
+confirm(
+
+month+
+" "+
+selectedFeeYear+
+" ki fee DUE karni hai?"
+
+);
+
+
+if(!ok){
+
+return;
+
+}
+
+}
+
+
+await updateFee(
+id,
+month,
+{
+
+amount:amount,
+
+status:status,
+
+paymentDate:
+status==="PAID"
+? paymentDate
+: "",
+
+paymentMode:
+status==="PAID"
+? paymentMode
+: ""
+
+}
+);
+
+
+msg(
+"✅ "+
+month+
+" "+
+selectedFeeYear+
+" marked "+
+status+"."
+);
+
+
+await loadStudents();
 
 }
 catch(error){
@@ -1687,7 +1678,7 @@ error
 );
 
 msg(
-"❌ Fee update failed: " +
+"❌ Fee update failed: "+
 error.message,
 "error"
 );
@@ -1697,53 +1688,52 @@ error.message,
 }
 
 
-/* =====================================================
-   ADMISSION OPEN / CLOSE
-===================================================== */
-
-async function changeAdmissionStatus(
+async function changeAdmission(
 id,
 month,
 status
 ){
 
-const student =
+try{
+
+const student=
 allStudents.find(
-function(item){
-
-return String(item.id) ===
-String(id);
-
-}
+s=>
+String(s.id)===
+String(id)
 );
 
 
 if(!student){
 
-msg(
-"Student not found.",
-"error"
+throw new Error(
+"Student not found."
 );
-
-return;
 
 }
 
 
-const fees =
-getYearFees(
+const fees=
+getFees(
 student,
 selectedFeeYear
 );
 
 
-const oldFee =
+const oldFee=
 fees[month] || {};
 
 
-const ok =
+const ok=
 confirm(
-`${month} ${selectedFeeYear} admission ko ${status} karna hai?`
+
+month+
+" "+
+selectedFeeYear+
+" admission ko "+
+status+
+" karna hai?"
+
 );
 
 
@@ -1754,44 +1744,15 @@ return;
 }
 
 
-try{
-
-const response =
-await fetch(
-API +
-"/api/admin/students/" +
-encodeURIComponent(id) +
-"/fee",
-{
-
-method:"PATCH",
-
-headers:{
-
-"Content-Type":
-"application/json",
-
-"Authorization":
-"Bearer " +
-token
-
-},
-
-body:
-JSON.stringify({
-
-year:
-selectedFeeYear,
-
-month:
+await updateFee(
+id,
 month,
-
-admissionStatus:
-status,
+{
 
 amount:
 Number(
-oldFee.amount ?? 700
+oldFee.amount ??
+700
 ),
 
 status:
@@ -1809,64 +1770,33 @@ oldFee.paymentMode ||
 
 receiptNumber:
 oldFee.receiptNumber ||
-""
+"",
 
-})
+admissionStatus:
+status
 
 }
 );
-
-
-const data =
-await response.json();
-
-
-if(
-response.status === 401
-){
-
-logoutAdmin();
-
-return;
-
-}
-
-
-if(!response.ok){
-
-throw new Error(
-data.message ||
-data.error ||
-"Admission status update failed."
-);
-
-}
 
 
 msg(
-"✅ " +
-month +
-" " +
-selectedFeeYear +
-" admission " +
-status +
+"✅ "+
+month+
+" admission "+
+status+
 "."
 );
 
 
 await loadStudents();
 
-
 }
 catch(error){
 
-console.error(
-"ADMISSION STATUS ERROR:",
-error
-);
+console.error(error);
 
 msg(
-"❌ Admission status update failed: " +
+"❌ Admission update failed: "+
 error.message,
 "error"
 );
@@ -1874,62 +1804,59 @@ error.message,
 }
 
 }
-/* =====================================================
-   RECEIPT DOWNLOAD
-===================================================== */
 
-async function receipt(
+
+/* =========================
+   RECEIPT
+========================= */
+
+async function downloadReceipt(
 id,
 month
 ){
 
-const student =
+try{
+
+const student=
 allStudents.find(
-function(item){
-
-return String(item.id) ===
-String(id);
-
-}
+s=>
+String(s.id)===
+String(id)
 );
 
 
 if(!student){
 
-alert(
+throw new Error(
 "Student not found."
 );
-
-return;
 
 }
 
 
-const url =
-API +
-"/api/receipt/" +
+const url=
+API+
+"/api/receipt/"+
 encodeURIComponent(
 student.enrollmentNumber
-) +
-"/" +
+)+
+"/"+
 encodeURIComponent(
 selectedFeeYear
-) +
-"/" +
+)+
+"/"+
 encodeURIComponent(
 month
 );
 
 
-try{
-
-const response =
+const response=
 await fetch(url);
 
 
 if(!response.ok){
 
-const text =
+const text=
 await response.text();
 
 throw new Error(
@@ -1940,24 +1867,44 @@ text ||
 }
 
 
-const blob =
+const blob=
 await response.blob();
 
 
-const blobUrl =
-URL.createObjectURL(blob);
+if(
+!blob ||
+blob.size===0
+){
+
+throw new Error(
+"PDF empty hai."
+);
+
+}
 
 
-const a =
+const blobUrl=
+URL.createObjectURL(
+blob
+);
+
+
+const a=
 document.createElement("a");
 
 
-a.href =
+a.href=
 blobUrl;
 
 
-a.download =
-`Aradhya-Library-${student.enrollmentNumber}-${selectedFeeYear}-${month}-Receipt.pdf`;
+a.download=
+"Aradhya-Library-"+
+student.enrollmentNumber+
+"-"+
+selectedFeeYear+
+"-"+
+month+
+"-Receipt.pdf";
 
 
 document.body.appendChild(a);
@@ -1980,7 +1927,7 @@ blobUrl
 
 
 msg(
-"✅ Receipt downloaded."
+"✅ PDF Receipt downloaded."
 );
 
 
@@ -1993,7 +1940,7 @@ error
 );
 
 msg(
-"❌ Receipt download failed: " +
+"❌ Receipt download failed: "+
 error.message,
 "error"
 );
@@ -2003,63 +1950,60 @@ error.message,
 }
 
 
-/* =====================================================
-   LOAD ATTENDANCE
-===================================================== */
+/* =========================
+   ATTENDANCE
+========================= */
 
 async function loadAttendance(id){
 
-const box =
+const box=
 document.getElementById(
-"att-" + id
+"att-"+id
 );
 
 
-box.innerHTML =
+box.innerHTML=
 "<p>⏳ Loading attendance...</p>";
 
 
 try{
 
-const year =
+const year=
 String(
 new Date().getFullYear()
 );
 
 
-const response =
+const response=
 await fetch(
-API +
-"/api/admin/student/" +
-encodeURIComponent(id) +
-"/attendance/" +
+
+API+
+"/api/admin/student/"+
+encodeURIComponent(id)+
+"/attendance/"+
 year,
+
 {
 
-method:"GET",
-
 headers:{
-
 "Authorization":
-"Bearer " +
-token
-
+"Bearer "+token
 }
 
 }
+
 );
 
 
-const data =
+const data=
 await response.json();
 
 
 if(
-response.status === 401
+response.status===401
 ){
 
 logoutAdmin();
-
 return;
 
 }
@@ -2075,34 +2019,32 @@ data.message ||
 }
 
 
-const attendance =
+const attendance=
 data.attendance || {};
 
 
-const rows =
+const rows=
 Object.values(
 attendance
 )
 .sort(
-function(a,b){
-
-return String(
+(a,b)=>
+String(
 b.date || ""
-).localeCompare(
+)
+.localeCompare(
 String(
 a.date || ""
 )
-);
-
-}
+)
 );
 
 
 if(!rows.length){
 
-box.innerHTML =
-'<div class="notice">' +
-'No attendance records.' +
+box.innerHTML=
+'<div class="notice">'+
+'No attendance records.'+
 '</div>';
 
 return;
@@ -2110,7 +2052,7 @@ return;
 }
 
 
-box.innerHTML = `
+box.innerHTML=`
 
 <div class="table-wrap">
 
@@ -2120,56 +2062,37 @@ box.innerHTML = `
 
 <tr>
 
-<th>
-Date
-</th>
-
-<th>
-IN
-</th>
-
-<th>
-OUT
-</th>
+<th>Date</th>
+<th>IN</th>
+<th>OUT</th>
 
 </tr>
 
 </thead>
 
-
 <tbody>
 
 ${
 rows.map(
-function(row){
-
-return `
+row=>`
 
 <tr>
 
 <td>
-${esc(
-row.date || "-"
-)}
+${esc(row.date || "-")}
 </td>
 
 <td>
-${esc(
-row.inTime || "-"
-)}
+${esc(row.inTime || "-")}
 </td>
 
 <td>
-${esc(
-row.outTime || "-"
-)}
+${esc(row.outTime || "-")}
 </td>
 
 </tr>
 
-`;
-
-}
+`
 ).join("")
 }
 
@@ -2184,28 +2107,19 @@ row.outTime || "-"
 }
 catch(error){
 
-console.error(
-"ATTENDANCE ERROR:",
-error
-);
-
-box.innerHTML =
-`
-<div class="notice error">
-
-❌ ${esc(
-error.message
-)}
-
-</div>
-`;
+box.innerHTML=
+'<div class="notice error">'+
+esc(error.message)+
+'</div>';
 
 }
 
 }
-/* =====================================================
+
+
+/* =========================
    LOGOUT
-===================================================== */
+========================= */
 
 function logoutAdmin(){
 
@@ -2223,40 +2137,32 @@ localStorage.removeItem(
 
 sessionStorage.clear();
 
-
-window.location.replace(
+location.replace(
 "admin-login.html"
 );
+
 
 }
 
 
-/* =====================================================
-   TOKEN CHECK
-===================================================== */
+/* =========================
+   PAGE CHECK
+========================= */
 
 window.addEventListener(
 "pageshow",
 function(){
 
-const loggedIn =
+if(
 localStorage.getItem(
 "adminLoggedIn"
-);
-
-
-const savedToken =
-localStorage.getItem(
+)!=="true" ||
+!localStorage.getItem(
 "adminToken"
-);
-
-
-if(
-loggedIn !== "true" ||
-!savedToken
+)
 ){
 
-window.location.replace(
+location.replace(
 "admin-login.html"
 );
 
@@ -2265,14 +2171,11 @@ window.location.replace(
 }
 );
 
-
-/* =====================================================
-   START
-===================================================== */
 
 loadStudents();
 
 </script>
 
 </body>
+
 </html>
