@@ -1,12 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 
 <meta charset="UTF-8">
-
-<meta name="viewport"
-      content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 
 <title>Aradhya Library - Student Dashboard</title>
 
@@ -15,61 +12,69 @@
 <style>
 
 .receipt-btn{
-    background:#1f6feb;
-    color:white;
-    border:0;
-    border-radius:6px;
-    padding:8px 12px;
-    cursor:pointer;
+background:#1f6feb;
+color:white;
+border:0;
+border-radius:6px;
+padding:8px 12px;
+cursor:pointer;
+font-weight:600;
+margin-top:6px;
 }
 
 .receipt-btn:hover{
-    opacity:.9;
+opacity:.9;
 }
 
 .no-receipt{
-    color:#777;
+color:#777;
 }
 
 .year-box{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    margin:15px 0;
-    flex-wrap:wrap;
+display:flex;
+align-items:center;
+gap:10px;
+margin-bottom:18px;
+flex-wrap:wrap;
+}
+
+.year-box label{
+font-weight:600;
 }
 
 .year-box select{
-    padding:9px 12px;
-    border-radius:7px;
-    border:1px solid #ccc;
-    font-size:15px;
-}
-
-.fee-note{
-    padding:10px 12px;
-    background:#f5f7fa;
-    border-radius:8px;
-    margin-bottom:12px;
+padding:9px 12px;
+border:1px solid #ccc;
+border-radius:6px;
+font-size:15px;
+background:white;
 }
 
 .paid{
-    color:green;
-    font-weight:bold;
+color:#16803c;
+font-weight:700;
 }
 
 .due{
-    color:red;
-    font-weight:bold;
+color:#d93025;
+font-weight:700;
+}
+
+.loading{
+text-align:center;
+padding:20px;
 }
 
 </style>
 
 </head>
 
-
 <body>
 
+
+<!-- =========================
+     NAVBAR
+========================= -->
 
 <header class="navbar">
 
@@ -96,6 +101,11 @@ Logout
 </header>
 
 
+
+<!-- =========================
+     MAIN DASHBOARD
+========================= -->
+
 <main class="dashboard">
 
 
@@ -116,16 +126,21 @@ Student Dashboard
 id="messageBox"
 class="notice"
 style="display:none">
+
 </div>
 
 
-<!-- STUDENT INFORMATION -->
+
+<!-- =========================
+     STUDENT INFORMATION
+========================= -->
 
 <div class="student-card">
 
 <h2>
 👤 Student Information
 </h2>
+
 
 <div class="student-info">
 
@@ -143,6 +158,7 @@ Name
 </div>
 
 
+
 <div class="info-box">
 
 <span>
@@ -154,6 +170,7 @@ Enrollment
 </strong>
 
 </div>
+
 
 
 <div class="info-box">
@@ -169,6 +186,7 @@ Not Assigned
 </div>
 
 
+
 <div class="info-box">
 
 <span>
@@ -180,6 +198,7 @@ Admission Date
 </strong>
 
 </div>
+
 
 
 <div class="info-box">
@@ -200,19 +219,22 @@ Mobile
 </div>
 
 
-<!-- FEES -->
+
+<!-- =========================
+     FEES
+========================= -->
 
 <div class="student-card">
 
 <h2>
-💰 Monthly Fees
+💰 Library Fees
 </h2>
 
 
 <div class="year-box">
 
-<label>
-<b>Fee Year:</b>
+<label for="feeYear">
+Select Year:
 </label>
 
 <select
@@ -243,15 +265,6 @@ onchange="renderFees()">
 
 </div>
 
-
-<div class="fee-note">
-
-💡 Fee amount library/admin ke according change ho sakta hai.
-<br>
-
-₹500 winter fee aur ₹700 normal fee dono supported hain.
-
-</div>
 
 
 <div class="table-wrap">
@@ -294,11 +307,13 @@ Receipt
 <tbody id="feesTable">
 
 <tr>
+<td
+colspan="6"
+class="loading">
 
-<td colspan="6">
 Loading fees...
-</td>
 
+</td>
 </tr>
 
 </tbody>
@@ -310,7 +325,10 @@ Loading fees...
 </div>
 
 
-<!-- ATTENDANCE -->
+
+<!-- =========================
+     TODAY ATTENDANCE
+========================= -->
 
 <div class="student-card">
 
@@ -329,7 +347,9 @@ Location is saved with attendance.
 </p>
 
 
+
 <div class="action-row">
+
 
 <button
 class="small-btn green"
@@ -348,7 +368,9 @@ onclick="markAttendance('out')">
 
 </button>
 
+
 </div>
+
 
 
 <div
@@ -369,6 +391,7 @@ Today's IN
 </div>
 
 
+
 <div class="stat">
 
 <span>
@@ -380,6 +403,7 @@ Today's OUT
 </strong>
 
 </div>
+
 
 
 <div class="stat">
@@ -398,7 +422,12 @@ Attendance Days This Year
 </div>
 
 </div>
-<!-- ATTENDANCE HISTORY -->
+
+
+
+<!-- =========================
+     ATTENDANCE HISTORY
+========================= -->
 
 <div class="student-card">
 
@@ -436,8 +465,12 @@ OUT
 
 <tr>
 
-<td colspan="3">
-Loading...
+<td
+colspan="3"
+class="loading">
+
+Loading attendance...
+
 </td>
 
 </tr>
@@ -454,6 +487,7 @@ Loading...
 </main>
 
 
+
 <script>
 
 
@@ -463,10 +497,9 @@ Loading...
 
 const API =
 window.location.protocol === "file:"
-?
-"http://localhost:3000"
-:
-"";
+? "http://localhost:3000"
+: "";
+
 
 
 /* =========================
@@ -492,6 +525,7 @@ student = null;
 }
 
 
+
 if(!student){
 
 location.replace(
@@ -500,15 +534,6 @@ location.replace(
 
 }
 
-
-/* =========================
-   YEAR
-========================= */
-
-let selectedFeeYear =
-String(
-new Date().getFullYear()
-);
 
 
 /* =========================
@@ -533,8 +558,9 @@ const months = [
 ];
 
 
+
 /* =========================
-   ESCAPE
+   ESCAPE HTML
 ========================= */
 
 function esc(value){
@@ -542,10 +568,9 @@ function esc(value){
 return String(
 value ?? ""
 )
-
 .replace(
 /[&<>"']/g,
-function(ch){
+function(c){
 
 return {
 
@@ -555,13 +580,13 @@ return {
 '"':"&quot;",
 "'":"&#039;"
 
-}[ch];
+}[c];
 
 }
-
 );
 
 }
+
 
 
 /* =========================
@@ -601,6 +626,7 @@ box.style.display =
 }
 
 
+
 /* =========================
    LOAD STUDENT
 ========================= */
@@ -633,15 +659,6 @@ data.message ||
 }
 
 
-if(!data.student){
-
-throw new Error(
-"Student data missing."
-);
-
-}
-
-
 student =
 data.student;
 
@@ -652,20 +669,12 @@ JSON.stringify(student)
 );
 
 
-document.getElementById(
-"feeYear"
-).value =
-selectedFeeYear;
-
-
 render();
 
-}
 
-catch(error){
+}catch(error){
 
 console.error(
-"STUDENT LOAD ERROR:",
 error
 );
 
@@ -679,47 +688,13 @@ error.message,
 }
 
 
-/* =========================
-   GET YEAR FEES
-========================= */
-
-function getYearFees(){
-
-const allYears =
-student.feesByYear || {};
-
-
-let fees =
-allYears[
-selectedFeeYear
-] || {};
-
-
-/*
-2026 old monthlyFees fallback
-*/
-
-if(
-selectedFeeYear === "2026" &&
-Object.keys(fees).length === 0
-){
-
-fees =
-student.monthlyFees || {};
-
-}
-
-
-return fees;
-
-}
-
 
 /* =========================
-   RENDER
+   RENDER STUDENT
 ========================= */
 
 function render(){
+
 
 document.getElementById(
 "studentName"
@@ -743,13 +718,46 @@ student.seatNumber ||
 document.getElementById(
 "admissionDate"
 ).textContent =
-student.registrationDate || "-";
+student.registrationDate ||
+"-";
 
 
 document.getElementById(
 "mobile"
 ).textContent =
 student.mobile || "-";
+
+
+
+/* =====================
+   CURRENT YEAR
+===================== */
+
+const currentYear =
+String(
+new Date().getFullYear()
+);
+
+
+const yearSelect =
+document.getElementById(
+"feeYear"
+);
+
+
+if(
+[...yearSelect.options]
+.some(
+option =>
+option.value ===
+currentYear
+)
+){
+
+yearSelect.value =
+currentYear;
+
+}
 
 
 renderFees();
@@ -759,39 +767,78 @@ renderAttendance();
 }
 
 
+
+/* =========================
+   GET YEAR FEES
+========================= */
+
+function getYearFees(){
+
+const year =
+document.getElementById(
+"feeYear"
+).value;
+
+
+const allFees =
+student.feesByYear ||
+{};
+
+
+/*
+2026 old data fallback
+*/
+
+if(
+year === "2026" &&
+(
+!allFees["2026"] ||
+Object.keys(
+allFees["2026"]
+).length === 0
+)
+){
+
+return (
+student.monthlyFees ||
+{}
+);
+
+}
+
+
+return (
+allFees[year] ||
+{}
+);
+
+}
+
+
+
 /* =========================
    RENDER FEES
 ========================= */
 
 function renderFees(){
 
-const select =
+const table =
 document.getElementById(
-"feeYear"
+"feesTable"
 );
-
-
-if(select){
-
-selectedFeeYear =
-String(select.value);
-
-}
 
 
 const fees =
 getYearFees();
 
 
-document.getElementById(
-"feesTable"
-).innerHTML =
-
+table.innerHTML =
 months.map(
 function(month){
 
 const fee =
-fees[month] || {};
+fees[month] ||
+{};
 
 
 const status =
@@ -802,74 +849,31 @@ fee.status || "DUE"
 
 const amount =
 Number(
-fee.amount || 700
+fee.amount || 0
 );
 
 
-const paid =
-status === "PAID";
-
-
-return `
-
-<tr>
-
-<td>
-<b>${esc(month)}</b>
-</td>
-
-
-<td>
-₹${amount}
-</td>
-
-
-<td
-class="${
-paid
-? "paid"
-: "due"
-}">
-
-${
-paid
-? "🟢 PAID"
-: "🔴 DUE"
-}
-
-</td>
-
-
-<td>
-
-${esc(
+const paymentDate =
 fee.paymentDate ||
 fee.paidDate ||
-"-"
-)}
-
-</td>
+"-";
 
 
-<td>
-
-${esc(
+const paymentMode =
 fee.paymentMode ||
-"-"
-)}
-
-</td>
+"-";
 
 
-<td>
+let receiptHTML =
+`<span class="no-receipt">-</span>`;
 
-${
-paid &&
+
+if(
+status === "PAID" &&
 fee.receiptNumber
+){
 
-?
-
-`
+receiptHTML = `
 
 <div>
 ${esc(
@@ -877,143 +881,58 @@ fee.receiptNumber
 )}
 </div>
 
-
 <button
-
 class="receipt-btn"
-
-type="button"
-
-onclick="
-downloadReceipt(
+onclick="downloadReceipt(
 '${esc(month)}'
 )">
 
-⬇ Download PDF
+⬇ Download Receipt
 
 </button>
-
-`
-
-:
-
-`<span
-class="no-receipt">
--
-</span>`
-
-}
-
-</td>
-
-</tr>
 
 `;
 
 }
 
-).join("");
-
-}
-
-
-/* =========================
-   RENDER ATTENDANCE
-========================= */
-
-function renderAttendance(){
-
-const year =
-String(
-new Date().getFullYear()
-);
-
-
-const records =
-student.attendance?.[
-year
-] || {};
-
-
-const dates =
-Object.keys(
-records
-)
-.sort()
-.reverse();
-
-
-const today =
-new Date()
-.toISOString()
-.slice(
-0,
-10
-);
-
-
-const todayRecord =
-records[today] || {};
-
-
-document.getElementById(
-"todayIn"
-).textContent =
-todayRecord.inTime || "-";
-
-
-document.getElementById(
-"todayOut"
-).textContent =
-todayRecord.outTime || "-";
-
-
-document.getElementById(
-"attendanceCount"
-).textContent =
-dates.filter(
-function(date){
-
-return records[
-date
-].inTime;
-
-}
-
-).length;
-
-
-document.getElementById(
-"attendanceTable"
-).innerHTML =
-
-dates.length
-
-?
-
-dates.map(
-function(date){
 
 return `
 
 <tr>
 
 <td>
-${esc(date)}
+${esc(month)}
 </td>
 
 <td>
-${esc(
-records[date].inTime ||
-"-"
-)}
+₹${amount}
+</td>
+
+<td
+class="${
+status === "PAID"
+? "paid"
+: "due"
+}">
+
+${
+status === "PAID"
+? "🟢 PAID"
+: "🔴 DUE"
+}
+
 </td>
 
 <td>
-${esc(
-records[date].outTime ||
-"-"
-)}
+${esc(paymentDate)}
+</td>
+
+<td>
+${esc(paymentMode)}
+</td>
+
+<td>
+${receiptHTML}
 </td>
 
 </tr>
@@ -1021,41 +940,33 @@ records[date].outTime ||
 `;
 
 }
-).join("")
-
-:
-
-`
-
-<tr>
-
-<td colspan="3">
-
-No attendance records yet.
-
-</td>
-
-</tr>
-
-`;
+).join("");
 
 }
+
+
+
 /* =========================
-   PDF RECEIPT DOWNLOAD
+   DOWNLOAD REAL PDF RECEIPT
 ========================= */
 
 async function downloadReceipt(
 month
 ){
 
-try{
+const year =
+document.getElementById(
+"feeYear"
+).value;
+
 
 const fees =
 getYearFees();
 
 
 const fee =
-fees[month] || {};
+fees[month] ||
+{};
 
 
 const status =
@@ -1064,7 +975,9 @@ fee.status || ""
 ).toUpperCase();
 
 
-if(status !== "PAID"){
+if(
+status !== "PAID"
+){
 
 message(
 "Receipt sirf PAID fee ke liye available hai.",
@@ -1076,22 +989,14 @@ return;
 }
 
 
-if(!fee.receiptNumber){
+try{
+
 
 message(
-"Receipt number available nahi hai.",
-"error"
+"Receipt generate ho rahi hai...",
+"notice"
 );
 
-return;
-
-}
-
-
-/*
-Backend se actual PDF
-download hoga.
-*/
 
 const url =
 API +
@@ -1101,17 +1006,11 @@ student.enrollmentNumber
 ) +
 "/" +
 encodeURIComponent(
-selectedFeeYear
+year
 ) +
 "/" +
 encodeURIComponent(
 month
-);
-
-
-message(
-"Receipt PDF prepare ho rahi hai...",
-"notice"
 );
 
 
@@ -1121,13 +1020,37 @@ await fetch(url);
 
 if(!response.ok){
 
+const errorText =
+await response.text();
+
+
+throw new Error(
+errorText ||
+"Receipt download failed."
+);
+
+}
+
+
+const contentType =
+response.headers.get(
+"content-type"
+) || "";
+
+
+if(
+!contentType.includes(
+"application/pdf"
+)
+){
+
 const text =
 await response.text();
 
 
 throw new Error(
 text ||
-"Receipt download failed."
+"Server did not return PDF."
 );
 
 }
@@ -1137,37 +1060,27 @@ const blob =
 await response.blob();
 
 
-if(
-!blob ||
-blob.size === 0
-){
-
-throw new Error(
-"PDF file empty hai."
-);
-
-}
-
-
-const downloadUrl =
+const blobURL =
 URL.createObjectURL(
 blob
 );
 
 
 const link =
-document.createElement("a");
+document.createElement(
+"a"
+);
 
 
 link.href =
-downloadUrl;
+blobURL;
 
 
 link.download =
 "Aradhya-Library-" +
 student.enrollmentNumber +
 "-" +
-selectedFeeYear +
+year +
 "-" +
 month +
 "-Receipt.pdf";
@@ -1188,7 +1101,7 @@ setTimeout(
 function(){
 
 URL.revokeObjectURL(
-downloadUrl
+blobURL
 );
 
 },
@@ -1197,24 +1110,22 @@ downloadUrl
 
 
 message(
-"PDF Receipt download ho gayi.",
+"✅ Receipt PDF download ho gayi.",
 "success"
 );
 
 
-}
-
-catch(error){
+}catch(error){
 
 console.error(
-"RECEIPT DOWNLOAD ERROR:",
+"RECEIPT ERROR:",
 error
 );
 
 
 message(
-error.message ||
-"Receipt download nahi ho saki.",
+"❌ Receipt download failed: " +
+error.message,
 "error"
 );
 
@@ -1223,8 +1134,140 @@ error.message ||
 }
 
 
+
 /* =========================
-   ATTENDANCE
+   ATTENDANCE RENDER
+========================= */
+
+function renderAttendance(){
+
+
+const year =
+String(
+new Date().getFullYear()
+);
+
+
+const records =
+(
+student.attendance &&
+student.attendance[year]
+) || {};
+
+
+const dates =
+Object.keys(records)
+.sort()
+.reverse();
+
+
+const today =
+new Date()
+.toISOString()
+.slice(
+0,
+10
+);
+
+
+const todayRecord =
+records[today] ||
+{};
+
+
+document.getElementById(
+"todayIn"
+).textContent =
+todayRecord.inTime ||
+"-";
+
+
+document.getElementById(
+"todayOut"
+).textContent =
+todayRecord.outTime ||
+"-";
+
+
+document.getElementById(
+"attendanceCount"
+).textContent =
+dates.filter(
+function(date){
+
+return records[date].inTime;
+
+}
+).length;
+
+
+
+document.getElementById(
+"attendanceTable"
+).innerHTML =
+
+dates.length
+
+?
+
+dates.map(
+function(date){
+
+const record =
+records[date] ||
+{};
+
+
+return `
+
+<tr>
+
+<td>
+${esc(date)}
+</td>
+
+<td>
+${esc(
+record.inTime || "-"
+)}
+</td>
+
+<td>
+${esc(
+record.outTime || "-"
+)}
+</td>
+
+</tr>
+
+`;
+
+}
+).join("")
+
+:
+
+`
+
+<tr>
+
+<td
+colspan="3">
+
+No attendance records yet.
+
+</td>
+
+</tr>
+
+`;
+
+}
+
+
+
+/* =========================
+   MARK ATTENDANCE
 ========================= */
 
 function markAttendance(
@@ -1245,11 +1288,13 @@ return;
 }
 
 
+
 navigator.geolocation.getCurrentPosition(
 
 async function(position){
 
 try{
+
 
 const response =
 await fetch(
@@ -1301,8 +1346,7 @@ data.message ||
 
 
 message(
-data.message ||
-"Attendance marked.",
+data.message,
 "success"
 );
 
@@ -1310,12 +1354,9 @@ data.message ||
 await loadStudent();
 
 
-}
-
-catch(error){
+}catch(error){
 
 console.error(
-"ATTENDANCE ERROR:",
 error
 );
 
@@ -1328,6 +1369,8 @@ error.message,
 
 },
 
+
+
 function(){
 
 message(
@@ -1336,6 +1379,8 @@ message(
 );
 
 },
+
+
 
 {
 
@@ -1350,6 +1395,7 @@ maximumAge:0
 );
 
 }
+
 
 
 /* =========================
@@ -1372,6 +1418,7 @@ localStorage.removeItem(
 
 sessionStorage.clear();
 
+
 location.replace(
 "login.html"
 );
@@ -1379,8 +1426,9 @@ location.replace(
 }
 
 
+
 /* =========================
-   PAGE CHECK
+   PAGE SECURITY
 ========================= */
 
 window.addEventListener(
@@ -1403,15 +1451,19 @@ location.replace(
 );
 
 
+
 /* =========================
-   INITIAL LOAD
+   START
 ========================= */
 
 loadStudent();
 
+
 </script>
+
+
 <script src="js/app.js"></script>
 
-</body>
 
+</body>
 </html>
