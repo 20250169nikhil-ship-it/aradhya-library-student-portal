@@ -106,12 +106,11 @@ Admin: <strong id="adminName">Admin</strong>
    CONFIG
 ================================ */
 
-const API_URL =
-    window.location.protocol === "file:"
-        ? "http://localhost:3000"
-        : "";
+// Fix: API_URL ko properly set kiya gaya hai taaki Live Server par bhi kaam kare.
+const API_URL = "http://localhost:3000";
 
-const ADMIN_TOKEN = "ARADHYA_ADMIN_ACCESS";
+// Fix: Hardcoded token hata kar localStorage se token fetch kiya gaya hai.
+const ADMIN_TOKEN = localStorage.getItem("adminToken") || "";
 
 let allStudents = [];
 
