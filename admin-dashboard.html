@@ -1,103 +1,172 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
 <title>Aradhya Library - Admin Dashboard</title>
+
 <link rel="stylesheet" href="css/style.css">
 
 <style>
+
 body{background:#f4f7fb}
+
 .admin-container{width:95%;max-width:1500px;margin:30px auto}
+
 .header-card,.student-card{background:#fff;padding:22px;border-radius:15px;
 box-shadow:0 4px 18px rgba(0,0,0,.08);margin-bottom:25px}
+
 .header-card h1{color:#123f78;margin-top:0}
+
 .topbar{display:flex;justify-content:space-between;align-items:center;
 gap:15px;flex-wrap:wrap}
+
 .form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
 gap:15px;margin:15px 0}
+
 label{font-weight:bold;display:block;margin-bottom:6px}
+
 input,select{width:100%;box-sizing:border-box;padding:10px;
 border:1px solid #ccd3dc;border-radius:7px}
+
 button{border:0;border-radius:7px;padding:9px 13px;cursor:pointer;
 font-weight:bold}
+
 .save{background:#123f78;color:#fff}
+
 .paid{background:#16a34a;color:#fff}
+
 .due{background:#dc2626;color:#fff}
+
 .receipt{background:#2563eb;color:#fff}
+
 .logout{background:#dc2626;color:#fff}
+
 .open{background:#16a34a;color:#fff}
+
 .close{background:#dc2626;color:#fff}
+
 .student-name{color:#123f78}
+
 .table-wrap{overflow-x:auto}
+
 table{width:100%;border-collapse:collapse;min-width:1050px}
+
 th,td{border:1px solid #ddd;padding:9px;text-align:center}
+
 th{background:#eef3f8;color:#123f78}
+
 .paid-text{color:#15803d;font-weight:bold}
+
 .due-text{color:#dc2626;font-weight:bold}
+
 .actions{display:flex;gap:5px;justify-content:center;flex-wrap:wrap}
+
 .msg{padding:12px;border-radius:8px;margin:10px 0;display:none}
+
 .success{background:#dcfce7;color:#166534}
+
 .error{background:#fee2e2;color:#991b1b}
+
 </style>
+
 </head>
 
 <body>
 
 <header class="navbar">
+
 <div class="logo">📚 Aradhya Library</div>
+
 <nav>
+
 <a href="index.html">Home</a>
+
 <span style="color:white;margin:0 15px">
+
 Admin: <strong id="adminName">Admin</strong>
+
 </span>
+
 <button class="logout" onclick="adminLogout()">Logout</button>
+
 </nav>
+
 </header>
 
 <section>
+
 <div class="admin-container">
 
 <div class="header-card">
 
 <div class="topbar">
+
 <div>
+
 <h1>🔐 Admin Dashboard</h1>
+
 <p>Student, Fee & Admission Management</p>
+
 </div>
 
 <div>
+
 <label>Fee Year</label>
+
 <select id="feeYear">
+
 <option value="2026">2026</option>
+
 <option value="2027">2027</option>
+
 <option value="2028">2028</option>
+
 <option value="2029">2029</option>
+
 <option value="2030">2030</option>
+
 </select>
+
 </div>
+
 </div>
 
 <div id="message" class="msg"></div>
 
 <p>
+
 👨‍🎓 Total Students:
+
 <strong id="totalStudents">0</strong>
+
 </p>
 
 </div>
 
 <div id="studentsContainer">
+
 <div class="header-card">⏳ Loading students...</div>
+
 </div>
 
 </div>
+
 </section>
 
 <footer>
+
 <div class="footer-logo">📚 Aradhya Library</div>
+
 <p>Library Management System</p>
+
 <p class="copyright">© 2026 Aradhya Library. All Rights Reserved.</p>
+
 </footer>
 
 <script>
@@ -106,10 +175,8 @@ Admin: <strong id="adminName">Admin</strong>
    CONFIG
 ================================ */
 
-// Fix: API_URL ko properly set kiya gaya hai taaki Live Server par bhi kaam kare.
-const API_URL = "http://localhost:3000";
+const API_URL = "";
 
-// Fix: Hardcoded token hata kar localStorage se token fetch kiya gaya hai.
 const ADMIN_TOKEN = localStorage.getItem("adminToken") || "";
 
 let allStudents = [];
@@ -118,7 +185,6 @@ const months = [
 "January","February","March","April","May","June",
 "July","August","September","October","November","December"
 ];
-
 
 /* ================================
    ADMIN CHECK
@@ -132,31 +198,37 @@ if(localStorage.getItem("adminLoggedIn") !== "true"){
 document.getElementById("adminName").textContent =
     localStorage.getItem("adminUsername") || "Admin";
 
-
 /* ================================
    MESSAGE
 ================================ */
 
 function showMessage(text,type="success"){
+
     const box=document.getElementById("message");
+
     box.textContent=text;
+
     box.className="msg "+type;
+
     box.style.display="block";
 
     setTimeout(()=>{
-        box.style.display="none";
-    },3000);
-}
 
+        box.style.display="none";
+
+    },3000);
+
+}
 
 /* ================================
    YEAR
 ================================ */
 
 function getYear(){
-    return document.getElementById("feeYear").value;
-}
 
+    return document.getElementById("feeYear").value;
+
+}
 
 /* ================================
    LOAD STUDENTS
@@ -173,22 +245,30 @@ async function loadStudents(){
     try{
 
         const response = await fetch(
+
             API_URL+"/api/admin/students",
+
             {
                 method:"GET",
+
                 headers:{
                     "Authorization":
                         "Bearer "+ADMIN_TOKEN
                 }
             }
+
         );
 
         const data=await response.json();
 
         if(!response.ok){
+
             throw new Error(
+
                 data.message || "Students load failed"
+
             );
+
         }
 
         allStudents=data.students || [];
@@ -203,13 +283,18 @@ async function loadStudents(){
         console.error(error);
 
         container.innerHTML =
-        `<div class="header-card">
-            ❌ Students load nahi hue.<br><br>
-            ${escapeHtml(error.message)}
-        </div>`;
-    }
-}
 
+        `<div class="header-card">
+
+            ❌ Students load nahi hue.<br><br>
+
+            ${escapeHtml(error.message)}
+
+        </div>`;
+
+    }
+
+}
 
 /* ================================
    RENDER STUDENTS
@@ -226,6 +311,7 @@ function renderStudents(){
         '<div class="header-card">📚 No students found.</div>';
 
         return;
+
     }
 
     container.innerHTML="";
@@ -239,65 +325,103 @@ function renderStudents(){
         card.innerHTML=`
 
         <h2 class="student-name">
+
             👤 ${escapeHtml(student.fullName || "Student")}
+
         </h2>
 
         <p>
+
             <b>Enrollment:</b>
+
             ${escapeHtml(student.enrollmentNumber || "-")}
+
         </p>
 
         <p>
+
             <b>Mobile:</b>
+
             ${escapeHtml(student.mobile || "-")}
+
         </p>
 
         <p>
+
             <b>Address:</b>
+
             ${escapeHtml(student.address || "-")}
+
         </p>
 
         <hr>
 
         <h3 class="student-name">
+
             ⚙️ Student Details
+
         </h3>
 
         <div class="form-grid">
 
             <div>
+
                 <label>Seat Number</label>
+
                 <input
+
                     id="seat-${student.id}"
+
                     value="${escapeAttr(
+
                         student.seatNumber || ""
+
                     )}"
+
                     placeholder="A-01">
+
             </div>
 
             <div>
+
                 <label>Admission / Registration Date</label>
+
                 <input
+
                     type="date"
+
                     id="date-${student.id}"
+
                     value="${dateInput(
+
                         student.registrationDate ||
+
                         student.admissionDate
+
                     )}">
+
             </div>
 
             <div style="display:flex;align-items:end">
+
                 <button
+
                     class="save"
+
                     onclick="saveStudent('${student.id}')">
+
                     💾 Save Details
+
                 </button>
+
             </div>
 
         </div>
 
         <h3 class="student-name">
+
             💰 Fees - Year ${getYear()}
+
         </h3>
 
         <div class="table-wrap">
@@ -305,24 +429,37 @@ function renderStudents(){
         <table>
 
         <thead>
+
         <tr>
+
             <th>Month</th>
+
             <th>Amount</th>
+
             <th>Status</th>
+
             <th>Payment Date</th>
+
             <th>Mode</th>
+
             <th>Receipt No.</th>
+
             <th>Admission</th>
+
             <th>Action</th>
+
         </tr>
+
         </thead>
 
         <tbody id="fees-${student.id}">
+
         </tbody>
 
         </table>
 
         </div>
+
         `;
 
         container.appendChild(card);
@@ -330,9 +467,8 @@ function renderStudents(){
         renderFees(student);
 
     });
+
 }
-
-
 /* ================================
    GET YEAR FEES
 ================================ */
@@ -342,23 +478,34 @@ function getYearFees(student){
     const year=getYear();
 
     if(
+
         student.feesByYear &&
+
         student.feesByYear[year]
+
     ){
+
         return student.feesByYear[year];
+
     }
 
     /* Preserve old 2026 data */
+
     if(
+
         year==="2026" &&
+
         student.monthlyFees
+
     ){
+
         return student.monthlyFees;
+
     }
 
     return {};
-}
 
+}
 
 /* ================================
    RENDER FEES
@@ -367,8 +514,11 @@ function getYearFees(student){
 function renderFees(student){
 
     const tbody =
+
         document.getElementById(
+
             "fees-"+student.id
+
         );
 
     if(!tbody)return;
@@ -380,21 +530,33 @@ function renderFees(student){
     months.forEach(month=>{
 
         const fee=yearFees[month] || {
+
             amount:700,
+
             status:"DUE",
+
             paymentDate:"",
+
             paidDate:"",
+
             paymentMode:"",
+
             receiptNumber:"",
+
             admissionStatus:"OPEN"
+
         };
 
         const status=
+
             String(fee.status || "DUE").toUpperCase();
 
         const admission=
+
             String(
+
                 fee.admissionStatus || "OPEN"
+
             ).toUpperCase();
 
         const tr=document.createElement("tr");
@@ -404,112 +566,195 @@ function renderFees(student){
         <td><b>${month}</b></td>
 
         <td>
+
             <input
+
                 type="number"
+
                 min="0"
+
                 step="1"
+
                 id="amount-${student.id}-${month}"
+
                 value="${Number(fee.amount ?? 700)}"
+
                 style="width:85px">
 
             <br>
 
             <button
+
                 class="save"
+
                 style="margin-top:5px"
+
                 onclick="
+
                     saveFeeAmount(
+
                         '${student.id}',
+
                         '${month}'
+
                     )
+
                 ">
+
                 Save ₹
+
             </button>
+
         </td>
 
         <td class="${
+
             status==="PAID"
+
                 ? "paid-text"
+
                 : "due-text"
+
         }">
+
             ${
+
                 status==="PAID"
+
                     ? "🟢 PAID"
+
                     : "🔴 DUE"
+
             }
+
         </td>
 
         <td>
+
             ${escapeHtml(
+
                 fee.paymentDate ||
+
                 fee.paidDate ||
+
                 "-"
+
             )}
+
         </td>
 
         <td>
+
             ${escapeHtml(
+
                 fee.paymentMode || "-"
+
             )}
+
         </td>
 
         <td>
+
             ${escapeHtml(
+
                 fee.receiptNumber || "-"
+
             )}
+
         </td>
 
         <td>
+
             ${
+
                 admission==="OPEN"
+
                     ? "🟢 OPEN"
+
                     : "🔴 CLOSED"
+
             }
+
         </td>
 
         <td>
+
             <div class="actions">
 
                 <button
+
                     class="paid"
+
                     onclick="
+
                         markPaid(
+
                             '${student.id}',
+
                             '${month}'
+
                         )
+
                     ">
+
                     PAID
+
                 </button>
 
                 <button
+
                     class="due"
+
                     onclick="
+
                         markDue(
+
                             '${student.id}',
+
                             '${month}'
+
                         )
+
                     ">
+
                     DUE
+
                 </button>
 
                 ${
+
                     status==="PAID"
+
                     ? `
+
                     <button
+
                         class="receipt"
+
                         onclick="
+
                             downloadReceipt(
+
                                 '${student.id}',
+
                                 '${month}'
+
                             )
+
                         ">
+
                         📄 Receipt
+
                     </button>
+
                     `
+
                     :""
+
                 }
 
             </div>
+
         </td>
 
         `;
@@ -517,20 +762,20 @@ function renderFees(student){
         tbody.appendChild(tr);
 
     });
-}
 
+}
 
 /* ================================
    YEAR CHANGE
 ================================ */
 
 document.getElementById("feeYear")
+
 .addEventListener("change",()=>{
 
     renderStudents();
 
 });
-
 
 /* ================================
    SAVE STUDENT
@@ -539,47 +784,83 @@ document.getElementById("feeYear")
 async function saveStudent(id){
 
     const seat=
+
         document.getElementById(
+
             "seat-"+id
+
         ).value.trim();
 
     const date=
+
         document.getElementById(
+
             "date-"+id
+
         ).value;
 
     try{
 
+        /*
+          IMPORTANT:
+          Current backend supports:
+          PUT /api/admin/student/:id
+        */
+
         const response=await fetch(
+
             API_URL+
-            "/api/admin/students/"+
+
+            "/api/admin/student/"+
+            
             encodeURIComponent(id),
+
             {
-                method:"PATCH",
+
+                method:"PUT",
+
                 headers:{
+
                     "Content-Type":
+
                         "application/json",
+
                     "Authorization":
+
                         "Bearer "+ADMIN_TOKEN
+
                 },
+
                 body:JSON.stringify({
+
                     seatNumber:seat,
+
                     registrationDate:date
+
                 })
+
             }
+
         );
 
         const data=await response.json();
 
         if(!response.ok){
+
             throw new Error(
+
                 data.message ||
+
                 "Student details update failed"
+
             );
+
         }
 
         showMessage(
+
             "✅ Seat number & admission date saved!"
+
         );
 
         await loadStudents();
@@ -589,13 +870,18 @@ async function saveStudent(id){
         console.error(error);
 
         showMessage(
-            "❌ Save failed: "+
-            error.message,
-            "error"
-        );
-    }
-}
 
+            "❌ Save failed: "+
+
+            error.message,
+
+            "error"
+
+        );
+
+    }
+
+}
 
 /* ================================
    SAVE FEE AMOUNT
@@ -604,8 +890,11 @@ async function saveStudent(id){
 async function saveFeeAmount(id,month){
 
     const input=
+
         document.getElementById(
+
             `amount-${id}-${month}`
+
         );
 
     const amount=Number(input.value);
@@ -615,11 +904,15 @@ async function saveFeeAmount(id,month){
         alert("Valid amount enter karo.");
 
         return;
+
     }
 
     const student=
+
         allStudents.find(
+
             s=>String(s.id)===String(id)
+
         );
 
     const year=getYear();
@@ -631,42 +924,71 @@ async function saveFeeAmount(id,month){
     try{
 
         const response=await fetch(
+
             API_URL+
-            "/api/admin/students/"+
-            id+
-            "/fee",
+
+            "/api/admin/student/"+
+
+            encodeURIComponent(id)+
+
+            "/fee/"+
+            
+            encodeURIComponent(year)+
+
+            "/"+
+
+            encodeURIComponent(month),
+
             {
-                method:"PATCH",
+
+                method:"PUT",
+
                 headers:{
+
                     "Content-Type":
+
                         "application/json",
+
                     "Authorization":
+
                         "Bearer "+ADMIN_TOKEN
+
                 },
+
                 body:JSON.stringify({
 
                     year:year,
+
                     month:month,
 
                     amount:amount,
 
                     status:
+
                         oldFee.status || "DUE",
 
                     paymentDate:
+
                         oldFee.paymentDate || "",
 
                     paymentMode:
+
                         oldFee.paymentMode || "",
 
                     receiptNumber:
+
                         oldFee.receiptNumber || "",
 
                     admissionStatus:
+
                         oldFee.admissionStatus ||
+
                         "OPEN"
+
                 })
+
             }
+
         );
 
         const data=await response.json();
@@ -674,13 +996,19 @@ async function saveFeeAmount(id,month){
         if(!response.ok){
 
             throw new Error(
+
                 data.message ||
+
                 "Fee amount update failed"
+
             );
+
         }
 
         showMessage(
+
             `✅ ${month} ${year} fee ₹${amount} saved!`
+
         );
 
         await loadStudents();
@@ -690,12 +1018,19 @@ async function saveFeeAmount(id,month){
         console.error(error);
 
         showMessage(
+
             "❌ Fee save failed: "+
+
             error.message,
+
             "error"
+
         );
+
     }
+
 }
+
 /* ================================
    GET CURRENT AMOUNT
 ================================ */
@@ -703,26 +1038,36 @@ async function saveFeeAmount(id,month){
 function currentAmount(id,month){
 
     const input=
+
         document.getElementById(
+
             `amount-${id}-${month}`
+
         );
 
     if(input && input.value!==""){
+
         return Number(input.value);
+
     }
 
     const student=
+
         allStudents.find(
+
             s=>String(s.id)===String(id)
+
         );
 
     const fees=getYearFees(student);
 
     return Number(
-        fees?.[month]?.amount ?? 700
-    );
-}
 
+        fees?.[month]?.amount ?? 700
+
+    );
+
+}
 
 /* ================================
    MARK PAID
@@ -731,47 +1076,67 @@ function currentAmount(id,month){
 async function markPaid(id,month){
 
     const amount=
+
         currentAmount(id,month);
 
     const modeInput=prompt(
+
         "Payment Mode:\n\nCash ya Online",
+
         "Cash"
+
     );
 
     if(!modeInput)return;
 
     const mode=modeInput
+
         .trim()
+
         .toLowerCase();
 
     if(mode!=="cash" && mode!=="online"){
 
         alert(
+
             "Sirf Cash ya Online enter karo."
+
         );
 
         return;
+
     }
 
     const paymentMode=
+
         mode==="cash"
+
             ? "Cash"
+
             : "Online";
 
     const receiptNumber=
+
         makeReceiptNumber(id,month);
 
     const today=
+
         indiaDate();
 
     const ok=confirm(
 
         "Fee PAID karni hai?\n\n"+
+
         "Year: "+getYear()+"\n"+
+
         "Month: "+month+"\n"+
+
         "Amount: ₹"+amount+"\n"+
+
         "Date: "+today+"\n"+
+
         "Mode: "+paymentMode+"\n"+
+
         "Receipt: "+receiptNumber
 
     );
@@ -779,19 +1144,30 @@ async function markPaid(id,month){
     if(!ok)return;
 
     await updateFee(
-        id,
-        month,
-        {
-            year:getYear(),
-            status:"PAID",
-            amount:amount,
-            paymentDate:today,
-            paymentMode:paymentMode,
-            receiptNumber:receiptNumber
-        }
-    );
-}
 
+        id,
+
+        month,
+
+        {
+
+            year:getYear(),
+
+            status:"PAID",
+
+            amount:amount,
+
+            paymentDate:today,
+
+            paymentMode:paymentMode,
+
+            receiptNumber:receiptNumber
+
+        }
+
+    );
+
+}
 
 /* ================================
    MARK DUE
@@ -800,15 +1176,21 @@ async function markPaid(id,month){
 async function markDue(id,month){
 
     const ok=confirm(
+
         month+
+
         " ki fee DUE karni hai?"
+
     );
 
     if(!ok)return;
 
     const student=
+
         allStudents.find(
+
             s=>String(s.id)===String(id)
+
         );
 
     const fees=getYearFees(student);
@@ -816,86 +1198,139 @@ async function markDue(id,month){
     const oldFee=fees[month] || {};
 
     await updateFee(
-        id,
-        month,
-        {
-            year:getYear(),
-            status:"DUE",
-            amount:Number(
-                oldFee.amount ?? 700
-            ),
-            paymentDate:"",
-            paymentMode:"",
-            receiptNumber:""
-        }
-    );
-}
 
+        id,
+
+        month,
+
+        {
+
+            year:getYear(),
+
+            status:"DUE",
+
+            amount:Number(
+
+                oldFee.amount ?? 700
+
+            ),
+
+            paymentDate:"",
+
+            paymentMode:"",
+
+            receiptNumber:""
+
+        }
+
+    );
+
+}
 
 /* ================================
    UPDATE FEE
 ================================ */
 
 async function updateFee(
+
     id,
+
     month,
+
     values
+
 ){
 
     try{
 
         const response=await fetch(
+
             API_URL+
-            "/api/admin/students/"+
-            id+
-            "/fee",
+
+            "/api/admin/student/"+
+
+            encodeURIComponent(id)+
+
+            "/fee/"+
+            
+            encodeURIComponent(values.year)+
+
+            "/"+
+
+            encodeURIComponent(month),
+
             {
-                method:"PATCH",
+
+                method:"PUT",
+
                 headers:{
+
                     "Content-Type":
+
                         "application/json",
+
                     "Authorization":
+
                         "Bearer "+ADMIN_TOKEN
+
                 },
+
                 body:JSON.stringify({
 
                     year:
+
                         values.year,
 
                     month:
+
                         month,
 
                     amount:
+
                         values.amount,
 
                     status:
+
                         values.status,
 
                     paymentDate:
+
                         values.paymentDate,
 
                     paymentMode:
+
                         values.paymentMode,
 
                     receiptNumber:
+
                         values.receiptNumber
+
                 })
+
             }
+
         );
 
         const data=
+
             await response.json();
 
         if(!response.ok){
 
             throw new Error(
+
                 data.message ||
+
                 "Fee update failed"
+
             );
+
         }
 
         showMessage(
+
             `✅ ${month} ${values.year} fee updated!`
+
         );
 
         await loadStudents();
@@ -905,14 +1340,18 @@ async function updateFee(
         console.error(error);
 
         showMessage(
+
             "❌ Fee update failed: "+
+
             error.message,
+
             "error"
+
         );
+
     }
+
 }
-
-
 /* ================================
    RECEIPT NUMBER
 ================================ */
@@ -922,23 +1361,36 @@ function makeReceiptNumber(id,month){
     const year=getYear();
 
     const random=
+
         Math.floor(
+
             1000+
+
             Math.random()*9000
+
         );
 
     return(
-        "AL-"+
-        year+
-        "-"+
-        String(id).slice(-6)+
-        "-"+
-        month.substring(0,3).toUpperCase()+
-        "-"+
-        random
-    );
-}
 
+        "AL-"+
+
+        year+
+
+        "-"+
+
+        String(id).slice(-6)+
+
+        "-"+
+
+        month.substring(0,3).toUpperCase()+
+
+        "-"+
+
+        random
+
+    );
+
+}
 
 /* ================================
    DOWNLOAD RECEIPT
@@ -947,20 +1399,30 @@ function makeReceiptNumber(id,month){
 function downloadReceipt(id,month){
 
     const url=
+
         API_URL+
+
         "/api/receipt/"+
+        
         encodeURIComponent(id)+
+
         "/"+
+
         encodeURIComponent(getYear())+
+
         "/"+
+
         encodeURIComponent(month);
 
     window.open(
-        url,
-        "_blank"
-    );
-}
 
+        url,
+
+        "_blank"
+
+    );
+
+}
 
 /* ================================
    INDIA DATE
@@ -969,31 +1431,50 @@ function downloadReceipt(id,month){
 function indiaDate(){
 
     const parts=
+
         new Intl.DateTimeFormat(
+
             "en-CA",
+
             {
+
                 timeZone:"Asia/Kolkata",
+
                 year:"numeric",
+
                 month:"2-digit",
+
                 day:"2-digit"
+
             }
+
         ).formatToParts(new Date());
 
     const get=
+
         type=>
+
             parts.find(
+
                 x=>x.type===type
+
             )?.value;
 
     return(
-        get("year")+
-        "-"+
-        get("month")+
-        "-"+
-        get("day")
-    );
-}
 
+        get("year")+
+
+        "-"+
+
+        get("month")+
+
+        "-"+
+
+        get("day")
+
+    );
+
+}
 
 /* ================================
    DATE INPUT
@@ -1006,30 +1487,46 @@ function dateInput(value){
     const text=String(value);
 
     if(
+
         /^\d{4}-\d{2}-\d{2}$/.test(text)
+
     ){
+
         return text;
+
     }
 
     const d=new Date(value);
 
     if(isNaN(d.getTime())){
+
         return "";
+
     }
 
     return(
-        d.getFullYear()+
-        "-"+
-        String(
-            d.getMonth()+1
-        ).padStart(2,"0")+
-        "-"+
-        String(
-            d.getDate()
-        ).padStart(2,"0")
-    );
-}
 
+        d.getFullYear()+
+
+        "-"+
+
+        String(
+
+            d.getMonth()+1
+
+        ).padStart(2,"0")+
+
+        "-"+
+
+        String(
+
+            d.getDate()
+
+        ).padStart(2,"0")
+
+    );
+
+}
 
 /* ================================
    ESCAPE
@@ -1038,17 +1535,24 @@ function dateInput(value){
 function escapeHtml(value){
 
     return String(value ?? "")
+
         .replaceAll("&","&amp;")
+
         .replaceAll("<","&lt;")
+
         .replaceAll(">","&gt;")
+
         .replaceAll('"',"&quot;")
+
         .replaceAll("'","&#039;");
+
 }
 
 function escapeAttr(value){
-    return escapeHtml(value);
-}
 
+    return escapeHtml(value);
+
+}
 
 /* ================================
    LOGOUT
@@ -1057,21 +1561,28 @@ function escapeAttr(value){
 function adminLogout(){
 
     localStorage.removeItem(
+
         "adminLoggedIn"
+
     );
 
     localStorage.removeItem(
+
         "adminUsername"
+
     );
 
     localStorage.removeItem(
+
         "adminToken"
+
     );
 
     window.location.href=
-        "admin-login.html";
-}
 
+        "admin-login.html";
+
+}
 
 /* ================================
    START
@@ -1082,4 +1593,5 @@ loadStudents();
 </script>
 
 </body>
+
 </html>
