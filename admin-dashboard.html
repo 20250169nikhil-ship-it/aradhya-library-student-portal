@@ -1,3477 +1,1086 @@
-<!doctype html>
-
+<!DOCTYPE html>
 <html lang="en">
-
-
-
 <head>
-
-
-
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Aradhya Library - Admin Dashboard</title>
+<link rel="stylesheet" href="css/style.css">
 
-
-
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0">
-
-
-
-<title>
-    Admin Dashboard | Aradhya Library
-</title>
-
-
-
-<link
-    rel="stylesheet"
-    href="css/style.css">
-
-
-
+<style>
+body{background:#f4f7fb}
+.admin-container{width:95%;max-width:1500px;margin:30px auto}
+.header-card,.student-card{background:#fff;padding:22px;border-radius:15px;
+box-shadow:0 4px 18px rgba(0,0,0,.08);margin-bottom:25px}
+.header-card h1{color:#123f78;margin-top:0}
+.topbar{display:flex;justify-content:space-between;align-items:center;
+gap:15px;flex-wrap:wrap}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:15px;margin:15px 0}
+label{font-weight:bold;display:block;margin-bottom:6px}
+input,select{width:100%;box-sizing:border-box;padding:10px;
+border:1px solid #ccd3dc;border-radius:7px}
+button{border:0;border-radius:7px;padding:9px 13px;cursor:pointer;
+font-weight:bold}
+.save{background:#123f78;color:#fff}
+.paid{background:#16a34a;color:#fff}
+.due{background:#dc2626;color:#fff}
+.receipt{background:#2563eb;color:#fff}
+.logout{background:#dc2626;color:#fff}
+.open{background:#16a34a;color:#fff}
+.close{background:#dc2626;color:#fff}
+.student-name{color:#123f78}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:1050px}
+th,td{border:1px solid #ddd;padding:9px;text-align:center}
+th{background:#eef3f8;color:#123f78}
+.paid-text{color:#15803d;font-weight:bold}
+.due-text{color:#dc2626;font-weight:bold}
+.actions{display:flex;gap:5px;justify-content:center;flex-wrap:wrap}
+.msg{padding:12px;border-radius:8px;margin:10px 0;display:none}
+.success{background:#dcfce7;color:#166534}
+.error{background:#fee2e2;color:#991b1b}
+</style>
 </head>
-
-
-
-
 
 <body>
 
-
-
-
-
 <header class="navbar">
-
-
-
-    <div class="logo">
-
-        📚 Aradhya Library
-
-    </div>
-
-
-
-
-
-    <nav>
-
-
-
-        <a href="index.html">
-
-            Home
-
-        </a>
-
-
-
-        <span>
-
-            Admin:
-
-            <b id="adminName">
-
-                Admin
-
-            </b>
-
-        </span>
-
-
-
-        <button
-            class="logout-btn"
-            type="button"
-            onclick="logoutAdmin()">
-
-            Logout
-
-        </button>
-
-
-
-    </nav>
-
-
-
+<div class="logo">📚 Aradhya Library</div>
+<nav>
+<a href="index.html">Home</a>
+<span style="color:white;margin:0 15px">
+Admin: <strong id="adminName">Admin</strong>
+</span>
+<button class="logout" onclick="adminLogout()">Logout</button>
+</nav>
 </header>
 
-
-
-
-
-
-
-<main class="admin-container">
-
-
-
-
-
-    <div class="admin-header">
-
-
-
-        <h1>
-
-            🔐 Admin Dashboard
-
-        </h1>
-
-
-
-        <p>
-
-            Student, seat, monthly fee and attendance management.
-
-        </p>
-
-
-
-
-
-        <div class="summary-box">
-
-
-
-            <div class="summary-item">
-
-
-
-                👨‍🎓 Students:
-
-
-
-                <span id="totalStudents">
-
-                    0
-
-                </span>
-
-
-
-            </div>
-
-
-
-
-
-            <div class="summary-item">
-
-
-
-                💰 Monthly Fee:
-
-                ₹700
-
-
-
-            </div>
-
-
-
-
-
-            <div class="summary-item">
-
-
-
-                📅 Year:
-
-
-
-                <span id="year"></span>
-
-
-
-            </div>
-
-
-
-        </div>
-
-
-
-    </div>
-
-
-
-
-
-
-
-    <div
-        id="messageBox"
-        class="notice"
-        style="display:none">
-
-
-
-    </div>
-
-
-
-
-
-
-
-    <div class="admin-form">
-
-
-
-        <div>
-
-
-
-            <label>
-
-                Search Student
-
-            </label>
-
-
-
-            <input
-                id="search"
-                placeholder="Name / enrollment / mobile">
-
-
-
-        </div>
-
-
-
-
-
-        <div
-            style="display:flex;align-items:end">
-
-
-
-            <button
-                class="save-btn"
-                type="button"
-                onclick="loadStudents()">
-
-
-
-                🔄 Refresh
-
-
-
-            </button>
-
-
-
-        </div>
-
-
-
-    </div>
-
-
-
-
-
-
-
-    <div id="studentsContainer">
-
-
-
-        <div class="loading">
-
-            Loading students...
-
-        </div>
-
-
-
-    </div>
-
-
-
-
-
-</main>
-
-
-
-
-
-
+<section>
+<div class="admin-container">
+
+<div class="header-card">
+
+<div class="topbar">
+<div>
+<h1>🔐 Admin Dashboard</h1>
+<p>Student, Fee & Admission Management</p>
+</div>
+
+<div>
+<label>Fee Year</label>
+<select id="feeYear">
+<option value="2026">2026</option>
+<option value="2027">2027</option>
+<option value="2028">2028</option>
+<option value="2029">2029</option>
+<option value="2030">2030</option>
+</select>
+</div>
+</div>
+
+<div id="message" class="msg"></div>
+
+<p>
+👨‍🎓 Total Students:
+<strong id="totalStudents">0</strong>
+</p>
+
+</div>
+
+<div id="studentsContainer">
+<div class="header-card">⏳ Loading students...</div>
+</div>
+
+</div>
+</section>
+
+<footer>
+<div class="footer-logo">📚 Aradhya Library</div>
+<p>Library Management System</p>
+<p class="copyright">© 2026 Aradhya Library. All Rights Reserved.</p>
+</footer>
 
 <script>
 
+/* ================================
+   CONFIG
+================================ */
 
-
-/* =====================================================
-   API
-===================================================== */
-
-const API =
-
+const API_URL =
     window.location.protocol === "file:"
-
         ? "http://localhost:3000"
-
         : "";
 
-
-
-
-
-
-
-/* =====================================================
-   ADMIN LOGIN CHECK
-===================================================== */
-
-let token =
-
-    localStorage.getItem("adminToken");
-
-
-
-let adminLoggedIn =
-
-    localStorage.getItem("adminLoggedIn");
-
-
-
-
-
-if (
-
-    adminLoggedIn !== "true" ||
-
-    !token
-
-) {
-
-
-
-    window.location.replace(
-
-        "admin-login.html"
-
-    );
-
-}
-
-
-
-
-
-
-
-/* =====================================================
-   ADMIN NAME
-===================================================== */
-
-document.getElementById(
-
-    "adminName"
-
-).textContent =
-
-    localStorage.getItem(
-
-        "adminUsername"
-
-    ) || "Admin";
-
-
-
-
-
-
-
-/* =====================================================
-   YEAR
-===================================================== */
-
-document.getElementById(
-
-    "year"
-
-).textContent =
-
-    new Date().getFullYear();
-
-
-
-
-
-
-
-/* =====================================================
-   VARIABLES
-===================================================== */
+const ADMIN_TOKEN = "ARADHYA_ADMIN_ACCESS";
 
 let allStudents = [];
 
-
-
-
-
 const months = [
-
-
-
-    "January",
-
-    "February",
-
-    "March",
-
-    "April",
-
-    "May",
-
-    "June",
-
-
-
-    "July",
-
-    "August",
-
-    "September",
-
-    "October",
-
-    "November",
-
-    "December"
-
-
-
+"January","February","March","April","May","June",
+"July","August","September","October","November","December"
 ];
 
 
+/* ================================
+   ADMIN CHECK
+================================ */
+
+if(localStorage.getItem("adminLoggedIn") !== "true"){
+    alert("Please login as Admin first.");
+    window.location.href="admin-login.html";
+}
+
+document.getElementById("adminName").textContent =
+    localStorage.getItem("adminUsername") || "Admin";
 
 
+/* ================================
+   MESSAGE
+================================ */
 
+function showMessage(text,type="success"){
+    const box=document.getElementById("message");
+    box.textContent=text;
+    box.className="msg "+type;
+    box.style.display="block";
 
-
-/* =====================================================
-   ESCAPE HTML
-===================================================== */
-
-function esc(value) {
-
-
-
-    return String(
-
-        value ?? ""
-
-    ).replace(
-
-        /[&<>"']/g,
-
-        function(character) {
-
-
-
-            return {
-
-
-
-                "&": "&amp;",
-
-                "<": "&lt;",
-
-                ">": "&gt;",
-
-                '"': "&quot;",
-
-                "'": "&#039;"
-
-
-
-            }[character];
-
-
-
-        }
-
-    );
-
+    setTimeout(()=>{
+        box.style.display="none";
+    },3000);
 }
 
 
+/* ================================
+   YEAR
+================================ */
+
+function getYear(){
+    return document.getElementById("feeYear").value;
+}
 
 
+/* ================================
+   LOAD STUDENTS
+================================ */
 
+async function loadStudents(){
 
+    const container =
+        document.getElementById("studentsContainer");
 
-/* =====================================================
-   MESSAGE
-===================================================== */
+    container.innerHTML =
+        '<div class="header-card">⏳ Loading students...</div>';
 
-function msg(
+    try{
 
-    text,
-
-    type = "notice"
-
-) {
-
-
-
-    const box =
-
-        document.getElementById(
-
-            "messageBox"
-
+        const response = await fetch(
+            API_URL+"/api/admin/students",
+            {
+                method:"GET",
+                headers:{
+                    "Authorization":
+                        "Bearer "+ADMIN_TOKEN
+                }
+            }
         );
 
+        const data=await response.json();
 
-
-    box.className =
-
-        "notice " + type;
-
-
-
-    box.textContent =
-
-        text;
-
-
-
-    box.style.display =
-
-        "block";
-
-
-
-    setTimeout(
-
-        function() {
-
-
-
-            box.style.display =
-
-                "none";
-
-
-
-        },
-
-        4000
-
-    );
-
-}
-
-
-
-
-
-
-
-/* =====================================================
-   LOAD STUDENTS
-===================================================== */
-
-async function loadStudents() {
-
-
-
-    try {
-
-
-
-        const response =
-
-            await fetch(
-
-                API +
-
-                "/api/admin/students",
-
-                {
-
-                    method: "GET",
-
-
-
-                    headers: {
-
-                        "Authorization":
-
-                            "Bearer " +
-
-                            token
-
-                    }
-
-                }
-
-            );
-
-
-
-
-
-        const data =
-
-            await response.json();
-
-
-
-
-
-        /* =============================================
-           LOGIN/TOKEN INVALID
-        ============================================= */
-
-        if (
-
-            response.status === 401
-
-        ) {
-
-
-
-            logoutAdmin();
-
-
-
-            return;
-
-
-
-        }
-
-
-
-
-
-        if (!response.ok) {
-
-
-
+        if(!response.ok){
             throw new Error(
-
-                data.message ||
-
-                "Unable to load students."
-
+                data.message || "Students load failed"
             );
-
-
-
         }
 
+        allStudents=data.students || [];
 
-
-
-
-        allStudents =
-
-            data.students || [];
-
-
-
-
-
-        document.getElementById(
-
-            "totalStudents"
-
-        ).textContent =
-
+        document.getElementById("totalStudents").textContent =
             allStudents.length;
 
+        renderStudents();
 
-
-
-
-        render();
-
-
-
-    }
-
-
-
-    catch (error) {
-
-
+    }catch(error){
 
         console.error(error);
 
-
-
-        msg(
-
-            error.message ||
-
-            "Students load nahi ho pa rahe.",
-
-            "error"
-
-        );
-
+        container.innerHTML =
+        `<div class="header-card">
+            ❌ Students load nahi hue.<br><br>
+            ${escapeHtml(error.message)}
+        </div>`;
     }
-
-
-
 }
 
 
-
-
-
-
-
-/* =====================================================
-   SEARCH
-===================================================== */
-
-document
-
-    .getElementById("search")
-
-    .addEventListener(
-
-        "input",
-
-        render
-
-    );
-
-
-
-
-
-
-
-/* =====================================================
+/* ================================
    RENDER STUDENTS
-===================================================== */
+================================ */
 
-function render() {
+function renderStudents(){
 
+    const container =
+        document.getElementById("studentsContainer");
 
+    if(!allStudents.length){
 
-    const query =
-
-        document
-
-            .getElementById("search")
-
-            .value
-
-            .trim()
-
-            .toLowerCase();
-
-
-
-
-
-    const list =
-
-        allStudents.filter(
-
-            function(student) {
-
-
-
-                return [
-
-
-
-                    student.fullName,
-
-
-
-                    student.enrollmentNumber,
-
-
-
-                    student.mobile
-
-
-
-                ].some(
-
-                    function(value) {
-
-
-
-                        return String(
-
-                            value || ""
-
-                        )
-
-                            .toLowerCase()
-
-                            .includes(query);
-
-
-
-                    }
-
-                );
-
-
-
-            }
-
-        );
-
-
-
-
-
-    const box =
-
-        document.getElementById(
-
-            "studentsContainer"
-
-        );
-
-
-
-
-
-    if (!list.length) {
-
-
-
-        box.innerHTML =
-
-            '<div class="empty">' +
-
-            '📚 No students found.' +
-
-            '</div>';
-
-
+        container.innerHTML =
+        '<div class="header-card">📚 No students found.</div>';
 
         return;
-
-
-
     }
 
+    container.innerHTML="";
 
+    allStudents.forEach(student=>{
 
+        const card=document.createElement("div");
 
+        card.className="student-card";
 
-    box.innerHTML =
+        card.innerHTML=`
 
-        list
+        <h2 class="student-name">
+            👤 ${escapeHtml(student.fullName || "Student")}
+        </h2>
 
-            .map(studentCard)
+        <p>
+            <b>Enrollment:</b>
+            ${escapeHtml(student.enrollmentNumber || "-")}
+        </p>
 
-            .join("");
+        <p>
+            <b>Mobile:</b>
+            ${escapeHtml(student.mobile || "-")}
+        </p>
 
-}
+        <p>
+            <b>Address:</b>
+            ${escapeHtml(student.address || "-")}
+        </p>
 
+        <hr>
 
+        <h3 class="student-name">
+            ⚙️ Student Details
+        </h3>
 
-
-
-
-
-/* =====================================================
-   STUDENT CARD
-===================================================== */
-
-function studentCard(student) {
-
-
-
-    const fees =
-
-        student.monthlyFees || {};
-
-
-
-
-
-    return `
-
-
-
-<div class="student-card">
-
-
-
-
-
-    <div class="student-top">
-
-
-
-        <div>
-
-
-
-            <h2
-
-                style="
-
-                    color:#173f75;
-
-                    margin-top:0
-
-                ">
-
-
-
-                👤
-
-                ${esc(student.fullName)}
-
-
-
-            </h2>
-
-
-
-
+        <div class="form-grid">
 
             <div>
-
-
-
-                <b>
-
-                    Enrollment:
-
-                </b>
-
-
-
-                ${esc(
-
-                    student.enrollmentNumber
-
-                )}
-
-
-
+                <label>Seat Number</label>
+                <input
+                    id="seat-${student.id}"
+                    value="${escapeAttr(
+                        student.seatNumber || ""
+                    )}"
+                    placeholder="A-01">
             </div>
-
-
-
-
 
             <div>
-
-
-
-                <b>
-
-                    Mobile:
-
-                </b>
-
-
-
-                +91
-
-                ${esc(
-
-                    student.mobile
-
-                )}
-
-
-
-            </div>
-
-
-
-
-
-            <div>
-
-
-
-                <b>
-
-                    Address:
-
-                </b>
-
-
-
-                ${esc(
-
-                    student.address
-
-                )}
-
-
-
-            </div>
-
-
-
-        </div>
-
-
-
-
-
-        <div>
-
-
-
-            <div class="summary-item">
-
-                Seat:
-
-                <b>
-
-                    ${esc(
-
-                        student.seatNumber ||
-
-                        "Not Assigned"
-
-                    )}
-
-                </b>
-
-            </div>
-
-
-
-
-
-            <div
-
-                class="summary-item"
-
-                style="margin-top:8px">
-
-
-
-                Admission:
-
-                <b>
-
-                    ${esc(
-
+                <label>Admission / Registration Date</label>
+                <input
+                    type="date"
+                    id="date-${student.id}"
+                    value="${dateInput(
                         student.registrationDate ||
-
-                        "-"
-
-                    )}
-
-                </b>
-
-
-
+                        student.admissionDate
+                    )}">
             </div>
 
-
-
-        </div>
-
-
-
-    </div>
-
-
-
-
-
-
-
-    <h3
-
-        style="
-
-            color:#173f75
-
-        ">
-
-
-
-        ⚙️ Student Information
-
-
-
-    </h3>
-
-
-
-
-
-    <div class="admin-form">
-
-
-
-
-
-        <div>
-
-
-
-            <label>
-
-                Full Name
-
-            </label>
-
-
-
-            <input
-
-                id="name-${student.id}"
-
-                value="${esc(
-
-                    student.fullName
-
-                )}">
-
-
+            <div style="display:flex;align-items:end">
+                <button
+                    class="save"
+                    onclick="saveStudent('${student.id}')">
+                    💾 Save Details
+                </button>
+            </div>
 
         </div>
 
-
-
-
-
-        <div>
-
-
-
-            <label>
-
-                Mobile
-
-            </label>
-
-
-
-            <input
-
-                id="mobile-${student.id}"
-
-                value="${esc(
-
-                    student.mobile
-
-                )}">
-
-
-
-        </div>
-
-
-
-
-
-        <div>
-
-
-
-            <label>
-
-                Seat Number
-
-            </label>
-
-
-
-            <input
-
-                id="seat-${student.id}"
-
-                value="${esc(
-
-                    student.seatNumber || ""
-
-                )}"
-
-                placeholder="A-01">
-
-
-
-        </div>
-
-
-
-
-
-        <div>
-
-
-
-            <label>
-
-                Admission Date
-
-            </label>
-
-
-
-            <input
-
-                id="date-${student.id}"
-
-                type="date"
-
-                value="${esc(
-
-                    student.registrationDate || ""
-
-                )}">
-
-
-
-        </div>
-
-
-
-
-
-        <div>
-
-
-
-            <label>
-
-                Address
-
-            </label>
-
-
-
-            <input
-
-                id="address-${student.id}"
-
-                value="${esc(
-
-                    student.address
-
-                )}">
-
-
-
-        </div>
-
-
-
-
-
-        <div
-
-            style="
-
-                display:flex;
-
-                align-items:end
-
-            ">
-
-
-
-            <button
-
-                class="save-btn"
-
-                type="button"
-
-                onclick="
-
-                    saveStudent(${student.id})
-
-                ">
-
-
-
-                💾 Save
-
-
-
-            </button>
-
-
-
-        </div>
-
-
-
-    </div>
-
-
-
-
-
-
-
-    <h3
-
-        style="
-
-            color:#173f75
-
-        ">
-
-
-
-        💰 Monthly Fees — ₹700
-
-
-
-    </h3>
-
-
-
-
-
-    <div class="table-wrap">
-
-
-
-        <table class="data-table">
-
-
-
-            <thead>
-
-
-
-                <tr>
-
-
-
-                    <th>
-
-                        Month
-
-                    </th>
-
-
-
-                    <th>
-
-                        Status
-
-                    </th>
-
-
-
-                    <th>
-
-                        Date
-
-                    </th>
-
-
-
-                    <th>
-
-                        Mode
-
-                    </th>
-
-
-
-                    <th>
-
-                        Receipt
-
-                    </th>
-
-
-
-                    <th>
-
-                        Admission
-
-                    </th>
-
-
-
-                    <th>
-
-                        Action
-
-                    </th>
-
-
-
-                </tr>
-
-
-
-            </thead>
-
-
-
-
-
-            <tbody>
-
-
-
-                ${months.map(
-
-                    function(month) {
-
-
-
-                        return feeRow(
-
-                            student,
-
-                            month,
-
-                            fees[month] || {}
-
-                        );
-
-
-
-                    }
-
-                ).join("")}
-
-
-
-            </tbody>
-
-
+        <h3 class="student-name">
+            💰 Fees - Year ${getYear()}
+        </h3>
+
+        <div class="table-wrap">
+
+        <table>
+
+        <thead>
+        <tr>
+            <th>Month</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Payment Date</th>
+            <th>Mode</th>
+            <th>Receipt No.</th>
+            <th>Admission</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+
+        <tbody id="fees-${student.id}">
+        </tbody>
 
         </table>
 
+        </div>
+        `;
 
+        container.appendChild(card);
 
-    </div>
+        renderFees(student);
 
-
-
-
-
-
-
-    <h3
-
-        style="
-
-            color:#173f75
-
-        ">
-
-
-
-        📍 Attendance
-
-
-
-    </h3>
-
-
-
-
-
-    <div id="att-${student.id}">
-
-
-
-        <button
-
-            class="small-btn blue"
-
-            type="button"
-
-            onclick="
-
-                loadAttendance(
-
-                    ${student.id}
-
-                )
-
-            ">
-
-
-
-            Load Attendance
-
-
-
-        </button>
-
-
-
-    </div>
-
-
-
-</div>
-
-
-
-`;
-
+    });
 }
 
 
+/* ================================
+   GET YEAR FEES
+================================ */
 
+function getYearFees(student){
 
+    const year=getYear();
 
+    if(
+        student.feesByYear &&
+        student.feesByYear[year]
+    ){
+        return student.feesByYear[year];
+    }
 
+    /* Preserve old 2026 data */
+    if(
+        year==="2026" &&
+        student.monthlyFees
+    ){
+        return student.monthlyFees;
+    }
 
-/* =====================================================
-   FEE ROW
-===================================================== */
+    return {};
+}
 
-function feeRow(
 
-    student,
+/* ================================
+   RENDER FEES
+================================ */
 
-    month,
+function renderFees(student){
 
-    fee
+    const tbody =
+        document.getElementById(
+            "fees-"+student.id
+        );
 
-) {
+    if(!tbody)return;
 
+    const yearFees=getYearFees(student);
 
+    tbody.innerHTML="";
 
-    const paid =
+    months.forEach(month=>{
 
-        String(
+        const fee=yearFees[month] || {
+            amount:700,
+            status:"DUE",
+            paymentDate:"",
+            paidDate:"",
+            paymentMode:"",
+            receiptNumber:"",
+            admissionStatus:"OPEN"
+        };
 
-            fee.status || "DUE"
+        const status=
+            String(fee.status || "DUE").toUpperCase();
 
-        ).toUpperCase() === "PAID";
+        const admission=
+            String(
+                fee.admissionStatus || "OPEN"
+            ).toUpperCase();
 
+        const tr=document.createElement("tr");
 
+        tr.innerHTML=`
 
+        <td><b>${month}</b></td>
 
+        <td>
+            <input
+                type="number"
+                min="0"
+                step="1"
+                id="amount-${student.id}-${month}"
+                value="${Number(fee.amount ?? 700)}"
+                style="width:85px">
 
-    const open =
-
-        String(
-
-            fee.admissionStatus ||
-
-            "OPEN"
-
-        ).toUpperCase() === "OPEN";
-
-
-
-
-
-    return `
-
-
-
-<tr>
-
-
-
-    <td>
-
-        <b>
-
-            ${month}
-
-        </b>
-
-    </td>
-
-
-
-
-
-    <td
-
-        class="${
-
-            paid
-
-                ? "paid"
-
-                : "due"
-
-        }">
-
-
-
-        ${
-
-            paid
-
-                ? "🟢 PAID"
-
-                : "🔴 DUE"
-
-        }
-
-
-
-    </td>
-
-
-
-
-
-    <td>
-
-
-
-        ${esc(
-
-            fee.paymentDate ||
-
-            fee.paidDate ||
-
-            "-"
-
-        )}
-
-
-
-    </td>
-
-
-
-
-
-    <td>
-
-
-
-        ${esc(
-
-            fee.paymentMode ||
-
-            "-"
-
-        )}
-
-
-
-    </td>
-
-
-
-
-
-    <td>
-
-
-
-        ${esc(
-
-            fee.receiptNumber ||
-
-            "-"
-
-        )}
-
-
-
-    </td>
-
-
-
-
-
-    <td
-
-        class="${
-
-            open
-
-                ? "open"
-
-                : "closed"
-
-        }">
-
-
-
-        ${
-
-            open
-
-                ? "OPEN"
-
-                : "CLOSED"
-
-        }
-
-
-
-    </td>
-
-
-
-
-
-    <td>
-
-
-
-        <div class="action-row">
-
-
-
-
+            <br>
 
             <button
-
-                class="small-btn green"
-
-                type="button"
-
+                class="save"
+                style="margin-top:5px"
                 onclick="
-
-                    setFee(
-
-                        ${student.id},
-
-                        '${month}',
-
-                        'PAID'
-
+                    saveFeeAmount(
+                        '${student.id}',
+                        '${month}'
                     )
-
                 ">
-
-
-
-                PAID
-
-
-
+                Save ₹
             </button>
+        </td>
 
+        <td class="${
+            status==="PAID"
+                ? "paid-text"
+                : "due-text"
+        }">
+            ${
+                status==="PAID"
+                    ? "🟢 PAID"
+                    : "🔴 DUE"
+            }
+        </td>
 
+        <td>
+            ${escapeHtml(
+                fee.paymentDate ||
+                fee.paidDate ||
+                "-"
+            )}
+        </td>
 
+        <td>
+            ${escapeHtml(
+                fee.paymentMode || "-"
+            )}
+        </td>
 
+        <td>
+            ${escapeHtml(
+                fee.receiptNumber || "-"
+            )}
+        </td>
 
-            <button
+        <td>
+            ${
+                admission==="OPEN"
+                    ? "🟢 OPEN"
+                    : "🔴 CLOSED"
+            }
+        </td>
 
-                class="small-btn red"
+        <td>
+            <div class="actions">
 
-                type="button"
+                <button
+                    class="paid"
+                    onclick="
+                        markPaid(
+                            '${student.id}',
+                            '${month}'
+                        )
+                    ">
+                    PAID
+                </button>
 
-                onclick="
-
-                    setFee(
-
-                        ${student.id},
-
-                        '${month}',
-
-                        'DUE'
-
-                    )
-
-                ">
-
-
-
-                DUE
-
-
-
-            </button>
-
-
-
-
-
-            <button
-
-                class="
-
-                    small-btn
-
-                    ${open ? "red" : "green"}
-
-                "
-
-                type="button"
-
-                onclick="
-
-                    setAdmission(
-
-                        ${student.id},
-
-                        '${month}',
-
-                        '${open ? "CLOSED" : "OPEN"}'
-
-                    )
-
-                ">
-
-
+                <button
+                    class="due"
+                    onclick="
+                        markDue(
+                            '${student.id}',
+                            '${month}'
+                        )
+                    ">
+                    DUE
+                </button>
 
                 ${
-
-                    open
-
-                        ? "Close"
-
-                        : "Open"
-
-                }
-
-
-
-            </button>
-
-
-
-
-
-            ${
-
-                paid
-
+                    status==="PAID"
                     ? `
-
                     <button
-
-                        class="small-btn blue"
-
-                        type="button"
-
+                        class="receipt"
                         onclick="
-
-                            receipt(
-
+                            downloadReceipt(
                                 '${student.id}',
-
                                 '${month}'
-
                             )
-
                         ">
-
-
-
-                        Receipt
-
-
-
+                        📄 Receipt
                     </button>
-
                     `
-
-                    : ""
-
-            }
-
-
-
-
-
-        </div>
-
-
-
-    </td>
-
-
-
-</tr>
-
-
-
-`;
-
-}
-/* =====================================================
-   SAVE STUDENT
-===================================================== */
-
-async function saveStudent(id) {
-
-
-
-    const body = {
-
-
-
-        fullName:
-
-            document.getElementById(
-
-                "name-" + id
-
-            ).value,
-
-
-
-        address:
-
-            document.getElementById(
-
-                "address-" + id
-
-            ).value,
-
-
-
-        mobile:
-
-            document.getElementById(
-
-                "mobile-" + id
-
-            ).value,
-
-
-
-        seatNumber:
-
-            document.getElementById(
-
-                "seat-" + id
-
-            ).value,
-
-
-
-        registrationDate:
-
-            document.getElementById(
-
-                "date-" + id
-
-            ).value
-
-
-
-    };
-
-
-
-
-
-    try {
-
-
-
-        const response =
-
-            await fetch(
-
-                API +
-
-                "/api/admin/student/" +
-
-                id,
-
-                {
-
-                    method: "PUT",
-
-
-
-                    headers: {
-
-
-
-                        "Content-Type":
-
-                            "application/json",
-
-
-
-                        "Authorization":
-
-                            "Bearer " +
-
-                            token
-
-
-
-                    },
-
-
-
-                    body:
-
-                        JSON.stringify(body)
-
-
-
+                    :""
                 }
-
-            );
-
-
-
-
-
-        const data =
-
-            await response.json();
-
-
-
-
-
-        if (
-
-            response.status === 401
-
-        ) {
-
-
-
-            logoutAdmin();
-
-
-
-            return;
-
-
-
-        }
-
-
-
-
-
-        if (!response.ok) {
-
-
-
-            throw new Error(
-
-                data.message
-
-            );
-
-
-
-        }
-
-
-
-
-
-        msg(
-
-            "Student details saved.",
-
-            "success"
-
-        );
-
-
-
-
-
-        loadStudents();
-
-
-
-    }
-
-
-
-    catch (error) {
-
-
-
-        msg(
-
-            error.message,
-
-            "error"
-
-        );
-
-    }
-
-
-
-}
-
-
-
-
-
-
-
-/* =====================================================
-   SET FEE
-===================================================== */
-
-async function setFee(
-
-    id,
-
-    month,
-
-    status
-
-) {
-
-
-
-    let mode = "";
-
-
-
-
-
-    if (
-
-        status === "PAID"
-
-    ) {
-
-
-
-        mode =
-
-            prompt(
-
-                "Payment mode: Cash / Online",
-
-                "Online"
-
-            );
-
-
-
-
-
-        if (!mode) {
-
-            return;
-
-        }
-
-
-
-    }
-
-
-
-
-
-    const body = {
-
-
-
-        status,
-
-
-
-        paymentMode:
-
-            mode,
-
-
-
-        paidDate:
-
-            status === "PAID"
-
-                ? new Date()
-
-                    .toISOString()
-
-                    .slice(0, 10)
-
-                : ""
-
-
-
-    };
-
-
-
-
-
-    try {
-
-
-
-        const response =
-
-            await fetch(
-
-                API +
-
-                "/api/admin/student/" +
-
-                id +
-
-                "/fee/" +
-
-                new Date()
-
-                    .getFullYear() +
-
-                "/" +
-
-                month,
-
-                {
-
-                    method: "PUT",
-
-
-
-                    headers: {
-
-
-
-                        "Content-Type":
-
-                            "application/json",
-
-
-
-                        "Authorization":
-
-                            "Bearer " +
-
-                            token
-
-
-
-                    },
-
-
-
-                    body:
-
-                        JSON.stringify(body)
-
-
-
-                }
-
-            );
-
-
-
-
-
-        const data =
-
-            await response.json();
-
-
-
-
-
-        if (
-
-            response.status === 401
-
-        ) {
-
-
-
-            logoutAdmin();
-
-
-
-            return;
-
-
-
-        }
-
-
-
-
-
-        if (!response.ok) {
-
-
-
-            throw new Error(
-
-                data.message
-
-            );
-
-
-
-        }
-
-
-
-
-
-        msg(
-
-            month +
-
-            " marked " +
-
-            status +
-
-            ".",
-
-            "success"
-
-        );
-
-
-
-
-
-        loadStudents();
-
-
-
-    }
-
-
-
-    catch (error) {
-
-
-
-        msg(
-
-            error.message,
-
-            "error"
-
-        );
-
-    }
-
-
-
-}
-
-
-
-
-
-
-
-/* =====================================================
-   ADMISSION STATUS
-===================================================== */
-
-async function setAdmission(
-
-    id,
-
-    month,
-
-    status
-
-) {
-
-
-
-    try {
-
-
-
-        const response =
-
-            await fetch(
-
-                API +
-
-                "/api/admin/student/" +
-
-                id +
-
-                "/fee/" +
-
-                new Date()
-
-                    .getFullYear() +
-
-                "/" +
-
-                month,
-
-                {
-
-                    method: "PUT",
-
-
-
-                    headers: {
-
-
-
-                        "Content-Type":
-
-                            "application/json",
-
-
-
-                        "Authorization":
-
-                            "Bearer " +
-
-                            token
-
-
-
-                    },
-
-
-
-                    body:
-
-                        JSON.stringify({
-
-                            admissionStatus:
-
-                                status
-
-                        })
-
-
-
-                }
-
-            );
-
-
-
-
-
-        const data =
-
-            await response.json();
-
-
-
-
-
-        if (
-
-            response.status === 401
-
-        ) {
-
-
-
-            logoutAdmin();
-
-
-
-            return;
-
-
-
-        }
-
-
-
-
-
-        if (!response.ok) {
-
-
-
-            throw new Error(
-
-                data.message
-
-            );
-
-
-
-        }
-
-
-
-
-
-        loadStudents();
-
-
-
-    }
-
-
-
-    catch (error) {
-
-
-
-        msg(
-
-            error.message,
-
-            "error"
-
-        );
-
-    }
-
-
-
-}
-
-
-
-
-
-
-
-/* =====================================================
-   RECEIPT
-===================================================== */
-
-function receipt(
-
-    id,
-
-    month
-
-) {
-
-
-
-    const student =
-
-        allStudents.find(
-
-            function(item) {
-
-
-
-                return String(item.id) ===
-
-                    String(id);
-
-
-
-            }
-
-        );
-
-
-
-
-
-    const fee =
-
-        student?.monthlyFees?.[month];
-
-
-
-
-
-    if (
-
-        !student ||
-
-        !fee
-
-    ) {
-
-
-
-        return;
-
-
-
-    }
-
-
-
-
-
-    const popup =
-
-        window.open(
-
-            "",
-
-            "_blank"
-
-        );
-
-
-
-
-
-    if (!popup) {
-
-
-
-        alert(
-
-            "Popup blocked hai. Browser me popup allow karein."
-
-        );
-
-
-
-        return;
-
-
-
-    }
-
-
-
-
-
-    popup.document.write(`
-
-
-
-<html>
-
-
-
-<head>
-
-
-
-<title>
-
-    Fee Receipt -
-
-    ${esc(
-
-        student.enrollmentNumber
-
-    )}
-
-</title>
-
-
-
-<style>
-
-
-
-body {
-
-    font-family: Arial;
-
-    padding: 40px;
-
-}
-
-
-
-.box {
-
-    border: 2px solid #173f75;
-
-    padding: 30px;
-
-    max-width: 650px;
-
-    margin: auto;
-
-}
-
-
-
-h1 {
-
-    color: #173f75;
-
-    text-align: center;
-
-}
-
-
-
-table {
-
-    width: 100%;
-
-    border-collapse: collapse;
-
-    margin-top: 20px;
-
-}
-
-
-
-td {
-
-    padding: 10px;
-
-    border-bottom: 1px solid #ddd;
-
-}
-
-
-
-</style>
-
-
-
-</head>
-
-
-
-
-
-<body>
-
-
-
-<div class="box">
-
-
-
-<h1>
-
-    📚 Aradhya Library
-
-</h1>
-
-
-
-
-
-<h2 style="text-align:center">
-
-    Fee Receipt
-
-</h2>
-
-
-
-
-
-<table>
-
-
-
-<tr>
-
-
-
-    <td>Student</td>
-
-    <td>
-
-        ${esc(student.fullName)}
-
-    </td>
-
-
-
-</tr>
-
-
-
-
-
-<tr>
-
-
-
-    <td>Enrollment</td>
-
-    <td>
-
-        ${esc(
-
-            student.enrollmentNumber
-
-        )}
-
-    </td>
-
-
-
-</tr>
-
-
-
-
-
-<tr>
-
-
-
-    <td>Month</td>
-
-    <td>
-
-        ${esc(month)}
-
-    </td>
-
-
-
-</tr>
-
-
-
-
-
-<tr>
-
-
-
-    <td>Amount</td>
-
-    <td>
-
-        ₹${Number(
-
-            fee.amount || 700
-
-        )}
-
-    </td>
-
-
-
-</tr>
-
-
-
-
-
-<tr>
-
-
-
-    <td>Payment Mode</td>
-
-    <td>
-
-        ${esc(
-
-            fee.paymentMode || "-"
-
-        )}
-
-    </td>
-
-
-
-</tr>
-
-
-
-
-
-<tr>
-
-
-
-    <td>Payment Date</td>
-
-    <td>
-
-        ${esc(
-
-            fee.paymentDate ||
-
-            fee.paidDate ||
-
-            "-"
-
-        )}
-
-    </td>
-
-
-
-</tr>
-
-
-
-
-
-<tr>
-
-
-
-    <td>Receipt No.</td>
-
-    <td>
-
-        ${esc(
-
-            fee.receiptNumber ||
-
-            "-"
-
-        )}
-
-    </td>
-
-
-
-</tr>
-
-
-
-</table>
-
-
-
-
-
-<p style="margin-top:35px">
-
-
-
-    Authorized by Aradhya Library
-
-
-
-</p>
-
-
-
-
-
-<script>
-
-    window.print();
-
-<\/script>
-
-
-
-
-
-</div>
-
-
-
-</body>
-
-
-
-</html>
-
-
-
-`);
-
-
-
-
-
-    popup.document.close();
-
-
-
-}
-
-
-
-
-
-
-
-/* =====================================================
-   LOAD ATTENDANCE
-===================================================== */
-
-async function loadAttendance(
-
-    id
-
-) {
-
-
-
-    const box =
-
-        document.getElementById(
-
-            "att-" + id
-
-        );
-
-
-
-
-
-    try {
-
-
-
-        const response =
-
-            await fetch(
-
-                API +
-
-                "/api/admin/student/" +
-
-                id +
-
-                "/attendance/" +
-
-                new Date()
-
-                    .getFullYear(),
-
-                {
-
-                    headers: {
-
-                        "Authorization":
-
-                            "Bearer " +
-
-                            token
-
-                    }
-
-                }
-
-            );
-
-
-
-
-
-        const data =
-
-            await response.json();
-
-
-
-
-
-        if (
-
-            response.status === 401
-
-        ) {
-
-
-
-            logoutAdmin();
-
-
-
-            return;
-
-
-
-        }
-
-
-
-
-
-        if (!response.ok) {
-
-
-
-            throw new Error(
-
-                data.message
-
-            );
-
-
-
-        }
-
-
-
-
-
-        const rows =
-
-            Object.values(
-
-                data.attendance || {}
-
-            )
-
-            .sort(
-
-                function(a, b) {
-
-
-
-                    return String(
-
-                        b.date
-
-                    ).localeCompare(
-
-                        String(a.date)
-
-                    );
-
-
-
-                }
-
-            );
-
-
-
-
-
-        box.innerHTML =
-
-            rows.length
-
-
-
-                ? `
-
-
-
-<div class="table-wrap">
-
-
-
-<table class="data-table">
-
-
-
-<tr>
-
-
-
-<th>
-
-    Date
-
-</th>
-
-
-
-<th>
-
-    IN
-
-</th>
-
-
-
-<th>
-
-    OUT
-
-</th>
-
-
-
-</tr>
-
-
-
-
-
-${rows.map(
-
-    function(attendance) {
-
-
-
-        return `
-
-
-
-<tr>
-
-
-
-<td>
-
-    ${esc(
-
-        attendance.date
-
-    )}
-
-</td>
-
-
-
-<td>
-
-    ${esc(
-
-        attendance.inTime ||
-
-        "-"
-
-    )}
-
-</td>
-
-
-
-<td>
-
-    ${esc(
-
-        attendance.outTime ||
-
-        "-"
-
-    )}
-
-</td>
-
-
-
-</tr>
-
-
-
-`;
-
-    }
-
-).join("")}
-
-
-
-</table>
-
-
-
-</div>
-
-
-
-`
-
-
-
-                : `
-
-<div class="notice">
-
-    No attendance records.
-
-</div>
-
-`;
-
-
-
-    }
-
-
-
-    catch (error) {
-
-
-
-        box.innerHTML =
-
-            `
-
-            <div class="notice error">
-
-                ${esc(
-
-                    error.message
-
-                )}
 
             </div>
+        </td>
 
-            `;
+        `;
 
+        tbody.appendChild(tr);
 
-
-    }
-
-
-
+    });
 }
 
 
+/* ================================
+   YEAR CHANGE
+================================ */
+
+document.getElementById("feeYear")
+.addEventListener("change",()=>{
+
+    renderStudents();
+
+});
 
 
+/* ================================
+   SAVE STUDENT
+================================ */
 
+async function saveStudent(id){
 
+    const seat=
+        document.getElementById(
+            "seat-"+id
+        ).value.trim();
 
-/* =====================================================
-   LOGOUT ADMIN
-===================================================== */
+    const date=
+        document.getElementById(
+            "date-"+id
+        ).value;
 
-function logoutAdmin() {
+    try{
 
+        const response=await fetch(
+            API_URL+
+            "/api/admin/students/"+
+            encodeURIComponent(id),
+            {
+                method:"PATCH",
+                headers:{
+                    "Content-Type":
+                        "application/json",
+                    "Authorization":
+                        "Bearer "+ADMIN_TOKEN
+                },
+                body:JSON.stringify({
+                    seatNumber:seat,
+                    registrationDate:date
+                })
+            }
+        );
 
+        const data=await response.json();
 
-    /* Clear admin login information */
-
-
-
-    localStorage.removeItem(
-
-        "adminLoggedIn"
-
-    );
-
-
-
-    localStorage.removeItem(
-
-        "adminUsername"
-
-    );
-
-
-
-    localStorage.removeItem(
-
-        "adminToken"
-
-    );
-
-
-
-
-
-    /* Clear session */
-
-
-
-    sessionStorage.clear();
-
-
-
-
-
-    /* Go to admin login */
-
-
-
-    window.location.replace(
-
-        "admin-login.html"
-
-    );
-
-}
-
-
-
-
-
-
-
-/* =====================================================
-   PREVENT BACK BUTTON AFTER LOGOUT
-===================================================== */
-
-window.addEventListener(
-
-    "pageshow",
-
-    function() {
-
-
-
-        const loggedIn =
-
-            localStorage.getItem(
-
-                "adminLoggedIn"
-
+        if(!response.ok){
+            throw new Error(
+                data.message ||
+                "Student details update failed"
             );
-
-
-
-        const savedToken =
-
-            localStorage.getItem(
-
-                "adminToken"
-
-            );
-
-
-
-
-
-        if (
-
-            loggedIn !== "true" ||
-
-            !savedToken
-
-        ) {
-
-
-
-            window.location.replace(
-
-                "admin-login.html"
-
-            );
-
         }
 
+        showMessage(
+            "✅ Seat number & admission date saved!"
+        );
+
+        await loadStudents();
+
+    }catch(error){
+
+        console.error(error);
+
+        showMessage(
+            "❌ Save failed: "+
+            error.message,
+            "error"
+        );
+    }
+}
 
 
+/* ================================
+   SAVE FEE AMOUNT
+================================ */
+
+async function saveFeeAmount(id,month){
+
+    const input=
+        document.getElementById(
+            `amount-${id}-${month}`
+        );
+
+    const amount=Number(input.value);
+
+    if(!Number.isFinite(amount) || amount<0){
+
+        alert("Valid amount enter karo.");
+
+        return;
     }
 
-);
+    const student=
+        allStudents.find(
+            s=>String(s.id)===String(id)
+        );
+
+    const year=getYear();
+
+    const oldFees=getYearFees(student);
+
+    const oldFee=oldFees[month] || {};
+
+    try{
+
+        const response=await fetch(
+            API_URL+
+            "/api/admin/students/"+
+            id+
+            "/fee",
+            {
+                method:"PATCH",
+                headers:{
+                    "Content-Type":
+                        "application/json",
+                    "Authorization":
+                        "Bearer "+ADMIN_TOKEN
+                },
+                body:JSON.stringify({
+
+                    year:year,
+                    month:month,
+
+                    amount:amount,
+
+                    status:
+                        oldFee.status || "DUE",
+
+                    paymentDate:
+                        oldFee.paymentDate || "",
+
+                    paymentMode:
+                        oldFee.paymentMode || "",
+
+                    receiptNumber:
+                        oldFee.receiptNumber || "",
+
+                    admissionStatus:
+                        oldFee.admissionStatus ||
+                        "OPEN"
+                })
+            }
+        );
+
+        const data=await response.json();
+
+        if(!response.ok){
+
+            throw new Error(
+                data.message ||
+                "Fee amount update failed"
+            );
+        }
+
+        showMessage(
+            `✅ ${month} ${year} fee ₹${amount} saved!`
+        );
+
+        await loadStudents();
+
+    }catch(error){
+
+        console.error(error);
+
+        showMessage(
+            "❌ Fee save failed: "+
+            error.message,
+            "error"
+        );
+    }
+}
+/* ================================
+   GET CURRENT AMOUNT
+================================ */
+
+function currentAmount(id,month){
+
+    const input=
+        document.getElementById(
+            `amount-${id}-${month}`
+        );
+
+    if(input && input.value!==""){
+        return Number(input.value);
+    }
+
+    const student=
+        allStudents.find(
+            s=>String(s.id)===String(id)
+        );
+
+    const fees=getYearFees(student);
+
+    return Number(
+        fees?.[month]?.amount ?? 700
+    );
+}
 
 
+/* ================================
+   MARK PAID
+================================ */
+
+async function markPaid(id,month){
+
+    const amount=
+        currentAmount(id,month);
+
+    const modeInput=prompt(
+        "Payment Mode:\n\nCash ya Online",
+        "Cash"
+    );
+
+    if(!modeInput)return;
+
+    const mode=modeInput
+        .trim()
+        .toLowerCase();
+
+    if(mode!=="cash" && mode!=="online"){
+
+        alert(
+            "Sirf Cash ya Online enter karo."
+        );
+
+        return;
+    }
+
+    const paymentMode=
+        mode==="cash"
+            ? "Cash"
+            : "Online";
+
+    const receiptNumber=
+        makeReceiptNumber(id,month);
+
+    const today=
+        indiaDate();
+
+    const ok=confirm(
+
+        "Fee PAID karni hai?\n\n"+
+        "Year: "+getYear()+"\n"+
+        "Month: "+month+"\n"+
+        "Amount: ₹"+amount+"\n"+
+        "Date: "+today+"\n"+
+        "Mode: "+paymentMode+"\n"+
+        "Receipt: "+receiptNumber
+
+    );
+
+    if(!ok)return;
+
+    await updateFee(
+        id,
+        month,
+        {
+            year:getYear(),
+            status:"PAID",
+            amount:amount,
+            paymentDate:today,
+            paymentMode:paymentMode,
+            receiptNumber:receiptNumber
+        }
+    );
+}
 
 
+/* ================================
+   MARK DUE
+================================ */
+
+async function markDue(id,month){
+
+    const ok=confirm(
+        month+
+        " ki fee DUE karni hai?"
+    );
+
+    if(!ok)return;
+
+    const student=
+        allStudents.find(
+            s=>String(s.id)===String(id)
+        );
+
+    const fees=getYearFees(student);
+
+    const oldFee=fees[month] || {};
+
+    await updateFee(
+        id,
+        month,
+        {
+            year:getYear(),
+            status:"DUE",
+            amount:Number(
+                oldFee.amount ?? 700
+            ),
+            paymentDate:"",
+            paymentMode:"",
+            receiptNumber:""
+        }
+    );
+}
 
 
+/* ================================
+   UPDATE FEE
+================================ */
 
-/* =====================================================
+async function updateFee(
+    id,
+    month,
+    values
+){
+
+    try{
+
+        const response=await fetch(
+            API_URL+
+            "/api/admin/students/"+
+            id+
+            "/fee",
+            {
+                method:"PATCH",
+                headers:{
+                    "Content-Type":
+                        "application/json",
+                    "Authorization":
+                        "Bearer "+ADMIN_TOKEN
+                },
+                body:JSON.stringify({
+
+                    year:
+                        values.year,
+
+                    month:
+                        month,
+
+                    amount:
+                        values.amount,
+
+                    status:
+                        values.status,
+
+                    paymentDate:
+                        values.paymentDate,
+
+                    paymentMode:
+                        values.paymentMode,
+
+                    receiptNumber:
+                        values.receiptNumber
+                })
+            }
+        );
+
+        const data=
+            await response.json();
+
+        if(!response.ok){
+
+            throw new Error(
+                data.message ||
+                "Fee update failed"
+            );
+        }
+
+        showMessage(
+            `✅ ${month} ${values.year} fee updated!`
+        );
+
+        await loadStudents();
+
+    }catch(error){
+
+        console.error(error);
+
+        showMessage(
+            "❌ Fee update failed: "+
+            error.message,
+            "error"
+        );
+    }
+}
+
+
+/* ================================
+   RECEIPT NUMBER
+================================ */
+
+function makeReceiptNumber(id,month){
+
+    const year=getYear();
+
+    const random=
+        Math.floor(
+            1000+
+            Math.random()*9000
+        );
+
+    return(
+        "AL-"+
+        year+
+        "-"+
+        String(id).slice(-6)+
+        "-"+
+        month.substring(0,3).toUpperCase()+
+        "-"+
+        random
+    );
+}
+
+
+/* ================================
+   DOWNLOAD RECEIPT
+================================ */
+
+function downloadReceipt(id,month){
+
+    const url=
+        API_URL+
+        "/api/receipt/"+
+        encodeURIComponent(id)+
+        "/"+
+        encodeURIComponent(getYear())+
+        "/"+
+        encodeURIComponent(month);
+
+    window.open(
+        url,
+        "_blank"
+    );
+}
+
+
+/* ================================
+   INDIA DATE
+================================ */
+
+function indiaDate(){
+
+    const parts=
+        new Intl.DateTimeFormat(
+            "en-CA",
+            {
+                timeZone:"Asia/Kolkata",
+                year:"numeric",
+                month:"2-digit",
+                day:"2-digit"
+            }
+        ).formatToParts(new Date());
+
+    const get=
+        type=>
+            parts.find(
+                x=>x.type===type
+            )?.value;
+
+    return(
+        get("year")+
+        "-"+
+        get("month")+
+        "-"+
+        get("day")
+    );
+}
+
+
+/* ================================
+   DATE INPUT
+================================ */
+
+function dateInput(value){
+
+    if(!value)return "";
+
+    const text=String(value);
+
+    if(
+        /^\d{4}-\d{2}-\d{2}$/.test(text)
+    ){
+        return text;
+    }
+
+    const d=new Date(value);
+
+    if(isNaN(d.getTime())){
+        return "";
+    }
+
+    return(
+        d.getFullYear()+
+        "-"+
+        String(
+            d.getMonth()+1
+        ).padStart(2,"0")+
+        "-"+
+        String(
+            d.getDate()
+        ).padStart(2,"0")
+    );
+}
+
+
+/* ================================
+   ESCAPE
+================================ */
+
+function escapeHtml(value){
+
+    return String(value ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+}
+
+function escapeAttr(value){
+    return escapeHtml(value);
+}
+
+
+/* ================================
+   LOGOUT
+================================ */
+
+function adminLogout(){
+
+    localStorage.removeItem(
+        "adminLoggedIn"
+    );
+
+    localStorage.removeItem(
+        "adminUsername"
+    );
+
+    localStorage.removeItem(
+        "adminToken"
+    );
+
+    window.location.href=
+        "admin-login.html";
+}
+
+
+/* ================================
    START
-===================================================== */
+================================ */
 
 loadStudents();
 
-
-
 </script>
 
-
-
-
-
-<script src="js/app.js"></script>
-
-
-
 </body>
-
-
-
 </html>
-<!-- PART 3 END -->
