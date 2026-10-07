@@ -474,8 +474,7 @@ async function patchStudent(
 
   const studentId =
     String(student.id).trim();
-
-  console.log(
+      console.log(
     "SAVE STUDENT ID:",
     studentId
   );
@@ -772,6 +771,7 @@ app.post(
     }
   }
 );
+
 /* =========================
    STUDENT LOGIN
 ========================= */
@@ -928,6 +928,7 @@ app.get(
           students.map(
             publicStudent
           )
+
       });
 
     } catch (error) {
@@ -950,8 +951,6 @@ app.get(
     }
   }
 );
-
-
 /* =========================
    ADMIN UPDATE STUDENT
    SAVE FIX
@@ -1217,7 +1216,6 @@ async function updateFeeForStudent(
       ...oldFee
     };
 
-
     if (
       req.body.status !==
       undefined
@@ -1228,7 +1226,6 @@ async function updateFeeForStudent(
           req.body.status
         ).toUpperCase();
     }
-
 
     if (
       req.body.amount !==
@@ -1241,7 +1238,6 @@ async function updateFeeForStudent(
         );
     }
 
-
     if (
       req.body.paymentDate !==
       undefined
@@ -1252,7 +1248,6 @@ async function updateFeeForStudent(
           req.body.paymentDate
         );
     }
-
 
     if (
       req.body.paymentMode !==
@@ -1265,7 +1260,6 @@ async function updateFeeForStudent(
         );
     }
 
-
     if (
       req.body.receiptNumber !==
       undefined
@@ -1277,6 +1271,23 @@ async function updateFeeForStudent(
         );
     }
 
+    /* ADMISSION OPEN / CLOSE */
+
+    if (
+      req.body.admissionStatus !==
+      undefined
+    ) {
+
+      const admissionStatus =
+        String(
+          req.body.admissionStatus
+        ).toUpperCase();
+
+      fee.admissionStatus =
+        admissionStatus === "CLOSED"
+          ? "CLOSED"
+          : "OPEN";
+    }
 
     if (
       fee.status === "PAID"
@@ -1328,17 +1339,14 @@ async function updateFeeForStudent(
       fee.receiptUrl = "";
     }
 
-
     feesByYear[year][month] =
       fee;
-
 
     if (year === "2026") {
 
       monthlyFees[month] =
         clone(fee);
     }
-
 
     const updated =
       await patchStudent(
@@ -1352,7 +1360,6 @@ async function updateFeeForStudent(
             feesByYear
         }
       );
-
 
     return res.json({
 
@@ -1381,7 +1388,6 @@ async function updateFeeForStudent(
           }
         )
     });
-
 
   } catch (error) {
 
@@ -1415,8 +1421,6 @@ app.patch(
   adminAuth,
   updateFeeForStudent
 );
-
-
 /* =========================
    STUDENT FEES
 ========================= */
@@ -1532,6 +1536,8 @@ app.get(
     }
   }
 );
+
+
 /* =========================
    RECEIPT HELPERS
 ========================= */
@@ -1772,6 +1778,8 @@ app.get(
     );
   }
 );
+
+
 /* =========================
    ATTENDANCE
 ========================= */
@@ -1889,9 +1897,7 @@ async function attendanceAction(
         longitude ?? "";
 
     }
-
-
-    /* =====================
+        /* =====================
        MARK OUT
     ===================== */
 
@@ -2303,6 +2309,8 @@ app.patch(
     }
   }
 );
+
+
 /* =========================
    FRONTEND
 ========================= */
