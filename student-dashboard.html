@@ -1,48 +1,121 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Student Dashboard | Aradhya Library</title>
+
+<meta name="viewport"
+      content="width=device-width,initial-scale=1">
+
+<title>Aradhya Library - Student Dashboard</title>
+
 <link rel="stylesheet" href="css/style.css">
+
+<style>
+
+.receipt-btn{
+    background:#1f6feb;
+    color:white;
+    border:0;
+    border-radius:6px;
+    padding:8px 12px;
+    cursor:pointer;
+}
+
+.receipt-btn:hover{
+    opacity:.9;
+}
+
+.no-receipt{
+    color:#777;
+}
+
+.year-box{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin:15px 0;
+    flex-wrap:wrap;
+}
+
+.year-box select{
+    padding:9px 12px;
+    border-radius:7px;
+    border:1px solid #ccc;
+    font-size:15px;
+}
+
+.fee-note{
+    padding:10px 12px;
+    background:#f5f7fa;
+    border-radius:8px;
+    margin-bottom:12px;
+}
+
+.paid{
+    color:green;
+    font-weight:bold;
+}
+
+.due{
+    color:red;
+    font-weight:bold;
+}
+
+</style>
+
 </head>
+
 
 <body>
 
+
 <header class="navbar">
 
-    <div class="logo">
-        📚 Aradhya Library
-    </div>
+<div class="logo">
+📚 Aradhya Library
+</div>
 
-    <nav>
-        <a href="index.html">Home</a>
+<nav>
 
-        <button
-            class="logout-btn"
-            onclick="logoutStudent()">
-            Logout
-        </button>
-    </nav>
+<a href="index.html">
+Home
+</a>
+
+<button
+class="logout-btn"
+onclick="logoutStudent()">
+
+Logout
+
+</button>
+
+</nav>
 
 </header>
 
 
 <main class="dashboard">
 
+
 <div class="dashboard-title">
-    <div>
-        <p class="welcome-text">MEMBER PORTAL</p>
-        <h1>Student Dashboard</h1>
-    </div>
+
+<p class="welcome-text">
+MEMBER PORTAL
+</p>
+
+<h1>
+Student Dashboard
+</h1>
+
 </div>
 
 
 <div
-    id="messageBox"
-    class="notice"
-    style="display:none">
+id="messageBox"
+class="notice"
+style="display:none">
 </div>
 
 
@@ -50,717 +123,1295 @@
 
 <div class="student-card">
 
-    <h2>👤 Student Information</h2>
+<h2>
+👤 Student Information
+</h2>
 
-    <div class="student-info">
+<div class="student-info">
 
-        <div class="info-box">
-            <span>Name</span>
-            <strong id="studentName">-</strong>
-        </div>
 
-        <div class="info-box">
-            <span>Enrollment</span>
-            <strong id="enrollment">-</strong>
-        </div>
+<div class="info-box">
 
-        <div class="info-box">
-            <span>Seat Number</span>
-            <strong id="seat">Not Assigned</strong>
-        </div>
+<span>
+Name
+</span>
 
-        <div class="info-box">
-            <span>Admission Date</span>
-            <strong id="admissionDate">-</strong>
-        </div>
-
-        <div class="info-box">
-            <span>Mobile</span>
-            <strong id="mobile">-</strong>
-        </div>
-
-    </div>
+<strong id="studentName">
+-
+</strong>
 
 </div>
 
 
-<!-- MONTHLY FEES -->
+<div class="info-box">
+
+<span>
+Enrollment
+</span>
+
+<strong id="enrollment">
+-
+</strong>
+
+</div>
+
+
+<div class="info-box">
+
+<span>
+Seat Number
+</span>
+
+<strong id="seat">
+Not Assigned
+</strong>
+
+</div>
+
+
+<div class="info-box">
+
+<span>
+Admission Date
+</span>
+
+<strong id="admissionDate">
+-
+</strong>
+
+</div>
+
+
+<div class="info-box">
+
+<span>
+Mobile
+</span>
+
+<strong id="mobile">
+-
+</strong>
+
+</div>
+
+
+</div>
+
+</div>
+
+
+<!-- FEES -->
 
 <div class="student-card">
 
-    <h2>💰 Monthly Fees</h2>
+<h2>
+💰 Monthly Fees
+</h2>
 
-    <div class="table-wrap">
 
-        <table class="data-table">
+<div class="year-box">
 
-            <thead>
-                <tr>
-                    <th>Month</th>
-                    <th>Amount</th>
-                    <th>Status</th>
-                    <th>Payment Date</th>
-                    <th>Mode</th>
-                    <th>Receipt</th>
-                </tr>
-            </thead>
+<label>
+<b>Fee Year:</b>
+</label>
 
-            <tbody id="feesTable"></tbody>
+<select
+id="feeYear"
+onchange="renderFees()">
 
-        </table>
+<option value="2026">
+2026
+</option>
 
-    </div>
+<option value="2027">
+2027
+</option>
+
+<option value="2028">
+2028
+</option>
+
+<option value="2029">
+2029
+</option>
+
+<option value="2030">
+2030
+</option>
+
+</select>
 
 </div>
 
 
-<!-- TODAY ATTENDANCE -->
+<div class="fee-note">
+
+💡 Fee amount library/admin ke according change ho sakta hai.
+<br>
+
+₹500 winter fee aur ₹700 normal fee dono supported hain.
+
+</div>
+
+
+<div class="table-wrap">
+
+<table class="data-table">
+
+<thead>
+
+<tr>
+
+<th>
+Month
+</th>
+
+<th>
+Amount
+</th>
+
+<th>
+Status
+</th>
+
+<th>
+Payment Date
+</th>
+
+<th>
+Mode
+</th>
+
+<th>
+Receipt
+</th>
+
+</tr>
+
+</thead>
+
+
+<tbody id="feesTable">
+
+<tr>
+
+<td colspan="6">
+Loading fees...
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+
+<!-- ATTENDANCE -->
 
 <div class="student-card">
 
-    <h2>📍 Today's Attendance</h2>
-
-    <p class="notice">
-        Allow browser location when asked.
-        Location is saved with the attendance record.
-    </p>
-
-    <div class="action-row">
-
-        <button
-            class="small-btn green"
-            onclick="markAttendance('in')">
-            ✓ Mark IN
-        </button>
-
-        <button
-            class="small-btn red"
-            onclick="markAttendance('out')">
-            ↗ Mark OUT
-        </button>
-
-    </div>
+<h2>
+📍 Today's Attendance
+</h2>
 
 
-    <div
-        class="stats-grid"
-        style="margin-top:15px">
+<p class="notice">
 
-        <div class="stat">
-            <span>Today's IN</span>
-            <strong id="todayIn">-</strong>
-        </div>
+Allow browser location when asked.
+<br>
 
-        <div class="stat">
-            <span>Today's OUT</span>
-            <strong id="todayOut">-</strong>
-        </div>
+Location is saved with attendance.
 
-        <div class="stat">
-            <span>Attendance Days This Year</span>
-            <strong id="attendanceCount">0</strong>
-        </div>
+</p>
 
-    </div>
+
+<div class="action-row">
+
+<button
+class="small-btn green"
+onclick="markAttendance('in')">
+
+✓ Mark IN
+
+</button>
+
+
+<button
+class="small-btn red"
+onclick="markAttendance('out')">
+
+↗ Mark OUT
+
+</button>
 
 </div>
 
 
+<div
+class="stats-grid"
+style="margin-top:15px">
+
+
+<div class="stat">
+
+<span>
+Today's IN
+</span>
+
+<strong id="todayIn">
+-
+</strong>
+
+</div>
+
+
+<div class="stat">
+
+<span>
+Today's OUT
+</span>
+
+<strong id="todayOut">
+-
+</strong>
+
+</div>
+
+
+<div class="stat">
+
+<span>
+Attendance Days This Year
+</span>
+
+<strong id="attendanceCount">
+0
+</strong>
+
+</div>
+
+
+</div>
+
+</div>
 <!-- ATTENDANCE HISTORY -->
 
 <div class="student-card">
 
-    <h2>📅 Attendance History</h2>
+<h2>
+📅 Attendance History
+</h2>
 
-    <div class="table-wrap">
 
-        <table class="data-table">
+<div class="table-wrap">
 
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>IN</th>
-                    <th>OUT</th>
-                </tr>
-            </thead>
+<table class="data-table">
 
-            <tbody id="attendanceTable"></tbody>
+<thead>
 
-        </table>
+<tr>
 
-    </div>
+<th>
+Date
+</th>
+
+<th>
+IN
+</th>
+
+<th>
+OUT
+</th>
+
+</tr>
+
+</thead>
+
+
+<tbody id="attendanceTable">
+
+<tr>
+
+<td colspan="3">
+Loading...
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
 
 </div>
+
+</div>
+
 
 </main>
 
 
 <script>
 
-/* =========================================
+
+/* =========================
    API
-========================================= */
+========================= */
 
 const API =
-    window.location.protocol === "file:"
-        ? "http://localhost:3000"
-        : "";
+window.location.protocol === "file:"
+?
+"http://localhost:3000"
+:
+"";
 
 
-/* =========================================
-   STUDENT SESSION
-========================================= */
+/* =========================
+   STUDENT
+========================= */
 
 let student = null;
 
-try {
 
-    student =
-        JSON.parse(
-            localStorage.getItem("currentStudent") || "null"
-        );
+try{
 
-} catch (error) {
+student =
+JSON.parse(
+localStorage.getItem(
+"currentStudent"
+) || "null"
+);
 
-    student = null;
+}catch(error){
 
-}
-
-
-/* =========================================
-   LOGIN CHECK
-========================================= */
-
-if (!student) {
-
-    window.location.replace("login.html");
+student = null;
 
 }
 
 
-/* =========================================
-   HTML ESCAPE
-========================================= */
+if(!student){
 
-function esc(value) {
-
-    return String(value ?? "")
-        .replace(
-            /[&<>"']/g,
-            function(character) {
-
-                return {
-
-                    "&": "&amp;",
-                    "<": "&lt;",
-                    ">": "&gt;",
-                    '"': "&quot;",
-                    "'": "&#039;"
-
-                }[character];
-
-            }
-        );
+location.replace(
+"login.html"
+);
 
 }
 
 
-/* =========================================
-   MESSAGE
-========================================= */
-
-function message(
-    text,
-    type = "notice"
-) {
-
-    const box =
-        document.getElementById(
-            "messageBox"
-        );
-
-    box.className =
-        "notice " + type;
-
-    box.textContent = text;
-
-    box.style.display = "block";
-
-    setTimeout(
-        function() {
-
-            box.style.display = "none";
-
-        },
-        5000
-    );
-
-}
-
-
-/* =========================================
-   LOAD STUDENT
-========================================= */
-
-async function loadStudent() {
-
-    try {
-
-        const response =
-            await fetch(
-                API +
-                "/api/student/" +
-                student.id
-            );
-
-
-        const data =
-            await response.json();
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                data.message ||
-                "Unable to load student."
-            );
-
-        }
-
-
-        student =
-            data.student;
-
-
-        localStorage.setItem(
-            "currentStudent",
-            JSON.stringify(student)
-        );
-
-
-        render();
-
-    }
-
-    catch (error) {
-
-        console.error(error);
-
-        message(
-            error.message ||
-            "Unable to load student.",
-            "error"
-        );
-
-    }
-
-}
-
-
-/* =========================================
-   RENDER STUDENT
-========================================= */
-
-function render() {
-
-    document.getElementById(
-        "studentName"
-    ).textContent =
-        student.fullName || "-";
-
-
-    document.getElementById(
-        "enrollment"
-    ).textContent =
-        student.enrollmentNumber || "-";
-
-
-    document.getElementById(
-        "seat"
-    ).textContent =
-        student.seatNumber ||
-        "Not Assigned";
-
-
-    document.getElementById(
-        "admissionDate"
-    ).textContent =
-        student.registrationDate || "-";
-
-
-    document.getElementById(
-        "mobile"
-    ).textContent =
-        student.mobile || "-";
-
-
-    /* FEES */
-
-    const fees =
-        student.monthlyFees || {};
-
-
-    document.getElementById(
-        "feesTable"
-    ).innerHTML =
-
-        Object.entries(fees)
-        .map(
-            function([month, fee]) {
-
-                const status =
-                    String(
-                        fee.status || ""
-                    ).toUpperCase();
-
-
-                return `
-
-                    <tr>
-
-                        <td>
-                            ${esc(month)}
-                        </td>
-
-                        <td>
-                            ₹${Number(
-                                fee.amount || 700
-                            )}
-                        </td>
-
-                        <td class="${
-                            status === "PAID"
-                                ? "paid"
-                                : "due"
-                        }">
-
-                            ${
-                                status === "PAID"
-                                    ? "🟢 PAID"
-                                    : "🔴 DUE"
-                            }
-
-                        </td>
-
-                        <td>
-                            ${esc(
-                                fee.paymentDate ||
-                                fee.paidDate ||
-                                "-"
-                            )}
-                        </td>
-
-                        <td>
-                            ${esc(
-                                fee.paymentMode ||
-                                "-"
-                            )}
-                        </td>
-
-                        <td>
-                            ${esc(
-                                fee.receiptNumber ||
-                                "-"
-                            )}
-                        </td>
-
-                    </tr>
-
-                `;
-
-            }
-        )
-        .join("");
-
-
-    /* ATTENDANCE */
-
-    const year =
-        String(
-            new Date().getFullYear()
-        );
-
-
-    const records =
-        student.attendance?.[year] || {};
-
-
-    const dates =
-        Object.keys(records)
-        .sort()
-        .reverse();
-
-
-    const today =
-        new Date()
-        .toISOString()
-        .slice(0, 10);
-
-
-    const todayRecord =
-        records[today] || {};
-
-
-    document.getElementById(
-        "todayIn"
-    ).textContent =
-        todayRecord.inTime || "-";
-
-
-    document.getElementById(
-        "todayOut"
-    ).textContent =
-        todayRecord.outTime || "-";
-
-
-    document.getElementById(
-        "attendanceCount"
-    ).textContent =
-
-        dates.filter(
-            function(date) {
-
-                return records[date].inTime;
-
-            }
-        ).length;
-
-
-    document.getElementById(
-        "attendanceTable"
-    ).innerHTML =
-
-        dates.length
-
-            ? dates.map(
-                function(date) {
-
-                    return `
-
-                        <tr>
-
-                            <td>
-                                ${esc(date)}
-                            </td>
-
-                            <td>
-                                ${esc(
-                                    records[date].inTime ||
-                                    "-"
-                                )}
-                            </td>
-
-                            <td>
-                                ${esc(
-                                    records[date].outTime ||
-                                    "-"
-                                )}
-                            </td>
-
-                        </tr>
-
-                    `;
-
-                }
-            ).join("")
-
-            :
-
-            `
-
-                <tr>
-
-                    <td colspan="3">
-                        No attendance records yet.
-                    </td>
-
-                </tr>
-
-            `;
-
-}
-
-
-/* =========================================
-   ATTENDANCE
-========================================= */
-
-function markAttendance(mode) {
-
-    if (!navigator.geolocation) {
-
-        return message(
-            "Location is not supported by this browser.",
-            "error"
-        );
-
-    }
-
-
-    navigator.geolocation.getCurrentPosition(
-
-        async function(position) {
-
-            try {
-
-                const response =
-                    await fetch(
-                        API +
-                        "/api/student/attendance/" +
-                        mode,
-                        {
-
-                            method: "POST",
-
-                            headers: {
-                                "Content-Type":
-                                    "application/json"
-                            },
-
-                            body: JSON.stringify({
-
-                                enrollmentNumber:
-                                    student.enrollmentNumber,
-
-                                latitude:
-                                    position.coords.latitude,
-
-                                longitude:
-                                    position.coords.longitude
-
-                            })
-
-                        }
-                    );
-
-
-                const data =
-                    await response.json();
-
-
-                if (!response.ok) {
-
-                    throw new Error(
-                        data.message ||
-                        "Attendance failed."
-                    );
-
-                }
-
-
-                message(
-                    data.message,
-                    "success"
-                );
-
-
-                await loadStudent();
-
-            }
-
-            catch (error) {
-
-                message(
-                    error.message,
-                    "error"
-                );
-
-            }
-
-        },
-
-        function() {
-
-            message(
-                "Location permission is required for attendance.",
-                "error"
-            );
-
-        },
-
-        {
-
-            enableHighAccuracy: true,
-
-            timeout: 10000
-
-        }
-
-    );
-
-}
-
-
-/* =========================================
-   STUDENT LOGOUT
-========================================= */
-
-function logoutStudent() {
-
-    // Remove student login/session data
-
-    localStorage.removeItem(
-        "currentStudent"
-    );
-
-    localStorage.removeItem(
-        "studentToken"
-    );
-
-    localStorage.removeItem(
-        "studentLoggedIn"
-    );
-
-
-    // Clear temporary session data
-
-    sessionStorage.clear();
-
-
-    // Go to login page
-
-    window.location.replace(
-        "login.html"
-    );
-
-}
-
-
-/* =========================================
-   PREVENT DASHBOARD AFTER LOGOUT
-========================================= */
-
-window.addEventListener(
-    "pageshow",
-    function() {
-
-        const loggedStudent =
-            localStorage.getItem(
-                "currentStudent"
-            );
-
-        if (!loggedStudent) {
-
-            window.location.replace(
-                "login.html"
-            );
-
-        }
-
-    }
+/* =========================
+   YEAR
+========================= */
+
+let selectedFeeYear =
+String(
+new Date().getFullYear()
 );
 
 
-/* =========================================
-   START
-========================================= */
+/* =========================
+   MONTHS
+========================= */
+
+const months = [
+
+"January",
+"February",
+"March",
+"April",
+"May",
+"June",
+"July",
+"August",
+"September",
+"October",
+"November",
+"December"
+
+];
+
+
+/* =========================
+   ESCAPE
+========================= */
+
+function esc(value){
+
+return String(
+value ?? ""
+)
+
+.replace(
+/[&<>"']/g,
+function(ch){
+
+return {
+
+"&":"&amp;",
+"<":"&lt;",
+">":"&gt;",
+'"':"&quot;",
+"'":"&#039;"
+
+}[ch];
+
+}
+
+);
+
+}
+
+
+/* =========================
+   MESSAGE
+========================= */
+
+function message(
+text,
+type="notice"
+){
+
+const box =
+document.getElementById(
+"messageBox"
+);
+
+box.className =
+"notice " + type;
+
+box.textContent =
+text;
+
+box.style.display =
+"block";
+
+
+setTimeout(
+function(){
+
+box.style.display =
+"none";
+
+},
+4000
+);
+
+}
+
+
+/* =========================
+   LOAD STUDENT
+========================= */
+
+async function loadStudent(){
+
+try{
+
+const response =
+await fetch(
+API +
+"/api/student/" +
+encodeURIComponent(
+student.id
+)
+);
+
+
+const data =
+await response.json();
+
+
+if(!response.ok){
+
+throw new Error(
+data.message ||
+"Unable to load student."
+);
+
+}
+
+
+if(!data.student){
+
+throw new Error(
+"Student data missing."
+);
+
+}
+
+
+student =
+data.student;
+
+
+localStorage.setItem(
+"currentStudent",
+JSON.stringify(student)
+);
+
+
+document.getElementById(
+"feeYear"
+).value =
+selectedFeeYear;
+
+
+render();
+
+}
+
+catch(error){
+
+console.error(
+"STUDENT LOAD ERROR:",
+error
+);
+
+message(
+error.message,
+"error"
+);
+
+}
+
+}
+
+
+/* =========================
+   GET YEAR FEES
+========================= */
+
+function getYearFees(){
+
+const allYears =
+student.feesByYear || {};
+
+
+let fees =
+allYears[
+selectedFeeYear
+] || {};
+
+
+/*
+2026 old monthlyFees fallback
+*/
+
+if(
+selectedFeeYear === "2026" &&
+Object.keys(fees).length === 0
+){
+
+fees =
+student.monthlyFees || {};
+
+}
+
+
+return fees;
+
+}
+
+
+/* =========================
+   RENDER
+========================= */
+
+function render(){
+
+document.getElementById(
+"studentName"
+).textContent =
+student.fullName || "-";
+
+
+document.getElementById(
+"enrollment"
+).textContent =
+student.enrollmentNumber || "-";
+
+
+document.getElementById(
+"seat"
+).textContent =
+student.seatNumber ||
+"Not Assigned";
+
+
+document.getElementById(
+"admissionDate"
+).textContent =
+student.registrationDate || "-";
+
+
+document.getElementById(
+"mobile"
+).textContent =
+student.mobile || "-";
+
+
+renderFees();
+
+renderAttendance();
+
+}
+
+
+/* =========================
+   RENDER FEES
+========================= */
+
+function renderFees(){
+
+const select =
+document.getElementById(
+"feeYear"
+);
+
+
+if(select){
+
+selectedFeeYear =
+String(select.value);
+
+}
+
+
+const fees =
+getYearFees();
+
+
+document.getElementById(
+"feesTable"
+).innerHTML =
+
+months.map(
+function(month){
+
+const fee =
+fees[month] || {};
+
+
+const status =
+String(
+fee.status || "DUE"
+).toUpperCase();
+
+
+const amount =
+Number(
+fee.amount || 700
+);
+
+
+const paid =
+status === "PAID";
+
+
+return `
+
+<tr>
+
+<td>
+<b>${esc(month)}</b>
+</td>
+
+
+<td>
+₹${amount}
+</td>
+
+
+<td
+class="${
+paid
+? "paid"
+: "due"
+}">
+
+${
+paid
+? "🟢 PAID"
+: "🔴 DUE"
+}
+
+</td>
+
+
+<td>
+
+${esc(
+fee.paymentDate ||
+fee.paidDate ||
+"-"
+)}
+
+</td>
+
+
+<td>
+
+${esc(
+fee.paymentMode ||
+"-"
+)}
+
+</td>
+
+
+<td>
+
+${
+paid &&
+fee.receiptNumber
+
+?
+
+`
+
+<div>
+${esc(
+fee.receiptNumber
+)}
+</div>
+
+
+<button
+
+class="receipt-btn"
+
+type="button"
+
+onclick="
+downloadReceipt(
+'${esc(month)}'
+)">
+
+⬇ Download PDF
+
+</button>
+
+`
+
+:
+
+`<span
+class="no-receipt">
+-
+</span>`
+
+}
+
+</td>
+
+</tr>
+
+`;
+
+}
+
+).join("");
+
+}
+
+
+/* =========================
+   RENDER ATTENDANCE
+========================= */
+
+function renderAttendance(){
+
+const year =
+String(
+new Date().getFullYear()
+);
+
+
+const records =
+student.attendance?.[
+year
+] || {};
+
+
+const dates =
+Object.keys(
+records
+)
+.sort()
+.reverse();
+
+
+const today =
+new Date()
+.toISOString()
+.slice(
+0,
+10
+);
+
+
+const todayRecord =
+records[today] || {};
+
+
+document.getElementById(
+"todayIn"
+).textContent =
+todayRecord.inTime || "-";
+
+
+document.getElementById(
+"todayOut"
+).textContent =
+todayRecord.outTime || "-";
+
+
+document.getElementById(
+"attendanceCount"
+).textContent =
+dates.filter(
+function(date){
+
+return records[
+date
+].inTime;
+
+}
+
+).length;
+
+
+document.getElementById(
+"attendanceTable"
+).innerHTML =
+
+dates.length
+
+?
+
+dates.map(
+function(date){
+
+return `
+
+<tr>
+
+<td>
+${esc(date)}
+</td>
+
+<td>
+${esc(
+records[date].inTime ||
+"-"
+)}
+</td>
+
+<td>
+${esc(
+records[date].outTime ||
+"-"
+)}
+</td>
+
+</tr>
+
+`;
+
+}
+).join("")
+
+:
+
+`
+
+<tr>
+
+<td colspan="3">
+
+No attendance records yet.
+
+</td>
+
+</tr>
+
+`;
+
+}
+/* =========================
+   PDF RECEIPT DOWNLOAD
+========================= */
+
+async function downloadReceipt(
+month
+){
+
+try{
+
+const fees =
+getYearFees();
+
+
+const fee =
+fees[month] || {};
+
+
+const status =
+String(
+fee.status || ""
+).toUpperCase();
+
+
+if(status !== "PAID"){
+
+message(
+"Receipt sirf PAID fee ke liye available hai.",
+"error"
+);
+
+return;
+
+}
+
+
+if(!fee.receiptNumber){
+
+message(
+"Receipt number available nahi hai.",
+"error"
+);
+
+return;
+
+}
+
+
+/*
+Backend se actual PDF
+download hoga.
+*/
+
+const url =
+API +
+"/api/receipt/" +
+encodeURIComponent(
+student.enrollmentNumber
+) +
+"/" +
+encodeURIComponent(
+selectedFeeYear
+) +
+"/" +
+encodeURIComponent(
+month
+);
+
+
+message(
+"Receipt PDF prepare ho rahi hai...",
+"notice"
+);
+
+
+const response =
+await fetch(url);
+
+
+if(!response.ok){
+
+const text =
+await response.text();
+
+
+throw new Error(
+text ||
+"Receipt download failed."
+);
+
+}
+
+
+const blob =
+await response.blob();
+
+
+if(
+!blob ||
+blob.size === 0
+){
+
+throw new Error(
+"PDF file empty hai."
+);
+
+}
+
+
+const downloadUrl =
+URL.createObjectURL(
+blob
+);
+
+
+const link =
+document.createElement("a");
+
+
+link.href =
+downloadUrl;
+
+
+link.download =
+"Aradhya-Library-" +
+student.enrollmentNumber +
+"-" +
+selectedFeeYear +
+"-" +
+month +
+"-Receipt.pdf";
+
+
+document.body.appendChild(
+link
+);
+
+
+link.click();
+
+
+link.remove();
+
+
+setTimeout(
+function(){
+
+URL.revokeObjectURL(
+downloadUrl
+);
+
+},
+1000
+);
+
+
+message(
+"PDF Receipt download ho gayi.",
+"success"
+);
+
+
+}
+
+catch(error){
+
+console.error(
+"RECEIPT DOWNLOAD ERROR:",
+error
+);
+
+
+message(
+error.message ||
+"Receipt download nahi ho saki.",
+"error"
+);
+
+}
+
+}
+
+
+/* =========================
+   ATTENDANCE
+========================= */
+
+function markAttendance(
+mode
+){
+
+if(
+!navigator.geolocation
+){
+
+message(
+"Location is not supported by this browser.",
+"error"
+);
+
+return;
+
+}
+
+
+navigator.geolocation.getCurrentPosition(
+
+async function(position){
+
+try{
+
+const response =
+await fetch(
+
+API +
+"/api/student/attendance/" +
+mode,
+
+{
+
+method:"POST",
+
+headers:{
+"Content-Type":
+"application/json"
+},
+
+body:
+JSON.stringify({
+
+enrollmentNumber:
+student.enrollmentNumber,
+
+latitude:
+position.coords.latitude,
+
+longitude:
+position.coords.longitude
+
+})
+
+}
+
+);
+
+
+const data =
+await response.json();
+
+
+if(!response.ok){
+
+throw new Error(
+data.message ||
+"Attendance failed."
+);
+
+}
+
+
+message(
+data.message ||
+"Attendance marked.",
+"success"
+);
+
+
+await loadStudent();
+
+
+}
+
+catch(error){
+
+console.error(
+"ATTENDANCE ERROR:",
+error
+);
+
+message(
+error.message,
+"error"
+);
+
+}
+
+},
+
+function(){
+
+message(
+"Location permission is required for attendance.",
+"error"
+);
+
+},
+
+{
+
+enableHighAccuracy:true,
+
+timeout:10000,
+
+maximumAge:0
+
+}
+
+);
+
+}
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+function logoutStudent(){
+
+localStorage.removeItem(
+"currentStudent"
+);
+
+localStorage.removeItem(
+"studentToken"
+);
+
+localStorage.removeItem(
+"studentLoggedIn"
+);
+
+sessionStorage.clear();
+
+location.replace(
+"login.html"
+);
+
+}
+
+
+/* =========================
+   PAGE CHECK
+========================= */
+
+window.addEventListener(
+"pageshow",
+function(){
+
+if(
+!localStorage.getItem(
+"currentStudent"
+)
+){
+
+location.replace(
+"login.html"
+);
+
+}
+
+}
+);
+
+
+/* =========================
+   INITIAL LOAD
+========================= */
 
 loadStudent();
 
 </script>
-
-
 <script src="js/app.js"></script>
 
 </body>
+
 </html>
