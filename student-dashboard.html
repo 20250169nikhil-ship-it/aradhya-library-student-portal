@@ -1032,38 +1032,28 @@ errorText ||
 }
 
 
-const contentType =
-response.headers.get(
-"content-type"
-) || "";
+// Some servers send a valid PDF as application/octet-stream.
+// Check the actual file signature instead of relying only on MIME type.
+const blob = await response.blob();
+const headerBytes = new Uint8Array(await blob.slice(0, 5).arrayBuffer());
+const isPdf = headerBytes.length === 5 &&
+    headerBytes[0] === 0x25 && // %
+    headerBytes[1] === 0x50 && // P
+    headerBytes[2] === 0x44 && // D
+    headerBytes[3] === 0x46 && // F
+    headerBytes[4] === 0x2D;   // -
 
-
-if(
-!contentType.includes(
-"application/pdf"
-)
-){
-
-const text =
-await response.text();
-
-
-throw new Error(
-text ||
-"Server did not return PDF."
-);
-
+if (!isPdf) {
+    const responseText = await blob.text();
+    let detail = responseText;
+    try {
+        const parsed = JSON.parse(responseText);
+        detail = parsed.message || parsed.error || responseText;
+    } catch (_) {}
+    throw new Error(detail || "Server did not return a valid PDF receipt.");
 }
 
-
-const blob =
-await response.blob();
-
-
-const blobURL =
-URL.createObjectURL(
-blob
-);
+const blobURL = URL.createObjectURL(blob);
 
 
 const link =
@@ -1097,16 +1087,8 @@ link.click();
 link.remove();
 
 
-setTimeout(
-function(){
-
-URL.revokeObjectURL(
-blobURL
-);
-
-},
-1000
-);
+// Give the browser enough time to start the download before revoking the URL.
+setTimeout(function(){ URL.revokeObjectURL(blobURL); }, 10000);
 
 
 message(
